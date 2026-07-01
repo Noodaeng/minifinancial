@@ -11,7 +11,7 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title> Quasar App </q-toolbar-title>
+        <q-toolbar-title class="text-weight-bold"> Mini Finance </q-toolbar-title>
 
         <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
@@ -43,10 +43,10 @@ import EssentialLink, {
 
 const linksList: EssentialLinkProps[] = [
   {
-    label: "Docs",
-    caption: "quasar.dev",
-    icon: "school",
-    link: "https://quasar.dev"
+    label: "Customers",
+    caption: "Manage customer information",
+    icon: "people",
+    link: "/customers"
   },
   {
     label: "Github",

@@ -24,4 +24,5 @@ quasar build
 See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
 
 ### URL for google database (on google sheet)
-URL: https://script.google.com/macros/s/AKfycby88D9FAXxXKVfU-4EV5XzWHot-slbatw6VVGcQk-BIC6FlkmVPUkAO96Bbwou_hce9iQ/exec
+URL: https://script.google.com/macros/s/AKfycbwpHGRbKG66L2AWiLs_iHGDIrv__sPC7wVQUxgheZrEbneFwSxaAI8rrEFpC1Krw6wa4A/exec
+Token: MiniFinancial_Secret_Token_2026_XYZ
