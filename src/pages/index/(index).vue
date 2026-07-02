@@ -3,7 +3,7 @@
     <div class="column items-center">
       <img
         alt="Mini Finance logo"
-        src="~@/assets/logo_mini.jpg"
+        src="~@/assets/cash.png"
         style="width: 200px; height: 200px"
       />
 

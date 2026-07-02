@@ -60,6 +60,27 @@ declare module 'vue-router/auto-routes' {
       { path: ParamValue<false> },
       | never
     >,
+    '/DashBoard': RouteRecordInfo<
+      '/DashBoard',
+      '/DashBoard',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/settings/CustomerPage': RouteRecordInfo<
+      '/settings/CustomerPage',
+      '/settings/CustomerPage',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/settings/LoginPage': RouteRecordInfo<
+      '/settings/LoginPage',
+      '/settings/LoginPage',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
   }
 
   /**
@@ -106,6 +127,30 @@ declare module 'vue-router/auto-routes' {
         | never
       pathParamNames:
         | 'path'
+    }
+    'src/pages/DashBoard.vue': {
+      routes:
+        | '/DashBoard'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'src/pages/settings/CustomerPage.vue': {
+      routes:
+        | '/settings/CustomerPage'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'src/pages/settings/LoginPage.vue': {
+      routes:
+        | '/settings/LoginPage'
+      views:
+        | never
+      pathParamNames:
+        | never
     }
   }
 

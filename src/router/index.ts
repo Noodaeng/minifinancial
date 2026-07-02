@@ -1,42 +1,44 @@
 import { defineRouter } from "#q-app";
-import { routes, handleHotUpdate } from "vue-router/auto-routes";
 import {
   createMemoryHistory,
   createRouter,
   createWebHashHistory,
   createWebHistory
 } from "vue-router";
+import { useAuthStore } from '../stores/authStore'
+import routes from './routes'
 
-/*
- * If not building with SSR mode, you can
- * directly export the Router instantiation;
- *
- * The function below can be async too; either use
- * async/await or return a Promise which resolves
- * with the Router instance.
- */
-
-export default defineRouter((/* { store, ssrContext } */) => {
-  const createHistory = import.meta.env.QUASAR_SERVER
+export default defineRouter(function (/* { store, ssrContext } */) {
+  // ปรับเปลี่ยนจุดนี้ให้ใช้มาตรฐานใหม่ของ Quasar v3 / Vite 🚀
+  const createHistory = import.meta.env.SSR
     ? createMemoryHistory
-    : import.meta.env.QUASAR_VUE_ROUTER_MODE === "history"
+    : import.meta.env.VUE_ROUTER_MODE === 'history'
       ? createWebHistory
-      : createWebHashHistory;
+      : createWebHashHistory
 
   const Router = createRouter({
     scrollBehavior: () => ({ left: 0, top: 0 }),
     routes,
+    // ใช้ import.meta.env.VUE_ROUTER_BASE แทนของเดิมเช่นกันครับ
+    history: createHistory(import.meta.env.VUE_ROUTER_BASE),
+  })
 
-    // Leave this as is and make changes in quasar.conf.js instead!
-    // quasar.conf.js -> build -> vueRouterMode
-    // quasar.conf.js -> build -> publicPath
-    history: createHistory(import.meta.env.QUASAR_VUE_ROUTER_BASE)
-  });
+  // Add route guards
+  Router.beforeEach((to, from, next) => {
+    const authStore = useAuthStore()
+    // authStore.checkSession() // Restore session if possible
 
-  // enable HMR for it
-  if (import.meta.hot) {
-    handleHotUpdate(Router);
-  }
+    if (to.meta.requiresAuth && !authStore.getAuthenticated) {
+      // Redirect to login if not authenticated
+      console.log('Redirecting to login → Authenticated:', authStore.getAuthenticated)
+      next({
+        path: '/login',
+        query: { to: to.path },
+      })
+    } else {
+      next() // Continue to the route
+    }
+  })
 
-  return Router;
-});
+  return Router
+})
