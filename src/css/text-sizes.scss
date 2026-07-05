@@ -1,0 +1,69 @@
+$text-sizes: 12, 16, 21;
+
+$text-size-options: (
+  'sm': 0.8,
+  'md': 1,
+  'lg': 1.2,
+  'xl': 1.4,
+);
+
+// variable text size classes
+@each $text-size, $multiplier in $text-size-options {
+  [data-text-size='#{$text-size}'] {
+    @each $text-size in $text-sizes {
+      .text-size-#{$text-size} {
+        font-size: #{$text-size * $multiplier}px;
+
+        // q-input overrides
+        &.q-field-dense {
+          .q-field__control,
+          .q-field__marginal {
+            height: 46px * $multiplier;
+          }
+          .q-field__label {
+            top: calc((46px * $multiplier) / 4);
+            font-size: 16px * $multiplier;
+            line-height: 23px * $multiplier;
+          }
+        }
+        &.q-field--labeled {
+          .q-field__native {
+            line-height: 24px * $multiplier;
+          }
+        }
+
+        &.q-select {
+          .q-field__label {
+            font-size: 16px * $multiplier;
+            top: 18px * $multiplier;
+            line-height: 23px * $multiplier;
+          }
+          .q-field__marginal {
+            height: 56px * $multiplier;
+          }
+          &.q-field--auto-height.q-field--labeled .q-field-container {
+            padding-top: 24px * $multiplier;
+          }
+        }
+
+        &.q-tab {
+          .q-tab__icon {
+            width: 24px * $multiplier;
+            height: 24px * $multiplier;
+            font-size: 24px * $multiplier;
+          }
+          .q-tab__label {
+            font-size: #{$text-size * $multiplier}px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// fixed text size classes
+@each $text-size in $text-sizes {
+  .text-size-fixed-#{$text-size} {
+    font-size: #{$text-size}px;
+  }
+}

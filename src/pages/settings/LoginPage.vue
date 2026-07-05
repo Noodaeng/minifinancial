@@ -61,6 +61,7 @@
 import { defineComponent, ref, onMounted, computed } from 'vue'
 import { useAuthStore } from '../../stores/authStore'
 import { useRouter } from 'vue-router'
+import MyConfig from '../../modules/myConfig'
 
 export default defineComponent({
   name: 'LoginPage',
@@ -79,24 +80,24 @@ export default defineComponent({
       return !login.value.username || !login.value.password || submitting.value
     })
     onMounted(() => {
-
+      login.value.username = MyConfig.instance.LastLogin
     })
 
     const submitForm = async () => {
       try {
         submitting.value = true
 
-
-
-        if (true) {
+        const success = await authStore.doLogin(login .value)
+        console.log('????Is login successful=>', success)
+        if (success) {
           const toPath = router.currentRoute.value.query.to as string | undefined
 
           if (toPath) {
             router.push(toPath)
-            // console.log('Form submitted push=>', toPath)
+             console.log('Form submitted push=>', toPath)
           } else {
             router.push('/')
-            // console.log('Form submitted push=>??', toPath)
+             console.log('Force submitted push=>??', toPath)
           }
 
         }

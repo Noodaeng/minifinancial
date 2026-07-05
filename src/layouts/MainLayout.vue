@@ -24,13 +24,13 @@
                   top: `10px`,
                 }"
               >
-                BCS-3⁺
+                💰{{$t('Mini_Financial')}}💰
               </div>
             </div>
 
             <div class="col-12 col-md-3">
               <div class="row justify-start items-start">
-                <div class="col-12 col-md-4">
+                <div  class="col-12 col-md-4">
                   <div
                     :style="{
                       position: `absolute`,
@@ -39,7 +39,7 @@
                       top: `-10px`,
                     }"
                   >
-                    <ThemeSwitcher></ThemeSwitcher>
+                    <ThemeSwitcher ></ThemeSwitcher>
                   </div>
                 </div>
                 <div class="col-12 col-md-4">
@@ -106,9 +106,7 @@
       <router-view />
     </q-page-container>
     <q-footer bordered class="bg-appLayout text-appText" style="min-height: 40px">
-      <div>
-        <GeneralBottom />
-      </div>
+
     </q-footer>
   </q-layout>
 </template>
@@ -116,14 +114,14 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted, computed, onBeforeUnmount } from 'vue'
 import EssentialLink from './EssentialLink.vue'
-// import LanguageSwitcher from './LanguageSwitcher.vue'
-// import ThemeSwitcher from './ThemeSwitcher.vue'
+import LanguageSwitcher from './LanguageSwitcher.vue'
+import ThemeSwitcher from './ThemeSwitcher.vue'
 import linksList from './menuList'
 import { AppFullscreen } from 'quasar'
 import { useAuthStore } from '../stores/authStore'
 import { useRouter } from 'vue-router'
-// import GeneralBottom from '../components/views/generals/GeneralBottom.vue'
-// import { errorToLog } from '../modules/utils/appUtils'
+
+import { errorToLog } from '../modules/appUtils'
 
 export default defineComponent({
   name: 'MainLayout',
@@ -132,9 +130,8 @@ export default defineComponent({
   },
   components: {
     EssentialLink,
-    // ThemeSwitcher,
-    // LanguageSwitcher,
-    // GeneralBottom,
+    ThemeSwitcher,
+    LanguageSwitcher,
   },
 
   setup() {
@@ -142,7 +139,7 @@ export default defineComponent({
     const authStore = useAuthStore()
     const router = useRouter()
     function logout() {
-      // authStore.signOut()
+      authStore.signOut()
       router.push({ path: '/login' })
       if (leftDrawerOpen.value) {
         leftDrawerOpen.value = !leftDrawerOpen.value
@@ -159,8 +156,8 @@ export default defineComponent({
             // success!
           })
           .catch((err) => {
-            //errorToLog(err)
-            console.log('Full screen request error=> ', err);
+            errorToLog(err)
+            //console.log('Full screen request error=> ', err);
           })
       }
     }
@@ -177,9 +174,11 @@ export default defineComponent({
       event.returnValue = confirmationMessage // Standard for most browsers
       return confirmationMessage // For older browsers
     }
-    const convertToUser = (obj: object): { name: string; role: string; exp: any } => {
-      return obj as { name: string; role: string; exp: any }
-    }
+    const convertToUser = (obj: object| null): { name: string; role: string; exp: any } => {
+      if(!obj) return { name: 'Unknown', role: 'User', exp: null }
+        return obj as { name: string; role: string; exp: any }
+      }
+
     return {
       essentialLinks: linksList,
       leftDrawerOpen,
