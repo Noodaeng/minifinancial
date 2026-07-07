@@ -1,5 +1,3 @@
-
-
 const linksList = [
   {
     title: 'SystemConfigure',
@@ -16,7 +14,7 @@ const linksList = [
         level: 1,
         access: 0,
         compType: 0,
-        children: [],
+        children: []
       },
       {
         title: 'Preference',
@@ -25,30 +23,28 @@ const linksList = [
         level: 1,
         access: 0,
         compType: 0,
-        children: [],
-      },
-    ],
+        children: []
+      }
+    ]
   },
   {
-    title: 'Mixer_settings',
-    icon: 'mdi-cog-clockwise',
+    title: 'Customers',
+    icon: 'mdi-account-multiple-outline',
     link: '/',
     level: 0,
     access: 0,
     compType: 1,
     children: [
       {
-        title: 'Mixers',
-        icon: 'mdi-cog-clockwise',
-        link: '/mixers',
+        title: 'Customer_Accounts',
+        icon: 'mdi-account-details-outline',
+        link: '/customers',
         level: 1,
         access: 0,
         compType: 1,
-        children: [],
-      },
-
-    ],
-  },
-
+        children: []
+      }
+    ]
+  }
 ]
 export default linksList

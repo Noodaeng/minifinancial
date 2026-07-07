@@ -1,13 +1,15 @@
 //load from db...
 export default {
   themes: {
-    "bcs-default": "ค่าเริ่มต้น",
-    "bcs-dark": "โหมดมืด",
-    "bcs-medium": "ปานกลาง"
+    'bcs-default': 'ค่าเริ่มต้น',
+    'bcs-dark': 'โหมดมืด',
+    'bcs-medium': 'ปานกลาง'
   },
-  Mini_Financial: "การเงินขนาดเล็ก",
+  Mini_Financial: 'การเงินขนาดเล็ก',
   Login_failed_Please_check_Username_or_Password:
-    "การเข้าสู่ระบบล้มเหลว โปรดตรวจสอบชื่อผู้ใช้หรือรหัสผ่าน",
-  Abort: "ล้มเหลว",
-  Account: "บัญชีผู้ใช้งาน"
-};
+    'การเข้าสู่ระบบล้มเหลว โปรดตรวจสอบชื่อผู้ใช้หรือรหัสผ่าน',
+  Abort: 'ล้มเหลว',
+  Account: 'บัญชีผู้ใช้งาน',
+  Customers: 'ลูกค้า',
+  Customer_Accounts: 'บัญชีลูกค้า'
+}
