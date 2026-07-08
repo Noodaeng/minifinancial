@@ -34,7 +34,7 @@ import { i18n } from '../../i18n'
 import { QTableColumn } from 'quasar'
 
 export default defineComponent({
-  name: 'CustomerListComp',
+  name: 'ListComp',
   data() {
     return {}
   },

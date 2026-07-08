@@ -1,85 +1,92 @@
 <template>
   <q-page class="row items-center justify-evenly bg-body text-appText">
-    <div>
-      <q-form class="q-gutter-md q-mt-sm">
-        <div class="row justify-start items-start">
-          <div class="col-12">
-            <q-input
-              outlined
-              label-color="white"
-              :label="$t('User')"
-              lazy-rules
-              dense
-              class="q-ma-sm text-appText"
-              v-model="login.username"
-            >
-              <template v-slot:prepend>
-                <q-icon class="text-appText" name="fas fa-user" size="xs" />
-              </template>
-              <template v-slot:error> </template>
-            </q-input>
+    <div class="q-pa-md fit">
+      <q-splitter
+        v-model="splitterModel"
+        before-class="bg-body text-appText "
+        after-class="bg-body text-appText fit"
+        style="height: 80vh"
+      >
+        <template v-slot:before>
+          <div class="q-pa-md">
+            <q-card class="bg-body text-appText">
+              <div class="row justify-start items-start">
+                <div class="col-12 col-md-5">
+                  <StateCtrlBtn
+                    :enbBtnCreate="true"
+                    :enbBtnEdit="true"
+                    :enbBtnDelete="true"
+                  ></StateCtrlBtn>
+                </div>
+              </div>
+              <q-separator />
+              <ListComp :rows="filteredRows" :columns="listColumns"></ListComp>
+            </q-card>
           </div>
-          <div class="col-12">
-            <q-input
-              outlined
-              label-color="white"
-              :label="$t('Password')"
-              type="password"
-              lazy-rules
-              dense
-              class="q-ma-sm text-appText"
-              v-model="login.password"
-            >
-              <template v-slot:prepend>
-                <q-icon class="text-appText" name="fas fa-lock" size="xs" />
-              </template>
-              <template v-slot:error> </template>
-            </q-input>
+        </template>
+        <template v-slot:after>
+          <div class="q-pa-md">
+            <q-card class="bg-body text-appText">
+              <CustomerComp :info="customer"></CustomerComp>
+            </q-card>
           </div>
-        </div>
-
-        <div class="q-pa-sm text-right">
-          <q-btn
-            icon="icon-dummy eva eva-log-in-outline"
-            type="submit"
-            unelevated
-            round
-            class="q-ma-sm shadow-3 bg-body text-appText"
-          >
-            <template v-slot:loading>
-              <q-spinner-facebook />
-            </template>
-          </q-btn>
-        </div>
-      </q-form>
+          <div class="row justify-end items-start">
+            <div class="col-12 col-md-6 bg-body text-appText">
+              <SaveCancelBtn :enbBtnDiscard="true" :enbBtnSave="true"> </SaveCancelBtn>
+            </div>
+          </div>
+        </template>
+      </q-splitter>
     </div>
+    {{ filteredRows }}
   </q-page>
 </template>
-
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue'
-
-
+import CustomerComp from '../../components/CustomerComp.vue'
+import ListComp from '../../components/utils/ListComp.vue'
+import StateCtrlBtn from '../../components/utils/StateCtrlBtn.vue'
+import SaveCancelBtn from '../../components/utils/SaveCancelBtn.vue'
+import { useCustomerProp } from '../../hooks/useCustomerProp'
 export default defineComponent({
   name: 'CustomerPage',
-
-  setup() {
-    const login = ref({
-      username: '5555',
-      password: '9999',
-    })
-
-    onMounted(() => {
-
-    })
-
-
-    return {
-      login,
-
+  components: {
+    CustomerComp,
+    ListComp,
+    StateCtrlBtn,
+    SaveCancelBtn
+  },
+  props: {
+    isDialog: {
+      type: Boolean,
+      default: false
+    },
+    parentCusId: {
+      type: String,
+      default: ''
     }
   },
+  data() {
+    return {
+      childIcon: 'mdi-widgets-outline'
+    }
+  },
+  setup(_, { emit }) {
+    const { customers, customer, listColumns, filteredRows, Init, getAllCustomer } =
+      useCustomerProp()
+    onMounted(async () => {
+      await Init()
+    })
+
+    return {
+      splitterModel: ref(35), // start at 20%
+      listColumns,
+      filteredRows,
+      customer,
+      customers
+    }
+  },
+  methods: {}
 })
 </script>
-
-<style></style>
+<style lang="sass" scoped></style>

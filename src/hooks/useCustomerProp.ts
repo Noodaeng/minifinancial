@@ -1,9 +1,60 @@
+import { ref, computed } from 'vue'
 import { useApi } from '../services/api'
 import { showError } from '../modules/appUtils'
 import MyConfig from '../modules/myConfig'
 import Customer from '../models/customer'
-
+import { QTableColumn } from 'quasar'
+import { i18n } from '../i18n'
 export function useCustomerProp() {
+  const { t } = i18n.global
+  const filter = ref('')
+  const customers = ref<Array<Customer>>([])
+  const customer = ref(new Customer())
+  const listColumns = ref<Array<QTableColumn>>([
+    {
+      name: 'customerId',
+      required: true,
+      label: t('Id'),
+      align: 'left',
+      field: 'customerId',
+      sortable: true
+    },
+    {
+      name: 'cardId',
+      required: true,
+      label: t('Card Id'),
+      align: 'left',
+      field: 'cardId',
+      sortable: true
+    },
+    {
+      name: 'Name',
+      required: true,
+      label: t('Name'),
+      align: 'left',
+      field: 'name',
+      sortable: true
+    }
+  ])
+  //+++++++Init+++++++++++++++++++++++
+  const Init = async () => {
+    try {
+      customers.value = await getAllCustomer()
+    } catch (err) {
+      await showError(err)
+    }
+  }
+  //+++++++Utils+++++++++++++++++++++++
+  const filteredRows = computed(() => {
+    if (!filter.value) {
+      return customers.value
+    }
+    const lowerFilter = filter.value.toLowerCase()
+    return customers.value.filter(row =>
+      Object.values(row).some(value => String(value).toLowerCase().includes(lowerFilter))
+    )
+  })
+  //+++++++Call Api+++++++++++++++++++++++
   const getAllCustomer = async (): Promise<Customer[]> => {
     try {
       const api = useApi()
@@ -25,5 +76,5 @@ export function useCustomerProp() {
     }
   }
 
-  return { getAllCustomer }
+  return { customers, customer, listColumns, filteredRows, Init, getAllCustomer }
 }
