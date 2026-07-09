@@ -20,7 +20,12 @@
                 </div>
               </div>
               <q-separator />
-              <ListComp :rows="filteredRows" :columns="listColumns"></ListComp>
+              <ListComp
+                :rows="filteredRows"
+                :columns="listColumns"
+                @onRowClick="onRowClick"
+                @onFilter="onFilter"
+              ></ListComp>
             </q-card>
           </div>
         </template>
@@ -38,7 +43,7 @@
         </template>
       </q-splitter>
     </div>
-    {{ filteredRows }}
+    {{ customer }}
   </q-page>
 </template>
 <script lang="ts">
@@ -72,8 +77,16 @@ export default defineComponent({
     }
   },
   setup(_, { emit }) {
-    const { customers, customer, listColumns, filteredRows, Init, getAllCustomer } =
-      useCustomerProp()
+    const {
+      customers,
+      customer,
+      listColumns,
+      filteredRows,
+      onRowClick,
+      onFilter,
+      Init,
+      getAllCustomer
+    } = useCustomerProp()
     onMounted(async () => {
       await Init()
     })
@@ -83,7 +96,9 @@ export default defineComponent({
       listColumns,
       filteredRows,
       customer,
-      customers
+      customers,
+      onRowClick,
+      onFilter
     }
   },
   methods: {}

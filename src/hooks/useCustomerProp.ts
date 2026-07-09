@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useApi } from '../services/api'
 import { showError } from '../modules/appUtils'
 import MyConfig from '../modules/myConfig'
@@ -10,6 +10,14 @@ export function useCustomerProp() {
   const filter = ref('')
   const customers = ref<Array<Customer>>([])
   const customer = ref(new Customer())
+
+  watch(
+    () => ({ ...customer.value }),
+    (newVal, oldVal) => {
+      if (newVal.customerId != oldVal.customerId) return
+      console.log('Customer changed deeply!', newVal, oldVal)
+    }
+  )
   const listColumns = ref<Array<QTableColumn>>([
     {
       name: 'customerId',
@@ -40,6 +48,9 @@ export function useCustomerProp() {
   const Init = async () => {
     try {
       customers.value = await getAllCustomer()
+      if (customers.value && customers.value.length > 0) {
+        Object.assign(customer.value, customers.value[0])
+      }
     } catch (err) {
       await showError(err)
     }
@@ -54,6 +65,18 @@ export function useCustomerProp() {
       Object.values(row).some(value => String(value).toLowerCase().includes(lowerFilter))
     )
   })
+  //+++++++Event handling+++++++++++++++++
+  const onRowClick = (row: any) => {
+    if (row) {
+      const cusId = (row as Customer).customerId
+      const selected = customers.value.find(c => c.customerId == cusId)
+
+      if (selected) Object.assign(customer.value, selected)
+    }
+  }
+  const onFilter = (val: string) => {
+    filter.value = val
+  }
   //+++++++Call Api+++++++++++++++++++++++
   const getAllCustomer = async (): Promise<Customer[]> => {
     try {
@@ -76,5 +99,14 @@ export function useCustomerProp() {
     }
   }
 
-  return { customers, customer, listColumns, filteredRows, Init, getAllCustomer }
+  return {
+    customers,
+    customer,
+    listColumns,
+    filteredRows,
+    onRowClick,
+    onFilter,
+    Init,
+    getAllCustomer
+  }
 }

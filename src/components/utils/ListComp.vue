@@ -7,7 +7,7 @@
       v-model="filter"
       :label="$t('Search')"
       debounce="300"
-      @input="onFilter"
+      @update:model-value="val => $emit('onFilter', val)"
     >
       <template v-slot:prepend>
         <q-icon name="mdi-magnify" />
@@ -24,13 +24,12 @@
       row-key="Id"
       :rows="rows"
       :columns="columns"
-      @row-click="onRowClick"
+      @row-click="(evt, row) => $emit('onRowClick', row)"
     />
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, computed, ref } from 'vue'
-import { i18n } from '../../i18n'
+import { defineComponent, ref } from 'vue'
 import { QTableColumn } from 'quasar'
 
 export default defineComponent({
@@ -48,17 +47,9 @@ export default defineComponent({
       required: true
     }
   },
-  setup(_, { emit }) {
+  setup() {
     const filter = ref('')
-    const onRowClick = (evt: Event, row: any) => {
-      emit('onRowClick', row)
-    }
-    const onFilter = (val: string) => {
-      emit('onFilter', val)
-    }
     return {
-      onRowClick,
-      onFilter,
       filter,
       pagination: ref({
         rowsPerPage: 0
