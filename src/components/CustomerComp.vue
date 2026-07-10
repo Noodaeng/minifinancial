@@ -100,7 +100,7 @@ import { defineComponent, ref, PropType } from 'vue'
 import { errorToLog, modelConverter } from '../modules/appUtils'
 import Customer from '../models/customer'
 import { useValidationRules } from '../hooks/useValidationRules'
-import { Action } from '../types/myTypes'
+import { i18n } from '../i18n'
 export default defineComponent({
   name: 'CustomerComp',
   components: {},
@@ -116,7 +116,8 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const myForm = ref()
-    const rules = useValidationRules()
+    const { t } = i18n.global
+    const rules = useValidationRules(t)
     const isAllValid = ref(false)
     const isNameValid = ref(true)
 

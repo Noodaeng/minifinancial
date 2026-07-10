@@ -14,5 +14,6 @@ export default {
   Customers: 'ลูกค้า',
   Customer_Accounts: 'บัญชีลูกค้า',
   Card_Id: 'บัตรประชาชนเลขที่',
-  Name: 'ชื่อ'
+  Name: 'ชื่อ',
+  Field_is_required: 'ต้องไม่เป็นค่าว่าง'
 }

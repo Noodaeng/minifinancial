@@ -15,5 +15,6 @@ export default {
   Customers: 'Customers',
   Customer_Accounts: 'Customer Accounts',
   Card_Id: 'Card Id',
-  Name: 'Name'
+  Name: 'Name',
+  Field_is_required: 'Field is required'
 }
