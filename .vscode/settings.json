@@ -1,0 +1,31 @@
+{
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+
+  // ⚡ เปิดระบบจัดหน้าจออัตโนมัติเมื่อกดบันทึก (ระดับสากล)
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // 🟢 บังคับเปิด Format On Save และระบุให้ใช้ Prettier เจาะจงทีละภาษา (ป้องกันค่าเอ๋อ)
+  "[vue]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // ❌ ล้างทิ้งระบบ ESLint ที่แครชออกไปให้พ้นทาง
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "never"
+  },
+  "eslint.enable": false,
+
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
+  "cSpell.words": ["Workabilities"]
+}

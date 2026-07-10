@@ -1,0 +1,8 @@
+{
+  "ClientId": 1,
+  "ScreenIndex": 1,
+  "Theme": 1,
+  "DbUrl": "https://script.google.com/macros/s/AKfycbz5GpF7IeXAqcLSNAqtlAXJTw_9s6_c_g8Nu-SZKumHNPqYacMdqtPJDFS5T8DtCgsneg/exec",
+  "AuthToken": "MiniFinancial_Secret_Token_2026_XYZ",
+  "PrivateKey": "finance"
+}

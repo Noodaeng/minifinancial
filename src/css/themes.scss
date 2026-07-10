@@ -1,0 +1,354 @@
+@use 'sass:map';
+@import './quasar.variables.scss';
+
+/* --------------------------------------------------------
+   Base Color Variables (Your existing values)
+-------------------------------------------------------- */
+$accent: #9c27b0;
+$dark-page: #121212;
+$dark: #08080871;
+$medium: $gray30;
+$light: $gray00;
+$backdrop: $gray10;
+$negative: #dc3545;
+$positive: #28a745;
+$primary: $white;
+$secondary: #e97300;
+$body: $Background;
+$tertiary: #ffb81d;
+$stateNotify: $yellow_10;
+$stateInactive: $gray30;
+$stateNormal: $gray00;
+$stateActive: $Liebherr;
+$stateInfo: #31ccec;
+$stateSuccess: $Green;
+$stateWarning: $stat_orange;
+$stateError: $stat_red;
+$appText: $white;
+$appLabel: $gray20;
+$appHint: $Olive;
+$appLayout: $gray50;
+
+$colorMatOther: #d9dbdf;
+$colorAggregate: #ff6200;
+$colorCement: #00b51a;
+$colorWater: #1b81e0;
+$colorAdmixture: #ae0001;
+$colorPigment: #ae3636;
+$colorReinforcement: #c10a50;
+
+$matOther: #d9dbdf;
+$matFineAggregate: #ff6200;
+$matCoarseAggregate: #ff6200;
+
+$matBinders: #00b51a;
+$matPortland: #00b51a;
+$matFlyAsh: #00b51a;
+$matMicroSilica: #00b51a;
+
+$matFreshWater: #00a6cc;
+$matRecycleWater: #00a6cc;
+$matCoolWater: #00a6cc;
+$matWarmWater: #00a6cc;
+$matIce: #00a6cc;
+$matVapor: #00a6cc;
+
+$matRetarder: #ae0001;
+$matAccelerating: #ae0001;
+$matWaterReducing: #ae0001;
+$matAirEntraining: #ae0001;
+$matPlasticizers: #ae0001;
+$matSuperPlasticizers: #ae0001;
+$matSlurry: #ae0001;
+
+$matPigment: #ae3636;
+
+$matSteelFiber: #c10a50;
+$matSyntheticFiber: #c10a50;
+
+/* --------------------------------------------------------
+   THEME MAPS
+-------------------------------------------------------- */
+$themes: (
+  'bcs-default': (
+    body: $body,
+    primary: $primary,
+    secondary: $secondary,
+    tertiary: $tertiary,
+    positive: $positive,
+    negative: $negative,
+    dark: $dark,
+    medium: $medium,
+    light: $light,
+    backdrop: $backdrop,
+    stateNotify: $stateNotify,
+    stateInactive: $gray30,
+    stateNormal: $stateNormal,
+    stateActive: $Liebherr,
+    stateInfo: $stateInfo,
+    stateSuccess: $stateSuccess,
+    stateWarning: $stateWarning,
+    stateError: $stateError,
+    appText: $primary,
+    appInactiveText: $gray50,
+    appLabel: $appLabel,
+    appHint: $appHint,
+    appLayout: $appLayout,
+
+    colorMatOther: $colorMatOther,
+    colorAggregate: $colorAggregate,
+    colorCement: $colorCement,
+    colorWater: $colorWater,
+    colorAdmixture: $colorAdmixture,
+    colorPigment: $colorPigment,
+    colorReinforcement: $colorReinforcement,
+
+    dryConcrete: #6366f1,
+    slightlyDryConcrete: #38bdf8,
+    perfectConcrete: #22c55e,
+    slightlyWetConcrete: #fbbf24,
+    tooWetConcrete: #ef4444,
+
+    matOther: #d9dbdf,
+    matFineAggregate: #e2bf70,
+    matCoarseAggregate: #e2bf70,
+
+    matBinders: #5b7c3d,
+    matPortland: #5b7c3d,
+    matFlyAsh: #5b7c3d,
+    matMicroSilica: #5b7c3d,
+
+    matFreshWater: #83b4dc,
+    matRecycleWater: #83b4dc,
+    matCoolWater: #83b4dc,
+    matWarmWater: #83b4dc,
+    matIce: #83b4dc,
+    matVapor: #83b4dc,
+
+    matRetarder: #f4c3c2,
+    matAccelerating: #f4c3c2,
+    matWaterReducing: #f4c3c2,
+    matAirEntraining: #f4c3c2,
+    matPlasticizers: #f4c3c2,
+    matSuperPlasticizers: #f4c3c2,
+    matSlurry: #f4c3c2,
+
+    matPigment: #ae3636,
+
+    matSteelFiber: #e2e08a,
+    matSyntheticFiber: #e2e08a,
+    //-----Draw element
+    emptyLevel: #8c949e,
+    busyLevel: #d9dba2,
+    fullLevel: #e2bf70,
+    strokeCol: #404c5e,
+    frameStartCol: #404c5e,
+    frameEndCol: #2e3745,
+    beltCol_0: #404c5e,
+    beltCol_1: #66707e,
+    beltCol_2: #8c949e,
+    //-----State colors-----
+    feedStateCol: #e2bf70,
+    mixStateCol: #ff6200,
+    deliverStateCol: #d9dba2,
+  ),
+
+  'bcs-dark': (
+    body: white,
+    primary: $yellow_20,
+    secondary: #c5c6c7,
+    tertiary: #c389de,
+    positive: #45a29e,
+    negative: #1f2833,
+    dark: $dark,
+    medium: $medium,
+    light: $light,
+    backdrop: $backdrop,
+    stateNotify: $stateNotify,
+    stateInactive: $gray30,
+    stateNormal: $stateNormal,
+    stateActive: $Green,
+    stateInfo: $stateInfo,
+    stateSuccess: $stateSuccess,
+    stateWarning: $stateWarning,
+    stateError: $stateError,
+    appText: $yellow_20,
+    appInactiveText: $gray30,
+    appLabel: $Marine,
+    appHint: $Olive,
+    appLayout: #9c27b0,
+
+    colorMatOther: $colorMatOther,
+    colorAggregate: $colorAggregate,
+    colorCement: $colorCement,
+    colorWater: $colorWater,
+    colorAdmixture: $colorAdmixture,
+    colorPigment: $colorPigment,
+    colorReinforcement: $colorReinforcement,
+
+    dryConcrete: #6366f1,
+    slightlyDryConcrete: #38bdf8,
+    perfectConcrete: #22c55e,
+    slightlyWetConcrete: #fbbf24,
+    tooWetConcrete: #ef4444,
+
+    matOther: #d9dbdf,
+    matFineAggregate: #e2bf70,
+    matCoarseAggregate: #e2bf70,
+
+    matBinders: #5b7c3d,
+    matPortland: #5b7c3d,
+    matFlyAsh: #5b7c3d,
+    matMicroSilica: #5b7c3d,
+
+    matFreshWater: #83b4dc,
+    matRecycleWater: #83b4dc,
+    matCoolWater: #83b4dc,
+    matWarmWater: #83b4dc,
+    matIce: #83b4dc,
+    matVapor: #83b4dc,
+
+    matRetarder: #f4c3c2,
+    matAccelerating: #f4c3c2,
+    matWaterReducing: #f4c3c2,
+    matAirEntraining: #f4c3c2,
+    matPlasticizers: #f4c3c2,
+    matSuperPlasticizers: #f4c3c2,
+    matSlurry: #f4c3c2,
+
+    matPigment: #ae3636,
+
+    matSteelFiber: #e2e08a,
+    matSyntheticFiber: #e2e08a,
+    //-----Draw element-------
+    emptyLevel: #8c949e,
+    busyLevel: #d9dba2,
+    fullLevel: #e2bf70,
+    strokeCol: #b3b7bf,
+    frameStartCol: white,
+    frameEndCol: #c5cbe3,
+    beltCol_0: #404c5e,
+    beltCol_1: #66707e,
+    beltCol_2: #8c949e,
+    //-----State colors-----
+    feedStateCol: #e2bf70,
+    mixStateCol: #ff6200,
+    deliverStateCol: #d9dba2,
+  ),
+
+  'bcs-medium': (
+    body: white,
+    primary: $GreenDark,
+    secondary: #d79922,
+    tertiary: #efe2ba,
+    positive: #c5cbe3,
+    negative: #f13c20,
+    dark: $dark,
+    medium: $medium,
+    light: $light,
+    backdrop: $backdrop,
+    stateNotify: $stateNotify,
+    stateInactive: $gray30,
+    stateNormal: $stateNormal,
+    stateActive: $Liebherr,
+    stateInfo: $stateInfo,
+    stateSuccess: $stateSuccess,
+    stateWarning: $stateWarning,
+    stateError: $stateError,
+    appText: $GreenDark,
+    appInactiveText: $gray30,
+    appLabel: $Marine,
+    appHint: $Olive,
+    appLayout: $appLayout,
+
+    colorMatOther: $colorMatOther,
+    colorAggregate: $colorAggregate,
+    colorCement: $colorCement,
+    colorWater: $colorWater,
+    colorAdmixture: $colorAdmixture,
+    colorPigment: $colorPigment,
+    colorReinforcement: $colorReinforcement,
+
+    dryConcrete: #6366f1,
+    slightlyDryConcrete: #38bdf8,
+    perfectConcrete: #22c55e,
+    slightlyWetConcrete: #fbbf24,
+    tooWetConcrete: #ef4444,
+
+    matOther: #d9dbdf,
+    matFineAggregate: #ff6200,
+    matCoarseAggregate: #ff6200,
+
+    matBinders: #00b51a,
+    matPortland: #00b51a,
+    matFlyAsh: #00b51a,
+    matMicroSilica: #00b51a,
+
+    matFreshWater: #00a6cc,
+    matRecycleWater: #00a6cc,
+    matCoolWater: #00a6cc,
+    matWarmWater: #00a6cc,
+    matIce: #00a6cc,
+    matVapor: #00a6cc,
+
+    matRetarder: #ae0001,
+    matAccelerating: #ae0001,
+    matWaterReducing: #ae0001,
+    matAirEntraining: #ae0001,
+    matPlasticizers: #ae0001,
+    matSuperPlasticizers: #ae0001,
+    matSlurry: #ae0001,
+
+    matPigment: #ae3636,
+
+    matSteelFiber: #c10a50,
+    matSyntheticFiber: #c10a50,
+    //-----Draw element
+    emptyLevel: #8c949e,
+    busyLevel: #d9dba2,
+    fullLevel: #e2bf70,
+    strokeCol: #b3b7bf,
+    frameStartCol: #404c5e,
+    frameEndCol: #2e3745,
+    beltCol_0: #404c5e,
+    beltCol_1: #66707e,
+    beltCol_2: #8c949e,
+    //-----State colors-----
+    feedStateCol: #e2bf70,
+    mixStateCol: #ff6200,
+    deliverStateCol: #d9dba2,
+  ),
+);
+
+/* --------------------------------------------------------
+   🚀 CSS VARIABLE GENERATION (GLOBAL, RUNTIME USABLE)
+-------------------------------------------------------- */
+@each $theme, $colors in $themes {
+  [data-application-theme='#{$theme}'] {
+    /* 1. Create CSS variables for all theme entries */
+    @each $name, $value in $colors {
+      --#{$name}: #{$value};
+    }
+
+    /* 2. Utility classes (your original behavior) */
+    @each $name, $value in $colors {
+      .bg-#{$name} {
+        background: #{$value} !important;
+      }
+      .text-#{$name} {
+        color: #{$value} !important;
+      }
+    }
+
+    /* 3. Body background override */
+    body {
+      background: map.get($colors, body) !important;
+    }
+
+    /* 4. Quasar component overrides */
+    .q-field__control,
+    .q-item--active {
+      color: map.get($colors, primary) !important;
+    }
+  }
+}

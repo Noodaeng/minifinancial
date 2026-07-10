@@ -1,0 +1,61 @@
+{
+  "name": "minifinancial",
+  "version": "0.0.1",
+  "private": true,
+  "description": "A Quasar Project",
+  "keywords": [
+    "quasar",
+    "quasar-app",
+    "quasar-app-vite",
+    "quasar-cli",
+    "vite",
+    "vue",
+    "vuejs"
+  ],
+  "author": "Noodaeng <35387905+Noodaeng@users.noreply.github.com>",
+  "type": "module",
+  "scripts": {
+    "lint": "oxfmt && oxlint --fix",
+    "lint:check": "oxfmt --check && oxlint",
+    "dev": "quasar dev",
+    "build": "quasar build",
+    "typecheck": "vue-tsc --noEmit",
+    "postinstall": "quasar prepare --silent"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.3.0",
+    "@quasar/extras": "^2.0.2",
+    "axios": "^1.18.1",
+    "pinia": "^3.0.1",
+    "quasar": "^2.20.3",
+    "validator": "^13.15.35",
+    "vue": "^3.5.22",
+    "vue-i18n": "^11.4.6"
+  },
+  "devDependencies": {
+    "@intlify/unplugin-vue-i18n": "^11.0.0",
+    "@quasar/app-vite": "^3.0.0-rc.5",
+    "@types/node": "^22.20.0",
+    "@types/validator": "^13.15.10",
+    "autoprefixer": "^10.4.27",
+    "eslint": "^10.6.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.6",
+    "eslint-plugin-vue": "^10.9.2",
+    "oxfmt": "^0.x",
+    "oxlint": "^1.x",
+    "oxlint-tsgolint": "^0.x",
+    "prettier": "^3.9.4",
+    "typescript": "^6.0.0",
+    "vue-router": "^5.1.0",
+    "vue-tsc": "^3.3.3"
+  },
+  "engines": {
+    "node": ">= 26 || ^24 || ^22.12"
+  },
+  "productName": "minifinancial",
+  "allowScripts": {
+    "esbuild@0.25.12": true,
+    "@parcel/watcher@2.5.6": true
+  }
+}
