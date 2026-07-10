@@ -20,9 +20,9 @@ export function useValidationRules(t: ComposerTranslation) {
     return [(value: string) => validator(value) || getMessage()]
   }
 
-  const string = (isValid: Ref<boolean>, updateValid: () => void, message?: string) =>
+  const string = (message?: string) =>
     createRule(
-      val => stringValidate(val, isValid, updateValid),
+      val => stringValidate(val),
       () => message ?? t('Field_is_required')
     )
 

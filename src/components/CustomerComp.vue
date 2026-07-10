@@ -118,19 +118,16 @@ export default defineComponent({
     const myForm = ref()
     const { t } = i18n.global
     const rules = useValidationRules(t)
-    const isAllValid = ref(false)
-    const isNameValid = ref(true)
-
-    function updateValid() {
-      isAllValid.value = isNameValid.value
-      emit('checkValid', isAllValid.value)
-    }
 
     const clearValidation = () => {
       myForm.value?.resetValidation()
     }
+    const getValidate = async (): Promise<boolean> => {
+      const valid = await myForm.value?.validate()
+      return valid ?? false
+    }
 
-    const strRule = rules.string(isNameValid, updateValid)
+    const strRule = rules.string()
 
     const save = async () => {
       const valid = await myForm.value?.validate()
@@ -151,7 +148,8 @@ export default defineComponent({
       strRule,
       myForm,
       save,
-      clearValidation
+      clearValidation,
+      getValidate
     }
   },
   methods: {}

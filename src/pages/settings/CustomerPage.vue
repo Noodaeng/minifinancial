@@ -95,7 +95,13 @@ export default defineComponent({
       }
       await Init()
     })
+    const save = async () => {
+      const valid = await myChild.value?.getValidate()
 
+      if (!valid) {
+        return
+      }
+    }
     return {
       splitterModel: ref(35), // start at 20%
       listColumns,
