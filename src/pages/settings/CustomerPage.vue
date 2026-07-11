@@ -102,8 +102,8 @@ export default defineComponent({
       splitterModel: ref(35), // start at 20%
       listColumns: useCustomer.listColumns,
       filteredRows: useCustomer.filteredRows,
-      customer: useCustomer.customer,
-      customers: useCustomer.customers,
+      customer: useCustomer.item,
+      customers: useCustomer.items,
       onRowClick: useCustomer.onRowClick,
       onFilter: useCustomer.onFilter,
       onCreate: useCustomer.onCreate,
