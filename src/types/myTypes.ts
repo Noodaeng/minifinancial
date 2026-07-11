@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-
-export type ApplicationTheme = 'bcs-default' | 'bcs-dark' | 'bcs-medium'
-export type Breakpoints = 'sm' | 'md' | 'lg' | 'xl'
-=======
 export type ApplicationTheme = 'bcs-default' | 'bcs-dark' | 'bcs-medium'
 export type Breakpoints = 'sm' | 'md' | 'lg' | 'xl'
 export type Action = () => void
@@ -12,4 +7,3 @@ export type DefaultValues<T> = {
 }
 export type MyRecord = Record<number, string>
 export type MyWorkAbilityVal = Record<number, number>
->>>>>>> main

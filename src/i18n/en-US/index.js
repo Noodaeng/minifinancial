@@ -15,9 +15,6 @@ export default {
   Customers: 'Customers',
   Customer_Accounts: 'Customer Accounts',
   Card_Id: 'Card Id',
-<<<<<<< HEAD
-  Name: 'Name'
-=======
   Name: 'Name',
   Field_is_required: 'Field is required',
   Email: 'e-mail',
@@ -26,5 +23,4 @@ export default {
   Address: 'Address',
   Credit_limit: 'Credit limit',
   Create_on: 'Create on'
->>>>>>> main
 }

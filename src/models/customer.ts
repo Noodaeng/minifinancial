@@ -7,11 +7,7 @@ export default class Customer {
   address = ''
   lineId = ''
   creditLimit = 0
-<<<<<<< HEAD
-  isActive = true
-=======
   isActive = false
   createBy = ''
   createOn = ''
->>>>>>> main
 }

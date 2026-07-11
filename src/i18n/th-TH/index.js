@@ -14,9 +14,6 @@ export default {
   Customers: 'ลูกค้า',
   Customer_Accounts: 'บัญชีลูกค้า',
   Card_Id: 'บัตรประชาชนเลขที่',
-<<<<<<< HEAD
-  Name: 'ชื่อ'
-=======
   Name: 'ชื่อ',
   Field_is_required: 'ต้องไม่เป็นค่าว่าง',
   Address: 'ที่อยู่',
@@ -25,5 +22,4 @@ export default {
   Line_Id: 'ไลน์ ไอดี',
   Credit_limit: 'วงเงินสูงสุด',
   Create_on: 'วันทีลงทะเบียน'
->>>>>>> main
 }
