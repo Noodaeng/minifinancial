@@ -16,5 +16,11 @@ export default {
   Customer_Accounts: 'Customer Accounts',
   Card_Id: 'Card Id',
   Name: 'Name',
-  Field_is_required: 'Field is required'
+  Field_is_required: 'Field is required',
+  Email: 'e-mail',
+  Phone: 'Phone',
+  Line_Id: 'Line Id',
+  Address: 'Address',
+  Credit_limit: 'Credit limit',
+  Create_on: 'Create on'
 }

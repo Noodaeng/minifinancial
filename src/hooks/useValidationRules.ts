@@ -26,86 +26,63 @@ export function useValidationRules(t: ComposerTranslation) {
       () => message ?? t('Field_is_required')
     )
 
-  const enumSelect = (isValid: Ref<boolean>, updateValid: () => void, message?: string) =>
+  const enumSelect = (message?: string) =>
     createRule(
-      val => enumSelectValidate(val, isValid, updateValid),
+      val => enumSelectValidate(val),
       () => message ?? t('Field_is_required')
     )
 
-  const number = (isValid: Ref<boolean>, updateValid: () => void, message?: string) =>
+  const number = (message?: string) =>
     createRule(
-      val => numberValidate(val, isValid, updateValid),
+      val => numberValidate(val),
       () => message ?? t('Invalid_number')
     )
 
-  const float = (isValid: Ref<boolean>, updateValid: () => void, message?: string) =>
+  const float = (message?: string) =>
     createRule(
-      val => floatValidate(val, isValid, updateValid),
+      val => floatValidate(val),
       () => message ?? t('Invalid_number')
     )
 
-  const floatMin = (
-    isValid: Ref<boolean>,
-    min: number,
-    updateValid: () => void,
-    message?: string
-  ) =>
+  const floatMin = (min: number, message?: string) =>
     createRule(
-      val => floatValidateMin(val, isValid, min, updateValid),
+      val => floatValidateMin(val, min),
       () => message ?? `${t('Please_use_value')} >= ${min}`
     )
 
-  const floatRange = (
-    isValid: Ref<boolean>,
-    min: number,
-    max: number,
-    updateValid: () => void,
-    message?: string
-  ) =>
+  const floatRange = (min: number, max: number, message?: string) =>
     createRule(
-      val => floatValidateRange(val, isValid, min, max, updateValid),
+      val => floatValidateRange(val, min, max),
       () => message ?? `${t('Please_use_value')} : ${min} - ${max}`
     )
 
-  const floatStepRange = (
-    isValid: Ref<boolean>,
-    min: number,
-    max: number,
-    updateValid: () => void,
-    message?: string
-  ) =>
+  const floatStepRange = (min: number, max: number, message?: string) =>
     createRule(
-      val => floatValidateStepRange(val, isValid, min, max, updateValid),
+      val => floatValidateStepRange(val, min, max),
       () => message ?? `${t('Please_use_value')} : ${min} - ${max}`
     )
 
-  const integer = (isValid: Ref<boolean>, updateValid: () => void, message?: string) =>
+  const integer = (message?: string) =>
     createRule(
-      val => intValidate(val, isValid, updateValid),
+      val => intValidate(val),
       () => message ?? t('Invalid_integer')
     )
 
-  const intMin = (isValid: Ref<boolean>, min: number, updateValid: () => void, message?: string) =>
+  const intMin = (min: number, message?: string) =>
     createRule(
-      val => intValidateMin(val, isValid, min, updateValid),
+      val => intValidateMin(val, min),
       () => message ?? `${t('Please_use_value')} >= ${min}`
     )
 
-  const intRange = (
-    isValid: Ref<boolean>,
-    min: number,
-    max: number,
-    updateValid: () => void,
-    message?: string
-  ) =>
+  const intRange = (min: number, max: number, message?: string) =>
     createRule(
-      val => intValidateMinMax(val, isValid, min, max, updateValid),
+      val => intValidateMinMax(val, min, max),
       () => message ?? `${t('Please_use_value')} : ${min} - ${max}`
     )
 
-  const ip = (isValid: Ref<boolean>, updateValid: () => void, message?: string) =>
+  const ip = (message?: string) =>
     createRule(
-      val => ipValidate(val, isValid, updateValid),
+      val => ipValidate(val),
       () => message ?? t('Invalid_IP_Address')
     )
 

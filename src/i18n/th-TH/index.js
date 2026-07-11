@@ -15,5 +15,11 @@ export default {
   Customer_Accounts: 'บัญชีลูกค้า',
   Card_Id: 'บัตรประชาชนเลขที่',
   Name: 'ชื่อ',
-  Field_is_required: 'ต้องไม่เป็นค่าว่าง'
+  Field_is_required: 'ต้องไม่เป็นค่าว่าง',
+  Address: 'ที่อยู่',
+  Email: 'อีเมลล์',
+  Phone: 'เบอร์โทร',
+  Line_Id: 'ไลน์ ไอดี',
+  Credit_limit: 'วงเงินสูงสุด',
+  Create_on: 'วันทีลงทะเบียน'
 }

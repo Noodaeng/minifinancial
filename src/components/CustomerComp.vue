@@ -4,9 +4,7 @@
       <q-card class="bg-body text-appText col-12 col-md-12">
         <q-icon class="q-ma-xs bg-body text-appText" name="mdi-account-details-outline" size="md" />
         <text-subtitle1
-          >&nbsp;&nbsp;&nbsp;{{ $t('Customer_Accounts') }}:Id-{{
-            model?.customerId
-          }}</text-subtitle1
+          >&nbsp;&nbsp;&nbsp;{{ $t('Customer_Accounts') }}:{{ model?.customerId }}</text-subtitle1
         >
         <div class="row justify-start items-start">
           <div class="col-12 col-md-3">
@@ -49,6 +47,7 @@
               label-color="appLabel"
               :hint="$t('Email')"
               :readonly="false"
+              :rules="emailRule"
               lazy-rules
               dense
               input-class="text-appText"
@@ -64,6 +63,7 @@
               label-color="appLabel"
               :hint="$t('Phone')"
               :readonly="false"
+              :rules="strRule"
               lazy-rules
               dense
               input-class="text-appText"
@@ -76,17 +76,76 @@
           <div class="col-12 col-md-3">
             <q-input
               outlined
-              v-model="model.lineId"
-              :label="$t('Line_Id')"
+              v-model="model.address"
+              :label="$t('Address')"
               label-color="appLabel"
-              :hint="$t('Line_Id')"
+              :hint="$t('Address')"
               :readonly="false"
+              :rules="strRule"
               lazy-rules
               dense
               input-class="text-appText"
               class="q-ma-sm"
             >
             </q-input>
+          </div>
+          <div class="col-12 col-md-3">
+            <q-input
+              outlined
+              v-model="model.lineId"
+              :label="$t('Line_Id')"
+              label-color="appLabel"
+              :hint="$t('Line_Id')"
+              :readonly="false"
+              :rules="strRule"
+              lazy-rules
+              dense
+              input-class="text-appText"
+              class="q-ma-sm"
+            >
+            </q-input>
+          </div>
+          <div class="col-12 col-md-3">
+            <q-input
+              outlined
+              v-model="model.creditLimit"
+              :label="$t('Credit_limit')"
+              label-color="appLabel"
+              :hint="$t('Credit_limit')"
+              :readonly="false"
+              :rules="creditRule"
+              lazy-rules
+              dense
+              input-class="text-appText"
+              class="q-ma-sm"
+            >
+            </q-input>
+          </div>
+          <div class="col-12 col-md-3">
+            <q-input
+              outlined
+              v-model="model.createOn"
+              :label="$t('Create_on')"
+              label-color="appLabel"
+              :hint="$t('Create_on')"
+              :readonly="true"
+              lazy-rules
+              dense
+              input-class="text-appText"
+              class="q-ma-sm"
+            >
+            </q-input>
+          </div>
+        </div>
+        <div class="row justify-start items-start">
+          <div class="col-12 col-md-3">
+            <q-checkbox
+              :disable="false"
+              :true-value="1"
+              :false-value="0"
+              v-model="model.isActive"
+              :label="$t('Active')"
+            />
           </div>
         </div>
       </q-card>
@@ -128,6 +187,8 @@ export default defineComponent({
     }
 
     const strRule = rules.string()
+    const emailRule = rules.email()
+    const creditRule = rules.floatRange(0, 1000000)
 
     const save = async () => {
       const valid = await myForm.value?.validate()
@@ -146,6 +207,8 @@ export default defineComponent({
     return {
       model: modelConverter<Customer>(props.info) ?? new Customer(),
       strRule,
+      emailRule,
+      creditRule,
       myForm,
       save,
       clearValidation,

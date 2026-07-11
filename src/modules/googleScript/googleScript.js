@@ -273,26 +273,46 @@ function createJsonResponse(output) {
 }
 
 /**
- * ฟังก์ชันสำหรับสร้าง Auto-Increment ID อ้างอิงตามชื่อ Sheet และแถวสุดท้าย
- * รองรับการใส่ Prefix แตกต่างกันไปในแต่ละตารางข้อมูล
+ * ฟังก์ชันสำหรับสร้าง Auto-Increment ID รูปแบบ Prefix-YYMMDDXXXX
+ * รีเซ็ตเลขวิ่ง (XXXX) เริ่มต้นใหม่ที่ 0001 ทุกวัน
  */
 function generateNextId(sheetName, prefix) {
   prefix = prefix || 'CUST-'
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName)
-  var nextId = prefix + '0001' // ค่าเริ่มต้นถ้าแผ่นงานว่างเปล่า
 
-  if (!sheet) return nextId
+  // 1. สร้างข้อความวันที่ปัจจุบันในรูปแบบ YYMMDD
+  var today = new Date()
+  var yy = String(today.getFullYear()).slice(-2)
+  var mm = String(today.getMonth() + 1).padStart(2, '0')
+  var dd = String(today.getDate()).padStart(2, '0')
+  var dateStr = yy + mm + dd // ผลลัพธ์ เช่น "260710" (ปี 2026 เดือน 07 วันที่ 10)
+
+  // ค่าเริ่มต้นสำหรับวันใหม่
+  var defaultId = prefix + dateStr + '0001'
+
+  if (!sheet) return defaultId
 
   var lastRow = sheet.getLastRow()
   if (lastRow > 1) {
-    var lastIdStr = sheet.getRange(lastRow, 1).getValue().toString() // ดึง ID ล่าสุดจากแถวท้ายสุด คอลัมน์แรก (A)
-    var lastIdNum = parseInt(lastIdStr.replace(prefix, ''), 10)
+    // 2. ดึง ID ล่าสุดจากแถวท้ายสุด คอลัมน์แรก (A)
+    var lastIdStr = sheet.getRange(lastRow, 1).getValue().toString()
 
-    if (!isNaN(lastIdNum)) {
-      // เพิ่มค่า 1 และเติมเลข 0 นำหน้าให้คงรูปครบ 4 หลัก (Zero-Padding)
-      nextId = prefix + String(lastIdNum + 1).padStart(4, '0')
+    // ตัดส่วน Prefix ออกเพื่อให้เหลือแค่ YYMMDDXXXX
+    var cleanIdStr = lastIdStr.replace(prefix, '')
+
+    // แยกส่วนวันที่ และ เลขวิ่งออกจากกัน
+    var lastIdDate = cleanIdStr.substring(0, 6) // ส่วน YYMMDD ของ ID ล่าสุด
+    var lastIdNumStr = cleanIdStr.substring(6) // ส่วน XXXX ของ ID ล่าสุด
+    var lastIdNum = parseInt(lastIdNumStr, 10)
+
+    // 3. ตรวจสอบว่า ID ล่าสุดตรงกับวันที่ปัจจุบันหรือไม่
+    if (lastIdDate === dateStr && !isNaN(lastIdNum)) {
+      // เป็นวันเดียวกัน -> เพิ่มเลขวิ่งขึ้น 1 ค่า และเติมศูนย์ให้ครบ 4 หลัก
+      var nextNumStr = String(lastIdNum + 1).padStart(4, '0')
+      return prefix + dateStr + nextNumStr
     }
   }
 
-  return nextId
+  // แผ่นงานว่างเปล่า หรือ เป็นการขึ้นวันใหม่ -> ส่งค่าเริ่มต้นของวันกลับไป
+  return defaultId
 }

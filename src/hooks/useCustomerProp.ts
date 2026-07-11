@@ -12,12 +12,16 @@ export function useCustomerProp() {
   const customers = ref<Array<Customer>>([])
   const customer = ref(new Customer())
   const clearValidate = ref<Action | undefined>(undefined)
+  const isNewMode = ref(false)
+  const canDelete = ref(false)
+  const canSave = ref(false)
   watch(
     () => ({ ...customer.value }),
     (newVal, oldVal) => {
       if (newVal.customerId != oldVal.customerId) {
         if (clearValidate.value) {
           clearValidate.value()
+          isNewMode.value = false
         }
         return
       }
@@ -57,6 +61,7 @@ export function useCustomerProp() {
       if (customers.value && customers.value.length > 0) {
         Object.assign(customer.value, customers.value[0])
       }
+      isNewMode.value = false
     } catch (err) {
       await showError(err)
     }
@@ -111,6 +116,9 @@ export function useCustomerProp() {
     customer,
     listColumns,
     filteredRows,
+    isNewMode,
+    canDelete,
+    canSave,
     onRowClick,
     onFilter,
     Init,

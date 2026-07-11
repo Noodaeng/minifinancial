@@ -7,5 +7,7 @@ export default class Customer {
   address = ''
   lineId = ''
   creditLimit = 0
-  isActive = true
+  isActive = false
+  createBy = ''
+  createOn = ''
 }
