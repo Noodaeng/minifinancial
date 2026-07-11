@@ -15,5 +15,16 @@ export default {
   Customers: 'Customers',
   Customer_Accounts: 'Customer Accounts',
   Card_Id: 'Card Id',
+<<<<<<< HEAD
   Name: 'Name'
+=======
+  Name: 'Name',
+  Field_is_required: 'Field is required',
+  Email: 'e-mail',
+  Phone: 'Phone',
+  Line_Id: 'Line Id',
+  Address: 'Address',
+  Credit_limit: 'Credit limit',
+  Create_on: 'Create on'
+>>>>>>> main
 }

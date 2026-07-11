@@ -5,16 +5,37 @@ import MyConfig from '../modules/myConfig'
 import Customer from '../models/customer'
 import { QTableColumn } from 'quasar'
 import { i18n } from '../i18n'
+<<<<<<< HEAD
+=======
+import { Action } from '../types/myTypes'
+>>>>>>> main
 export function useCustomerProp() {
   const { t } = i18n.global
   const filter = ref('')
   const customers = ref<Array<Customer>>([])
   const customer = ref(new Customer())
+<<<<<<< HEAD
 
   watch(
     () => ({ ...customer.value }),
     (newVal, oldVal) => {
       if (newVal.customerId != oldVal.customerId) return
+=======
+  const clearValidate = ref<Action | undefined>(undefined)
+  const isNewMode = ref(false)
+  const canDelete = ref(false)
+  const canSave = ref(false)
+  watch(
+    () => ({ ...customer.value }),
+    (newVal, oldVal) => {
+      if (newVal.customerId != oldVal.customerId) {
+        if (clearValidate.value) {
+          clearValidate.value()
+          isNewMode.value = false
+        }
+        return
+      }
+>>>>>>> main
       console.log('Customer changed deeply!', newVal, oldVal)
     }
   )
@@ -51,6 +72,10 @@ export function useCustomerProp() {
       if (customers.value && customers.value.length > 0) {
         Object.assign(customer.value, customers.value[0])
       }
+<<<<<<< HEAD
+=======
+      isNewMode.value = false
+>>>>>>> main
     } catch (err) {
       await showError(err)
     }
@@ -65,6 +90,10 @@ export function useCustomerProp() {
       Object.values(row).some(value => String(value).toLowerCase().includes(lowerFilter))
     )
   })
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
   //+++++++Event handling+++++++++++++++++
   const onRowClick = (row: any) => {
     if (row) {
@@ -104,9 +133,20 @@ export function useCustomerProp() {
     customer,
     listColumns,
     filteredRows,
+<<<<<<< HEAD
     onRowClick,
     onFilter,
     Init,
     getAllCustomer
+=======
+    isNewMode,
+    canDelete,
+    canSave,
+    onRowClick,
+    onFilter,
+    Init,
+    getAllCustomer,
+    clearValidate
+>>>>>>> main
   }
 }

@@ -32,7 +32,11 @@
         <template v-slot:after>
           <div class="q-pa-md">
             <q-card class="bg-body text-appText">
+<<<<<<< HEAD
               <CustomerComp :info="customer"></CustomerComp>
+=======
+              <CustomerComp ref="myChild" :info="customer"></CustomerComp>
+>>>>>>> main
             </q-card>
           </div>
           <div class="row justify-end items-start">
@@ -77,6 +81,10 @@ export default defineComponent({
     }
   },
   setup(_, { emit }) {
+<<<<<<< HEAD
+=======
+    const myChild = ref<InstanceType<typeof CustomerComp>>()
+>>>>>>> main
     const {
       customers,
       customer,
@@ -85,12 +93,31 @@ export default defineComponent({
       onRowClick,
       onFilter,
       Init,
+<<<<<<< HEAD
       getAllCustomer
     } = useCustomerProp()
     onMounted(async () => {
       await Init()
     })
 
+=======
+      getAllCustomer,
+      clearValidate
+    } = useCustomerProp()
+    onMounted(async () => {
+      clearValidate.value = () => {
+        myChild.value?.clearValidation()
+      }
+      await Init()
+    })
+    const save = async () => {
+      const valid = await myChild.value?.getValidate()
+
+      if (!valid) {
+        return
+      }
+    }
+>>>>>>> main
     return {
       splitterModel: ref(35), // start at 20%
       listColumns,
@@ -98,7 +125,12 @@ export default defineComponent({
       customer,
       customers,
       onRowClick,
+<<<<<<< HEAD
       onFilter
+=======
+      onFilter,
+      myChild
+>>>>>>> main
     }
   },
   methods: {}
