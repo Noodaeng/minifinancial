@@ -11,89 +11,67 @@
       <q-fab-action
         v-if="visBtnCreate"
         color="body"
-        @click="onClickCreate"
+        @click="$emit('onClickCreate')"
         :disable="!enbBtnCreate"
         icon="fas fa-plus"
-        :class="[
-          enbBtnCreate
-            ? 'q-ma-sm bg-body text-appText'
-            : 'q-ma-sm bg-body text-appLayout',
-        ]"
+        :class="[enbBtnCreate ? 'q-ma-sm bg-body text-appText' : 'q-ma-sm bg-body text-appLayout']"
       />
       <q-fab-action
         v-if="visBtnEdit"
         color="body"
-        @click="onClickEdit"
+        @click="$emit('onClickEdit')"
         :disable="!enbBtnEdit"
         icon="fas fa-pen"
-        :class="[
-          enbBtnEdit
-            ? 'q-ma-sm bg-body text-appText'
-            : 'q-ma-sm bg-body text-appLayout',
-        ]"
+        :class="[enbBtnEdit ? 'q-ma-sm bg-body text-appText' : 'q-ma-sm bg-body text-appLayout']"
       />
       <q-fab-action
         v-if="visBtnDelete"
         color="body"
-        @click="onClickDelete"
+        @click="$emit('onClickDelete')"
         :disable="!enbBtnDelete"
         icon="delete"
-        :class="[
-          enbBtnDelete
-            ? 'q-ma-sm bg-body text-appText'
-            : 'q-ma-sm bg-body text-appLayout',
-        ]"
+        :class="[enbBtnDelete ? 'q-ma-sm bg-body text-appText' : 'q-ma-sm bg-body text-appLayout']"
       />
     </q-fab>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref } from 'vue'
 export default defineComponent({
   name: 'StateCtrlBtn',
 
   props: {
     enbBtnCreate: {
       type: Boolean,
-      required: true,
+      required: true
     },
     enbBtnEdit: {
       type: Boolean,
-      required: true,
+      required: true
     },
     enbBtnDelete: {
       type: Boolean,
-      required: true,
+      required: true
     },
     visBtnEdit: {
       type: Boolean,
-      default: true,
+      default: false
     },
     visBtnCreate: {
       type: Boolean,
-      default: true,
+      default: true
     },
     visBtnDelete: {
       type: Boolean,
-      default: true,
-    },
+      default: true
+    }
   },
   setup() {
     return {
-      fab1: ref(false),
-    };
+      fab1: ref(false)
+    }
   },
-  methods: {
-    onClickCreate() {
-      this.$emit('onClickCreate');
-    },
-    onClickEdit() {
-      this.$emit('onClickEdit');
-    },
-    onClickDelete() {
-      this.$emit('onClickDelete');
-    },
-  },
-});
+  methods: {}
+})
 </script>
 <style lang=""></style>

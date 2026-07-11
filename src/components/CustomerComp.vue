@@ -139,6 +139,42 @@
         </div>
         <div class="row justify-start items-start">
           <div class="col-12 col-md-3">
+            <q-select
+              v-model="model.customerType"
+              label-color="appLabel"
+              :label="$t('Customer_category')"
+              :hint="$t('Customer_category')"
+              :options="custOption"
+              :readonly="false"
+              :rules="custTypeRule"
+              lazy-rules
+              dense
+              outlined
+              borderless
+              emit-value
+              map-options
+              options-dense
+              popup-content-class="bg-body text-appText"
+              class="q-ma-sm"
+            >
+            </q-select>
+          </div>
+          <div class="col-12 col-md-6">
+            <q-input
+              outlined
+              v-model="model.remark"
+              :label="$t('Remark')"
+              label-color="appLabel"
+              :hint="$t('Remark')"
+              :readonly="false"
+              lazy-rules
+              dense
+              input-class="text-appText"
+              class="q-ma-sm"
+            >
+            </q-input>
+          </div>
+          <div class="col-12 col-md-3">
             <q-checkbox
               :disable="false"
               :true-value="1"
@@ -149,17 +185,16 @@
           </div>
         </div>
       </q-card>
-
-      <q-btn color="primary" :label="$t('Save')" @click="save" />
     </q-form>
   </div>
 </template>
 <script lang="ts">
 import { defineComponent, ref, PropType } from 'vue'
-import { errorToLog, modelConverter } from '../modules/appUtils'
+import { modelConverter, enumToQSelectOptions } from '../modules/appUtils'
 import Customer from '../models/customer'
 import { useValidationRules } from '../hooks/useValidationRules'
 import { i18n } from '../i18n'
+import { ECreditCustomerType } from '../types/myEnums'
 export default defineComponent({
   name: 'CustomerComp',
   components: {},
@@ -189,28 +224,16 @@ export default defineComponent({
     const strRule = rules.string()
     const emailRule = rules.email()
     const creditRule = rules.floatRange(0, 1000000)
-
-    const save = async () => {
-      const valid = await myForm.value?.validate()
-
-      emit('checkValid', valid)
-
-      console.log('Save--------!!!!!', valid)
-
-      if (!valid) {
-        return
-      }
-
-      emit('save')
-    }
+    const custTypeRule = rules.enumSelect()
 
     return {
       model: modelConverter<Customer>(props.info) ?? new Customer(),
+      custOption: enumToQSelectOptions(ECreditCustomerType),
       strRule,
       emailRule,
       creditRule,
+      custTypeRule,
       myForm,
-      save,
       clearValidation,
       getValidate
     }

@@ -1,31 +1,44 @@
 import { ref, computed, watch } from 'vue'
 import { useApi } from '../services/api'
-import { showError } from '../modules/appUtils'
+import { showError, confirmDelete } from '../modules/appUtils'
 import MyConfig from '../modules/myConfig'
 import Customer from '../models/customer'
 import { QTableColumn } from 'quasar'
 import { i18n } from '../i18n'
-import { Action } from '../types/myTypes'
+import { Action, FuncBoolAsync } from '../types/myTypes'
+import { useDataState } from './useDataState'
+import { EDataState } from '@/types/myEnums'
 export function useCustomerProp() {
   const { t } = i18n.global
   const filter = ref('')
   const customers = ref<Array<Customer>>([])
   const customer = ref(new Customer())
   const clearValidate = ref<Action | undefined>(undefined)
-  const isNewMode = ref(false)
-  const canDelete = ref(false)
-  const canSave = ref(false)
+  const justSave = ref(false)
+
+  const getValidate = ref<FuncBoolAsync>(async () => {
+    return false
+  })
+  const dataState = useDataState()
   watch(
     () => ({ ...customer.value }),
-    (newVal, oldVal) => {
+    async (newVal, oldVal) => {
       if (newVal.customerId != oldVal.customerId) {
         if (clearValidate.value) {
           clearValidate.value()
-          isNewMode.value = false
+          console.log('1---clear----******checkvalid---->')
+          justSave.value = false
         }
         return
+      } else if (justSave.value) {
+        justSave.value = false
+        return
+      } else {
+        const valid = await getValidate.value()
+        console.log('2---checkvalid---->')
+        dataState.stateCtrl(false, false, valid, false)
       }
-      console.log('Customer changed deeply!', newVal, oldVal)
+      //console.log('Customer changed deeply!', newVal, oldVal)
     }
   )
   const listColumns = ref<Array<QTableColumn>>([
@@ -57,11 +70,15 @@ export function useCustomerProp() {
   //+++++++Init+++++++++++++++++++++++
   const Init = async () => {
     try {
+      dataState.stateCtrl(true, false, false, false)
       customers.value = await getAllCustomer()
+      if (clearValidate.value) {
+        clearValidate.value()
+      }
       if (customers.value && customers.value.length > 0) {
         Object.assign(customer.value, customers.value[0])
+        dataState.stateCtrl(false, true, false, false)
       }
-      isNewMode.value = false
     } catch (err) {
       await showError(err)
     }
@@ -83,11 +100,37 @@ export function useCustomerProp() {
       const cusId = (row as Customer).customerId
       const selected = customers.value.find(c => c.customerId == cusId)
 
-      if (selected) Object.assign(customer.value, selected)
+      if (selected) {
+        Object.assign(customer.value, selected)
+        dataState.stateCtrl(false, true, false, false)
+      }
     }
   }
   const onFilter = (val: string) => {
     filter.value = val
+  }
+  const onCreate = () => {
+    Object.assign(customer.value, new Customer())
+    dataState.stateCtrl(false, false, false, true)
+  }
+  const onDelete = () => {
+    queueMicrotask(async () => {
+      if (customer.value && customer.value.customerId != '') {
+        confirmDelete(customer.value.customerId, deleteCustomer)
+        await Init()
+      }
+    })
+  }
+  const onSave = () => {
+    queueMicrotask(async () => {
+      if (customer.value) {
+        if (dataState.state.value == EDataState.ValidEdit) {
+        } else if (dataState.state.value == EDataState.ValidNew) {
+        }
+        justSave.value = true
+        await Init()
+      }
+    })
   }
   //+++++++Call Api+++++++++++++++++++++++
   const getAllCustomer = async (): Promise<Customer[]> => {
@@ -110,19 +153,44 @@ export function useCustomerProp() {
       return []
     }
   }
+  const deleteCustomer = async (): Promise<boolean> => {
+    try {
+      const api = useApi()
+      const secretToken = MyConfig.instance.AppConfig.AuthToken
+      const baseUrl = MyConfig.instance.AppConfig.DbUrl // ลิงก์ที่ลงท้ายด้วย /exec
+
+      // 💡 ส่งผ่าน URL Parameter เพื่อให้ Google Apps Script ไปเรียกใช้ ฟังก์ชัน doGet(e)
+      const finalUrl = `${baseUrl}?token=${encodeURIComponent(secretToken)}&sheet=customers`
+
+      // const response = await api.get(finalUrl)
+
+      // // ดึงข้อมูลมาใช้งาน (ปกติ axios/api wrapper มักจะแปลง json ให้แล้วใน response.data)
+      // const output = response.data
+      console.log('Customer output data:', api, finalUrl)
+      return true
+    } catch (err) {
+      await showError(err)
+      return false
+    }
+  }
 
   return {
     customers,
     customer,
     listColumns,
     filteredRows,
-    isNewMode,
-    canDelete,
-    canSave,
+    canCreate: dataState.canCreate,
+    canDelete: dataState.canDelete,
+    canSave: dataState.canSave,
+    state: dataState.state,
+    clearValidate,
+    getValidate,
     onRowClick,
     onFilter,
+    onCreate,
+    onDelete,
+    onSave,
     Init,
-    getAllCustomer,
-    clearValidate
+    getAllCustomer
   }
 }

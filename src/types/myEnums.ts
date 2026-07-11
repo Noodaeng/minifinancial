@@ -8,7 +8,7 @@ export enum ERole {
   //[Description("Admin")]
   Admin,
   //[Description("Power User")]
-  PowerUser,
+  PowerUser
 }
 export enum EAlarmLevel {
   //[Description("None")]
@@ -22,5 +22,19 @@ export enum EAlarmLevel {
   //[Description("Warning")]
   Warning = 4,
   //[Description("Error")]
-  Error = 5,
+  Error = 5
+}
+export enum EDataState {
+  None,
+  Init = 1,
+  Selected = 2,
+  New = 3,
+  ValidEdit = 4,
+  ValidNew = 5
+}
+export enum ECreditCustomerType {
+  SuperPrime = 0, // ลูกค้าชั้นพิเศษ
+  Prime = 1, // ลูกค้าชั้นดี
+  NearPrime = 2, // ลูกค้ากึ่งดี
+  Subprime = 3 // ลูกค้าชั้นเลว
 }

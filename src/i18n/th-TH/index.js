@@ -21,5 +21,11 @@ export default {
   Phone: 'เบอร์โทร',
   Line_Id: 'ไลน์ ไอดี',
   Credit_limit: 'วงเงินสูงสุด',
-  Create_on: 'วันทีลงทะเบียน'
+  Create_on: 'วันทีลงทะเบียน',
+  Customer_category: 'กลุ่มลูกค้า',
+  Remark: 'หมายเหตุ',
+  SuperPrime: 'ลูกค้าชั้นพิเศษ',
+  Prime: 'ลูกค้าชั้นดี',
+  NearPrime: 'ลูกค้ากึ่งดี',
+  Subprime: 'ลูกค้าชั้นเลว'
 }

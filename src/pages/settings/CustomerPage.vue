@@ -13,9 +13,11 @@
               <div class="row justify-start items-start">
                 <div class="col-12 col-md-5">
                   <StateCtrlBtn
-                    :enbBtnCreate="true"
-                    :enbBtnEdit="true"
-                    :enbBtnDelete="true"
+                    :enbBtnCreate="canCreate"
+                    :enbBtnEdit="false"
+                    :enbBtnDelete="canDelete"
+                    @onClickCreate="onCreate"
+                    @onClickDelete="onDelete"
                   ></StateCtrlBtn>
                 </div>
               </div>
@@ -37,13 +39,14 @@
           </div>
           <div class="row justify-end items-start">
             <div class="col-12 col-md-6 bg-body text-appText">
-              <SaveCancelBtn :enbBtnDiscard="true" :enbBtnSave="true"> </SaveCancelBtn>
+              <SaveCancelBtn :enbBtnDiscard="false" :enbBtnSave="canSave" @onClickSave="onSave">
+              </SaveCancelBtn>
             </div>
           </div>
         </template>
       </q-splitter>
     </div>
-    {{ customer }}
+    {{ state }}- {{ customer }}
   </q-page>
 </template>
 <script lang="ts">
@@ -78,22 +81,15 @@ export default defineComponent({
   },
   setup(_, { emit }) {
     const myChild = ref<InstanceType<typeof CustomerComp>>()
-    const {
-      customers,
-      customer,
-      listColumns,
-      filteredRows,
-      onRowClick,
-      onFilter,
-      Init,
-      getAllCustomer,
-      clearValidate
-    } = useCustomerProp()
+    const useCustomer = useCustomerProp()
     onMounted(async () => {
-      clearValidate.value = () => {
+      useCustomer.clearValidate.value = () => {
         myChild.value?.clearValidation()
       }
-      await Init()
+      useCustomer.getValidate.value = async (): Promise<boolean> => {
+        return (await myChild.value?.getValidate()) ?? false
+      }
+      await useCustomer.Init()
     })
     const save = async () => {
       const valid = await myChild.value?.getValidate()
@@ -104,12 +100,19 @@ export default defineComponent({
     }
     return {
       splitterModel: ref(35), // start at 20%
-      listColumns,
-      filteredRows,
-      customer,
-      customers,
-      onRowClick,
-      onFilter,
+      listColumns: useCustomer.listColumns,
+      filteredRows: useCustomer.filteredRows,
+      customer: useCustomer.customer,
+      customers: useCustomer.customers,
+      onRowClick: useCustomer.onRowClick,
+      onFilter: useCustomer.onFilter,
+      onCreate: useCustomer.onCreate,
+      onDelete: useCustomer.onDelete,
+      onSave: useCustomer.onSave,
+      canDelete: useCustomer.canDelete,
+      canCreate: useCustomer.canCreate,
+      canSave: useCustomer.canSave,
+      state: useCustomer.state,
       myChild
     }
   },

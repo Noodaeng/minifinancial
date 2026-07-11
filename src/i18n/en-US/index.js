@@ -22,5 +22,11 @@ export default {
   Line_Id: 'Line Id',
   Address: 'Address',
   Credit_limit: 'Credit limit',
-  Create_on: 'Create on'
+  Create_on: 'Create on',
+  Customer_category: 'Customer category',
+  Remark: 'Remark',
+  SuperPrime: 'Super-prime', // ลูกค้าชั้นพิเศษ
+  Prime: 'Prime', // ลูกค้าชั้นดี
+  NearPrime: 'Near-prime', // ลูกค้ากึ่งดี
+  Subprime: 'Subprime' // ลูกค้าชั้นเลว
 }

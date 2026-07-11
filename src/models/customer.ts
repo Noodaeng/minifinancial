@@ -8,6 +8,8 @@ export default class Customer {
   lineId = ''
   creditLimit = 0
   isActive = false
+  customerType = 0
   createBy = ''
   createOn = ''
+  remark = ''
 }

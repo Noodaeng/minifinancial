@@ -1,9 +1,11 @@
 import NotifyMsg from '../models/notifyMsg'
 import { i18n } from '../i18n'
 import { EAlarmLevel } from '../types/myEnums'
-import { Notify } from 'quasar'
+import { FuncBoolAsync } from '../types/myTypes'
+import { Notify, Dialog, Loading } from 'quasar'
 import MyConfig from './myConfig'
 
+const { t } = i18n.global
 export const showError = async (err: any) => {
   if (err) {
     if (err.response) {
@@ -140,4 +142,58 @@ export const modelsConverter = <T>(models: object): T[] | undefined => {
     console.error('Error', err)
     return undefined
   }
+}
+export interface QSelectOption {
+  value: string | number
+  label: string
+}
+
+export const enumToQSelectOptions = (myEnum: Record<string, string | number>): QSelectOption[] => {
+  return Object.keys(myEnum)
+    .filter(key => isNaN(Number(key)))
+    .map(key => ({
+      // Using the non-null assertion operator (!) tells TypeScript
+      // we guarantee this key exists on the enum object.
+      value: myEnum[key]!,
+      label: t(key)
+    }))
+}
+
+export const confirmDelete = (info: string, delFunc: FuncBoolAsync) => {
+  Dialog.create({
+    title: t('Confirm'),
+    message: t('Would_you_like_to_delete') + info + '?',
+    persistent: true,
+    class: 'bg-body text-appText',
+    cancel: {
+      label: t('Cancel'),
+      color: 'body'
+    },
+    ok: {
+      label: t('OK'),
+      color: 'body'
+    }
+  })
+    .onOk(async () => {
+      try {
+        Loading.show({ message: 'Deleting...' })
+        if (delFunc) {
+          await delFunc()
+        }
+        Notify.create({
+          type: 'positive',
+          message: 'Item deleted successfully.'
+        })
+      } catch (err) {
+        Notify.create({
+          type: 'negative',
+          message: `Failed to delete item. ${err instanceof Error ? err.message : ''}`
+        })
+      } finally {
+        Loading.hide()
+      }
+    })
+    .onCancel(() => {
+      console.log('Deletion cancelled by user.')
+    })
 }
