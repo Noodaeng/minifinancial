@@ -2,10 +2,9 @@ import NotifyMsg from '../models/notifyMsg'
 import { i18n } from '../i18n'
 import { EAlarmLevel } from '../types/myEnums'
 import { FuncBoolAsync } from '../types/myTypes'
-import { Notify, Dialog, Loading } from 'quasar'
+import { Notify, QVueGlobals } from 'quasar'
 import MyConfig from './myConfig'
 
-const { t } = i18n.global
 export const showError = async (err: any) => {
   if (err) {
     if (err.response) {
@@ -149,6 +148,7 @@ export interface QSelectOption {
 }
 
 export const enumToQSelectOptions = (myEnum: Record<string, string | number>): QSelectOption[] => {
+  const { t } = i18n.global
   return Object.keys(myEnum)
     .filter(key => isNaN(Number(key)))
     .map(key => ({
@@ -159,8 +159,11 @@ export const enumToQSelectOptions = (myEnum: Record<string, string | number>): Q
     }))
 }
 
-export const confirmDelete = (info: string, delFunc: FuncBoolAsync) => {
-  Dialog.create({
+export const confirmDelete = ($q: QVueGlobals, info: string, delFunc: FuncBoolAsync) => {
+  const { t } = i18n.global
+
+  // Change from Dialog.create to $q.dialog
+  $q.dialog({
     title: t('Confirm'),
     message: t('Would_you_like_to_delete') + info + '?',
     persistent: true,
@@ -176,21 +179,26 @@ export const confirmDelete = (info: string, delFunc: FuncBoolAsync) => {
   })
     .onOk(async () => {
       try {
-        Loading.show({ message: 'Deleting...' })
+        // Change from Loading.show to $q.loading.show
+        $q.loading.show({ message: 'Deleting...' })
+
         if (delFunc) {
           await delFunc()
         }
-        Notify.create({
+
+        // Change from Notify.create to $q.notify
+        $q.notify({
           type: 'positive',
           message: 'Item deleted successfully.'
         })
       } catch (err) {
-        Notify.create({
+        $q.notify({
           type: 'negative',
           message: `Failed to delete item. ${err instanceof Error ? err.message : ''}`
         })
       } finally {
-        Loading.hide()
+        // Change from Loading.hide to $q.loading.hide
+        $q.loading.hide()
       }
     })
     .onCancel(() => {

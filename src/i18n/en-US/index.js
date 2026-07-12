@@ -28,5 +28,21 @@ export default {
   SuperPrime: 'Super-prime', // ลูกค้าชั้นพิเศษ
   Prime: 'Prime', // ลูกค้าชั้นดี
   NearPrime: 'Near-prime', // ลูกค้ากึ่งดี
-  Subprime: 'Subprime' // ลูกค้าชั้นเลว
+  Subprime: 'Subprime', // ลูกค้าชั้นเลว
+  Customer_Id: 'Customer Id',
+  Customer_Name: 'Customer Name',
+  Ports: 'Ports',
+  CashAndDeposits: 'Cash And Deposits',
+  LoansReceivable: 'Loans Receivable',
+  Securities: 'Securities',
+  EquityHoldings: 'Equity Holdings',
+  OtherInvestments: 'Other nvestments'
+
+  // export enum EInvestPortType {
+  //   CashAndDeposits = 0,   // เงินสด / เงินฝาก (Savings & Bank Deposits)
+  //   LoansReceivable = 1,   // สินเชื่อและเงินให้กู้ (Loan Assets)
+  //   Securities = 2,        // การลงทุนในตราสาร เช่น พันธบัตร หุ้นกู้
+  //   EquityHoldings = 3,    // การลงทุนในทุน/หุ้น (Equity Investments)
+  //   OtherInvestments = 4   // อื่น ๆ เช่น กองทุนรวม, อสังหาริมทรัพย์เพื่อการลงทุน
+  // }
 }

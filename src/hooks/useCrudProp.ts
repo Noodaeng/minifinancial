@@ -1,8 +1,8 @@
-import { ref, computed, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useApi } from '../services/api'
 import { showError, confirmDelete } from '../modules/appUtils'
 import MyConfig from '../modules/myConfig'
-import { QTableColumn } from 'quasar'
+import { QTableColumn, useQuasar } from 'quasar'
 import { i18n } from '../i18n'
 import { Action, FuncBoolAsync } from '../types/myTypes'
 import { useDataState } from './useDataState'
@@ -20,8 +20,9 @@ export function useCrudProp<T extends BaseEntity>(
   ModelConstructor: new () => T,
   columnsConfig: (t: (key: string) => string) => QTableColumn[]
 ) {
+  const $q = useQuasar()
   const { t } = i18n.global
-  const filter = ref('')
+
   const items = ref<T[]>([]) as any // Explicit casting for safety
   const item = ref<T>(new ModelConstructor())
   const clearValidate = ref<Action | undefined>(undefined)
@@ -73,15 +74,6 @@ export function useCrudProp<T extends BaseEntity>(
   }
 
   // +++++++ Utils +++++++++++++++++++++++
-  const filteredRows = computed(() => {
-    if (!filter.value) {
-      return items.value
-    }
-    const lowerFilter = filter.value.toLowerCase()
-    return items.value.filter((row: any) =>
-      Object.values(row).some(value => String(value).toLowerCase().includes(lowerFilter))
-    )
-  })
 
   // +++++++ Event handling +++++++++++++++++
   const onRowClick = (row: any) => {
@@ -96,10 +88,6 @@ export function useCrudProp<T extends BaseEntity>(
     }
   }
 
-  const onFilter = (val: string) => {
-    filter.value = val
-  }
-
   const onCreate = () => {
     Object.assign(item.value, new ModelConstructor())
     dataState.stateCtrl(false, false, false, true)
@@ -108,19 +96,25 @@ export function useCrudProp<T extends BaseEntity>(
   const onDelete = () => {
     // 💡 Removed the C# style queueMicrotask unless explicitly needed for tick adjustments
     if (item.value && item.value[idKey as string] !== '') {
-      confirmDelete(String(item.value[idKey as string]), deleteItem)
+      confirmDelete($q, String(item.value[idKey as string]), deleteItem)
     }
   }
 
   const onSave = async () => {
-    if (item.value) {
-      if (dataState.state.value === EDataState.ValidEdit) {
-        // Run edit API save here...
-      } else if (dataState.state.value === EDataState.ValidNew) {
-        // Run create API save here...
-      }
+    if (!item.value) return
+
+    let success = false
+
+    if (dataState.state.value === EDataState.ValidEdit) {
+      // 💡 Execute our freshly built generic update function
+      success = await updateItem()
+    } else if (dataState.state.value === EDataState.ValidNew) {
+      // 💡 Placeholder for your insert logic (uses similar layout configuration structural payload)
+      success = await insertItem()
+    }
+
+    if (success) {
       justSave.value = true
-      await Init()
     }
   }
 
@@ -145,22 +139,147 @@ export function useCrudProp<T extends BaseEntity>(
   const deleteItem = async (): Promise<boolean> => {
     try {
       const api = useApi()
-      console.log('Deleting item via endpoint:', api, getBaseUrl())
-      // Example implementation wrapper execution:
-      // await api.delete(getBaseUrl() + `&id=${item.value[idKey]}`)
-      await Init() // Trigger refresh inside the confirmation promise callback execution
-      return true
+
+      // 1. Extract the raw configuration variables
+      const secretToken = MyConfig.instance.AppConfig.AuthToken
+      const baseUrl = MyConfig.instance.AppConfig.DbUrl
+      const currentId = item.value[idKey as string]
+
+      if (!currentId) {
+        console.warn('Cannot delete: No item ID is currently selected.')
+        return false
+      }
+
+      // 2. Build the payload schema your Google Apps Script doPost expects
+      const payload = {
+        token: secretToken,
+        sheet: sheetName,
+        action: 'delete',
+        id: currentId
+      }
+
+      console.log('Sending delete request to Google Apps Script:', payload)
+
+      // 3. Trigger the network execution via POST
+      //const response = await api.post(baseUrl, payload)
+
+      const response = await api.post(baseUrl, JSON.stringify(payload), {
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8'
+        }
+      })
+
+      // 4. Verify the response status returned by createJsonResponse
+      if (response.data && response.data.status === 'success') {
+        await Init() // Trigger a visual grid refresh upon success
+        return true
+      } else {
+        // Handles programmatic errors (e.g., ID not found in sheet)
+        throw new Error(response.data?.message || 'Unknown server error during deletion.')
+      }
+    } catch (err) {
+      await showError(err)
+      return false
+    }
+  }
+  // ➕ Action 1: Create a brand new record (Insert)
+  const insertItem = async (): Promise<boolean> => {
+    try {
+      const api = useApi()
+
+      const secretToken = MyConfig.instance.AppConfig.AuthToken
+      const baseUrl = MyConfig.instance.AppConfig.DbUrl
+
+      // Dynamically discover the strict property layout order straight from the model blueprint
+      const blankInstance = new ModelConstructor()
+      const itemKeys = Object.keys(blankInstance)
+
+      // Maps the user inputs into a flat array matching the model structure perfectly
+      // Column A ([0]) is forced to an empty string because the App Script generates the auto-increment ID
+      const newRowArray = itemKeys.map((key, index) => {
+        if (index === 0) return '' // Column A auto-increment placeholder
+        return item.value[key] ?? ''
+      })
+
+      const payload = {
+        token: secretToken,
+        sheet: sheetName,
+        action: 'insert',
+        data: newRowArray
+      }
+
+      console.log('Sending insert request to Google Apps Script:', payload)
+
+      // Using text/plain header trick to bypass CORS checks
+      const response = await api.post(baseUrl, JSON.stringify(payload), {
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8'
+        }
+      })
+
+      if (response.data && response.data.status === 'success') {
+        await Init() // Reload table rows view
+        return true
+      } else {
+        throw new Error(response.data?.message || 'Failed to insert new record.')
+      }
     } catch (err) {
       await showError(err)
       return false
     }
   }
 
+  // ✏️ Action 2: Modify an existing record (Update)
+  const updateItem = async (): Promise<boolean> => {
+    try {
+      const api = useApi()
+
+      const secretToken = MyConfig.instance.AppConfig.AuthToken
+      const baseUrl = MyConfig.instance.AppConfig.DbUrl
+      const currentId = item.value[idKey as string]
+
+      if (!currentId) {
+        console.warn('Cannot update: No item ID is currently selected.')
+        return false
+      }
+
+      // Safely structure keys out of the constructor template sequence
+      const blankInstance = new ModelConstructor()
+      const itemKeys = Object.keys(blankInstance)
+      const updatedRowArray = itemKeys.map(key => item.value[key] ?? '')
+
+      const payload = {
+        token: secretToken,
+        sheet: sheetName,
+        action: 'update',
+        id: currentId,
+        data: updatedRowArray
+      }
+
+      console.log('Sending update request to Google Apps Script:', payload)
+
+      // Using text/plain header trick to bypass CORS checks
+      const response = await api.post(baseUrl, JSON.stringify(payload), {
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8'
+        }
+      })
+
+      if (response.data && response.data.status === 'success') {
+        await Init() // Reload grid rows automatically
+        return true
+      } else {
+        throw new Error(response.data?.message || 'Failed to update record.')
+      }
+    } catch (err) {
+      await showError(err)
+      return false
+    }
+  }
   return {
     items,
     item,
     listColumns,
-    filteredRows,
     canCreate: dataState.canCreate,
     canDelete: dataState.canDelete,
     canSave: dataState.canSave,
@@ -168,7 +287,6 @@ export function useCrudProp<T extends BaseEntity>(
     clearValidate,
     getValidate,
     onRowClick,
-    onFilter,
     onCreate,
     onDelete,
     onSave,

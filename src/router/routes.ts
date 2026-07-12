@@ -23,6 +23,11 @@ const routes: RouteRecordRaw[] = [
     path: '/customers',
     component: () => import('../layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('../pages/settings/CustomerPage.vue') }]
+  },
+  {
+    path: '/loans',
+    component: () => import('../layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('../pages/settings/LoanPortPage.vue') }]
   }
 ]
 
