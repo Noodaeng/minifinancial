@@ -29,7 +29,7 @@ const linksList = [
     ]
   },
   {
-    title: 'Customers',
+    title: 'Customers_and_Brokers',
     icon: 'mdi-account-multiple-outline',
     link: '/',
     level: 0,
@@ -40,6 +40,15 @@ const linksList = [
         title: 'Customer_Accounts',
         icon: 'mdi-account-details-outline',
         link: '/customers',
+        level: 1,
+        access: 0,
+        compType: 1,
+        children: []
+      },
+      {
+        title: 'Broker_Accounts',
+        icon: 'mdi-account-details-outline',
+        link: '/brokers',
         level: 1,
         access: 0,
         compType: 1,

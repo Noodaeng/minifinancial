@@ -1,14 +1,17 @@
 import { ref, computed, watch, Ref } from 'vue'
 import PortDto from '../models/portDto'
 import Customer from '../models/customer'
+import Broker from '../models/broker'
 import { useCrudProp } from './useCrudProp'
 import { EInvestPortType } from '../types/myEnums'
+import { QSelectOption } from '../types/myTypes'
 import MyConfig from '../modules/myConfig'
 import { useApi } from '../services/api'
 import { showError } from '../modules/appUtils'
 
 export function usePortProp() {
   const customers = ref<Customer[]>([])
+  const brokers = ref<Broker[]>([])
   const filter = ref('')
   const portType: Ref<string | number | EInvestPortType> = ref(EInvestPortType.CashAndDeposits)
   // 1. Initialize our generic CRUD composable
@@ -61,6 +64,14 @@ export function usePortProp() {
     if (!Array.isArray(customers.value)) return '-'
     const match = customers.value.find(c => String(c.customerId) === String(cusId))
     return match?.name || '-'
+  }
+  const customerToQSelectOptions = (cusArr: Customer[]): QSelectOption[] => {
+    return (cusArr || [])
+      .filter(c => c.customerId !== undefined && c.customerId !== null)
+      .map(c => ({
+        value: c.customerId,
+        label: c.name || 'Unnamed Customer' // Fallback in case name is missing/blank
+      }))
   }
 
   // 2. Intercept and enrich the rows dynamically whenever the underlying items change
@@ -117,16 +128,16 @@ export function usePortProp() {
   )
 
   // +++++++ Call customers Api +++++++++++++++++++++++
-  const getBaseUrl = () => {
+  const getBaseUrl = (sheet: string) => {
     const secretToken = MyConfig.instance.AppConfig.AuthToken
     const baseUrl = MyConfig.instance.AppConfig.DbUrl
-    return `${baseUrl}?token=${encodeURIComponent(secretToken)}&sheet=customers`
+    return `${baseUrl}?token=${encodeURIComponent(secretToken)}&sheet=${sheet}`
   }
 
   const getCustomers = async (): Promise<Customer[]> => {
     try {
       const api = useApi()
-      const response = await api.get(getBaseUrl())
+      const response = await api.get(getBaseUrl('customers'))
 
       // Defensively parse the Google Web App script response layout
       if (response.data && Array.isArray(response.data)) {
@@ -140,9 +151,26 @@ export function usePortProp() {
       return []
     }
   }
+  const getBrokers = async (): Promise<Broker[]> => {
+    try {
+      const api = useApi()
+      const response = await api.get(getBaseUrl('brokers'))
 
-  const initCustomerList = async () => {
+      // Defensively parse the Google Web App script response layout
+      if (response.data && Array.isArray(response.data)) {
+        return response.data
+      } else if (response.data && Array.isArray(response.data.data)) {
+        return response.data.data
+      }
+      return []
+    } catch (err) {
+      await showError(err)
+      return []
+    }
+  }
+  const initOtherList = async () => {
     customers.value = await getCustomers()
+    brokers.value = await getBrokers()
   }
 
   // 4. Overwrite the main Init method to combine the data fetching orchestrations smoothly
@@ -171,8 +199,10 @@ export function usePortProp() {
     filter,
     filteredRows,
     onFilter,
-    initCustomerList,
+    initOtherList,
+    customerToQSelectOptions,
     customers,
+    brokers,
     portType
   }
 }

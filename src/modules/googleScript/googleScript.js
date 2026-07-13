@@ -200,11 +200,20 @@ function doPost(e) {
       }
 
       // 💡 กำหนด Prefix ตามชื่อ Sheet (สามารถเพิ่มเงื่อนไขต่อได้ตามต้องการ)
-      var prefix = 'CUST-'
+      var prefix = 'CUS-'
       if (sheetName === 'users') {
-        prefix = 'USER-'
+        prefix = 'USR-'
+      } else if (sheetName === 'customers') {
+        prefix = 'CUS-'
+      } else if (sheetName === 'ports') {
+        prefix = 'POT-'
+      } else if (sheetName === 'sessions') {
+        prefix = 'SES-'
+      } else if (sheetName === 'transactions') {
+        prefix = 'TRN-'
+      } else if (sheetName === 'brokers') {
+        prefix = 'BRK-'
       }
-
       // 🔍 เรียกใช้ฟังก์ชันส่วนกลางเพื่อดึง ID ล่าสุดมาบวกเพิ่มอัตโนมัติ
       var newId = generateNextId(sheetName, prefix)
 
@@ -277,7 +286,7 @@ function createJsonResponse(output) {
  * รีเซ็ตเลขวิ่ง (XXXX) เริ่มต้นใหม่ที่ 0001 ทุกวัน
  */
 function generateNextId(sheetName, prefix) {
-  prefix = prefix || 'CUST-'
+  prefix = prefix || 'CUS-'
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName)
 
   // 1. สร้างข้อความวันที่ปัจจุบันในรูปแบบ YYMMDD
@@ -285,7 +294,7 @@ function generateNextId(sheetName, prefix) {
   var yy = String(today.getFullYear()).slice(-2)
   var mm = String(today.getMonth() + 1).padStart(2, '0')
   var dd = String(today.getDate()).padStart(2, '0')
-  var dateStr = yy + mm + dd // ผลลัพธ์ เช่น "260710" (ปี 2026 เดือน 07 วันที่ 10)
+  var dateStr = yy + mm + dd // ผลลัพธ์ เช่น "260713"
 
   // ค่าเริ่มต้นสำหรับวันใหม่
   var defaultId = prefix + dateStr + '0001'
@@ -297,19 +306,22 @@ function generateNextId(sheetName, prefix) {
     // 2. ดึง ID ล่าสุดจากแถวท้ายสุด คอลัมน์แรก (A)
     var lastIdStr = sheet.getRange(lastRow, 1).getValue().toString()
 
-    // ตัดส่วน Prefix ออกเพื่อให้เหลือแค่ YYMMDDXXXX
-    var cleanIdStr = lastIdStr.replace(prefix, '')
+    // ค้นหาตำแหน่งที่วันที่ (dateStr) เริ่มต้นขึ้น เพื่อความแม่นยำ ไม่ว่า Prefix จะยาวเท่าไหร่ก็ตาม
+    var dateIndex = lastIdStr.indexOf(dateStr)
 
-    // แยกส่วนวันที่ และ เลขวิ่งออกจากกัน
-    var lastIdDate = cleanIdStr.substring(0, 6) // ส่วน YYMMDD ของ ID ล่าสุด
-    var lastIdNumStr = cleanIdStr.substring(6) // ส่วน XXXX ของ ID ล่าสุด
-    var lastIdNum = parseInt(lastIdNumStr, 10)
+    if (dateIndex !== -1) {
+      // ตัดสตริงเอาเฉพาะพาร์ท "วันที่ + เลขวิ่ง" โดยเริ่มจากจุดที่เจอ dateStr
+      var cleanIdStr = lastIdStr.substring(dateIndex)
 
-    // 3. ตรวจสอบว่า ID ล่าสุดตรงกับวันที่ปัจจุบันหรือไม่
-    if (lastIdDate === dateStr && !isNaN(lastIdNum)) {
-      // เป็นวันเดียวกัน -> เพิ่มเลขวิ่งขึ้น 1 ค่า และเติมศูนย์ให้ครบ 4 หลัก
-      var nextNumStr = String(lastIdNum + 1).padStart(4, '0')
-      return prefix + dateStr + nextNumStr
+      var lastIdDate = cleanIdStr.substring(0, 6) // ส่วน YYMMDD ของ ID ล่าสุด
+      var lastIdNumStr = cleanIdStr.substring(6) // ส่วน XXXX ของ ID ล่าสุด
+      var lastIdNum = parseInt(lastIdNumStr, 10)
+
+      // 3. ตรวจสอบความถูกต้องและเพิ่มเลขวิ่ง
+      if (lastIdDate === dateStr && !isNaN(lastIdNum)) {
+        var nextNumStr = String(lastIdNum + 1).padStart(4, '0')
+        return prefix + dateStr + nextNumStr
+      }
     }
   }
 

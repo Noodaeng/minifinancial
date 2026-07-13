@@ -34,12 +34,7 @@
         <template v-slot:after>
           <div class="q-pa-md">
             <q-card class="bg-body text-appText">
-              <PortComp
-                ref="myChild"
-                :custOption="custOption"
-                :portType="portType"
-                :info="port"
-              ></PortComp>
+              <BrokerComp ref="myChild" :info="broker"></BrokerComp>
             </q-card>
           </div>
           <div class="row justify-end items-start">
@@ -51,95 +46,67 @@
         </template>
       </q-splitter>
     </div>
-    {{ brokers }}- {{ customers }}
+    {{ state }}- {{ broker }}
   </q-page>
 </template>
 <script lang="ts">
-import { defineComponent, ref, onMounted, PropType, watch, computed } from 'vue'
-import PortComp from '../../components/PortComp.vue'
+import { defineComponent, ref, onMounted } from 'vue'
+import BrokerComp from '../../components/BrokerComp.vue'
 import ListComp from '../../components/utils/ListComp.vue'
 import StateCtrlBtn from '../../components/utils/StateCtrlBtn.vue'
 import SaveCancelBtn from '../../components/utils/SaveCancelBtn.vue'
-import { usePortProp } from '../../hooks/usePortProp.js'
-import { EInvestPortType } from '../../types/myEnums.js'
-
+import { useBrokerProp } from '../../hooks/useBrokerProp'
 export default defineComponent({
-  name: 'PortPage',
+  name: 'BrokerPage',
   components: {
-    PortComp,
+    BrokerComp,
     ListComp,
     StateCtrlBtn,
     SaveCancelBtn
-  },
-  props: {
-    // 1. This matches the ':portType' param string from your router file
-    portType: {
-      type: [String, Number] as PropType<string | number | EInvestPortType>,
-      default: EInvestPortType.CashAndDeposits
-    }
   },
   data() {
     return {
       childIcon: 'mdi-widgets-outline'
     }
   },
-  // 2. Accept 'props' here so we can access them dynamically
-  setup(props, { emit }) {
-    const myChild = ref<InstanceType<typeof PortComp>>()
-
-    // 3. Convert the value to a Number if your enum expects numbers
-
-    // 4. Feed the route param into your hook instead of hardcoding it!
-    const usePort = usePortProp()
-
+  setup(_, { emit }) {
+    const myChild = ref<InstanceType<typeof BrokerComp>>()
+    const useBroker = useBrokerProp()
     onMounted(async () => {
-      await usePort.initOtherList()
-      await init()
-    })
-    watch(
-      () => props.portType,
-      async () => {
-        await init()
-      }
-    )
-    const init = async () => {
-      usePort.portType.value = props.portType
-
-      usePort.clearValidate.value = () => {
+      useBroker.clearValidate.value = () => {
         myChild.value?.clearValidation()
       }
-      usePort.getValidate.value = async (): Promise<boolean> => {
+      useBroker.getValidate.value = async (): Promise<boolean> => {
         return (await myChild.value?.getValidate()) ?? false
       }
-      await usePort.Init()
-    }
-
+      await useBroker.Init()
+    })
     const save = async () => {
       const valid = await myChild.value?.getValidate()
-      if (!valid) return
+
+      if (!valid) {
+        return
+      }
     }
-    const custOption = computed(() => usePort.customerToQSelectOptions(usePort.customers.value))
     return {
-      splitterModel: ref(35),
-      custOption,
-      listColumns: usePort.listColumns,
-      filteredRows: usePort.filteredRows,
-      port: usePort.item,
-      ports: usePort.items,
-      customers: usePort.customers,
-      brokers: usePort.brokers,
-      onRowClick: usePort.onRowClick,
-      onFilter: usePort.onFilter,
-      onCreate: usePort.onCreate,
-      onDelete: usePort.onDelete,
-      onSave: usePort.onSave,
-      canDelete: usePort.canDelete,
-      canCreate: usePort.canCreate,
-      canSave: usePort.canSave,
-      state: usePort.state,
+      splitterModel: ref(35), // start at 20%
+      listColumns: useBroker.listColumns,
+      filteredRows: useBroker.filteredRows,
+      broker: useBroker.item,
+      brokers: useBroker.items,
+      onRowClick: useBroker.onRowClick,
+      onFilter: useBroker.onFilter,
+      onCreate: useBroker.onCreate,
+      onDelete: useBroker.onDelete,
+      onSave: useBroker.onSave,
+      canDelete: useBroker.canDelete,
+      canCreate: useBroker.canCreate,
+      canSave: useBroker.canSave,
+      state: useBroker.state,
       myChild
     }
-  }
+  },
+  methods: {}
 })
 </script>
 <style lang="sass" scoped></style>

@@ -1,7 +1,7 @@
 import NotifyMsg from '../models/notifyMsg'
 import { i18n } from '../i18n'
 import { EAlarmLevel } from '../types/myEnums'
-import { FuncBoolAsync } from '../types/myTypes'
+import { FuncBoolAsync, QSelectOption } from '../types/myTypes'
 import { Notify, QVueGlobals } from 'quasar'
 import MyConfig from './myConfig'
 
@@ -142,10 +142,6 @@ export const modelsConverter = <T>(models: object): T[] | undefined => {
     return undefined
   }
 }
-export interface QSelectOption {
-  value: string | number
-  label: string
-}
 
 export const enumToQSelectOptions = (myEnum: Record<string, string | number>): QSelectOption[] => {
   const { t } = i18n.global
@@ -158,7 +154,15 @@ export const enumToQSelectOptions = (myEnum: Record<string, string | number>): Q
       label: t(key)
     }))
 }
-
+export const enumToString = (myEnum: Record<string, number | string>, enumKey: number): string => {
+  const { t } = i18n.global
+  for (const key in myEnum) {
+    if (Number(myEnum[key]) === enumKey) {
+      return t(String(key))
+    }
+  }
+  return '-'
+}
 export const confirmDelete = ($q: QVueGlobals, info: string, delFunc: FuncBoolAsync) => {
   const { t } = i18n.global
 

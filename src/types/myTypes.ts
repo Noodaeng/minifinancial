@@ -8,3 +8,7 @@ export type DefaultValues<T> = {
 }
 export type MyRecord = Record<number, string>
 export type MyWorkAbilityVal = Record<number, number>
+export interface QSelectOption {
+  value: string | number
+  label: string
+}
