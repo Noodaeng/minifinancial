@@ -64,16 +64,6 @@ export default defineComponent({
     StateCtrlBtn,
     SaveCancelBtn
   },
-  props: {
-    isDialog: {
-      type: Boolean,
-      default: false
-    },
-    parentCusId: {
-      type: String,
-      default: ''
-    }
-  },
   data() {
     return {
       childIcon: 'mdi-widgets-outline'

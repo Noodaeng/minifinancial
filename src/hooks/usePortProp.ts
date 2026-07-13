@@ -1,4 +1,4 @@
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, Ref } from 'vue'
 import PortDto from '../models/portDto'
 import Customer from '../models/customer'
 import { useCrudProp } from './useCrudProp'
@@ -7,10 +7,10 @@ import MyConfig from '../modules/myConfig'
 import { useApi } from '../services/api'
 import { showError } from '../modules/appUtils'
 
-export function usePortProp(portType: EInvestPortType) {
+export function usePortProp() {
   const customers = ref<Customer[]>([])
   const filter = ref('')
-
+  const portType: Ref<string | number | EInvestPortType> = ref(EInvestPortType.CashAndDeposits)
   // 1. Initialize our generic CRUD composable
   const crud = useCrudProp<PortDto>('portId', 'ports', PortDto, t => [
     {
@@ -46,7 +46,16 @@ export function usePortProp(portType: EInvestPortType) {
       sortable: true
     }
   ])
-
+  crud.assignInit.value = (ports: PortDto[]) => {
+    const filters = ports.filter(
+      (port: PortDto) => Number(port.portType) === Number(portType.value)
+    )
+    if (filters && filters.length > 0) {
+      Object.assign(crud.item.value, filters[0])
+    } else {
+      Object.assign(crud.item.value, new PortDto())
+    }
+  }
   // Helper method to look up names securely
   const findCustomerName = (cusId: string | number): string => {
     if (!Array.isArray(customers.value)) return '-'
@@ -67,9 +76,8 @@ export function usePortProp(portType: EInvestPortType) {
   const filteredRows = computed(() => {
     // Filter by the type passed to the composable first
     const typeMatchedPorts = enrichedRows.value.filter(
-      (port: PortDto) => Number(port.portType) === Number(portType)
+      (port: PortDto) => Number(port.portType) === Number(portType.value)
     )
-
     if (!filter.value) {
       return typeMatchedPorts
     }
@@ -141,7 +149,7 @@ export function usePortProp(portType: EInvestPortType) {
   const Init = async () => {
     try {
       // Step A: Load customers blueprint data mapping keys first
-      await initCustomerList()
+      //await initCustomerList()
 
       // Step B: Load the port records using your core crud workflow mechanics
       await crud.Init()
@@ -164,6 +172,7 @@ export function usePortProp(portType: EInvestPortType) {
     filteredRows,
     onFilter,
     initCustomerList,
-    customers
+    customers,
+    portType
   }
 }

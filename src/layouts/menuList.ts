@@ -1,3 +1,4 @@
+import { EInvestPortType } from '../types/myEnums'
 const linksList = [
   {
     title: 'SystemConfigure',
@@ -57,7 +58,8 @@ const linksList = [
       {
         title: 'CashAndDeposits',
         icon: 'mdi-account-details-outline',
-        link: '/customers',
+        // 1. Pass a real object here instead of a string literal
+        link: { name: 'CashPort', params: { portType: EInvestPortType.CashAndDeposits } },
         level: 1,
         access: 0,
         compType: 1,
@@ -66,7 +68,8 @@ const linksList = [
       {
         title: 'LoansReceivable',
         icon: 'mdi-account-details-outline',
-        link: '/loans',
+        // 2. Pass a real object here too
+        link: { name: 'LoanPort', params: { portType: EInvestPortType.LoansReceivable } },
         level: 1,
         access: 0,
         compType: 1,
@@ -75,7 +78,7 @@ const linksList = [
       {
         title: 'Securities',
         icon: 'mdi-account-details-outline',
-        link: '/customers',
+        link: { name: 'SecurityPort', params: { portType: EInvestPortType.Securities } },
         level: 1,
         access: 0,
         compType: 1,
@@ -84,7 +87,7 @@ const linksList = [
       {
         title: 'EquityHoldings',
         icon: 'mdi-account-details-outline',
-        link: '/customers',
+        link: { name: 'EquityPort', params: { portType: EInvestPortType.EquityHoldings } },
         level: 1,
         access: 0,
         compType: 1,
@@ -93,7 +96,7 @@ const linksList = [
       {
         title: 'OtherInvestments',
         icon: 'mdi-account-details-outline',
-        link: '/customers',
+        link: { name: 'OtherPort', params: { portType: EInvestPortType.OtherInvestments } },
         level: 1,
         access: 0,
         compType: 1,

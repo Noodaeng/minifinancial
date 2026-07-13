@@ -4,7 +4,7 @@ import { showError, confirmDelete } from '../modules/appUtils'
 import MyConfig from '../modules/myConfig'
 import { QTableColumn, useQuasar } from 'quasar'
 import { i18n } from '../i18n'
-import { Action, FuncBoolAsync } from '../types/myTypes'
+import { Action, FuncBoolAsync, ActionSingle } from '../types/myTypes'
 import { useDataState } from './useDataState'
 import { EDataState } from '@/types/myEnums'
 
@@ -27,6 +27,7 @@ export function useCrudProp<T extends BaseEntity>(
   const item = ref<T>(new ModelConstructor())
   const clearValidate = ref<Action | undefined>(undefined)
   const justSave = ref(false)
+  const assignInit = ref<ActionSingle<T[]> | undefined>(undefined)
 
   const getValidate = ref<FuncBoolAsync>(async () => {
     return false
@@ -61,10 +62,16 @@ export function useCrudProp<T extends BaseEntity>(
     try {
       dataState.stateCtrl(true, false, false, false)
       items.value = await getAllItems()
+
       if (clearValidate.value) {
         clearValidate.value()
       }
-      if (items.value && items.value.length > 0) {
+
+      // Fixed: Properly check and invoke the assignInit ref
+      if (assignInit.value && items.value && items.value.length > 0) {
+        assignInit.value(items.value)
+        dataState.stateCtrl(false, true, false, false)
+      } else if (items.value && items.value.length > 0) {
         Object.assign(item.value, items.value[0])
         dataState.stateCtrl(false, true, false, false)
       }
@@ -72,7 +79,6 @@ export function useCrudProp<T extends BaseEntity>(
       await showError(err)
     }
   }
-
   // +++++++ Utils +++++++++++++++++++++++
 
   // +++++++ Event handling +++++++++++++++++
@@ -286,11 +292,13 @@ export function useCrudProp<T extends BaseEntity>(
     state: dataState.state,
     clearValidate,
     getValidate,
+    stateCtrl: dataState.stateCtrl,
     onRowClick,
     onCreate,
     onDelete,
     onSave,
     Init,
-    getAllItems
+    getAllItems,
+    assignInit
   }
 }

@@ -21,25 +21,25 @@
                   fontSize: `20px`,
                   position: `absolute`,
                   left: `50px`,
-                  top: `10px`,
+                  top: `10px`
                 }"
               >
-                💰{{$t('Mini_Financial')}}💰
+                💰{{ $t('Mini_Financial') }}💰
               </div>
             </div>
 
             <div class="col-12 col-md-3">
               <div class="row justify-start items-start">
-                <div  class="col-12 col-md-4">
+                <div class="col-12 col-md-4">
                   <div
                     :style="{
                       position: `absolute`,
                       alignItems: `right`,
                       left: `75%`,
-                      top: `-10px`,
+                      top: `-10px`
                     }"
                   >
-                    <ThemeSwitcher ></ThemeSwitcher>
+                    <ThemeSwitcher></ThemeSwitcher>
                   </div>
                 </div>
                 <div class="col-12 col-md-4">
@@ -48,7 +48,7 @@
                       position: `absolute`,
                       alignItems: `right`,
                       left: `82%`,
-                      top: `-17px`,
+                      top: `-17px`
                     }"
                   >
                     <LanguageSwitcher></LanguageSwitcher>
@@ -96,7 +96,7 @@
         </q-item-label>
         <EssentialLink
           class="bg-appLayout text-appText"
-          v-for="link in essentialLinks"
+          v-for="link in essentialLinks || []"
           :key="link.title"
           v-bind="link"
         />
@@ -105,9 +105,7 @@
     <q-page-container>
       <router-view />
     </q-page-container>
-    <q-footer bordered class="bg-appLayout text-appText" style="min-height: 40px">
-
-    </q-footer>
+    <q-footer bordered class="bg-appLayout text-appText" style="min-height: 40px"> </q-footer>
   </q-layout>
 </template>
 
@@ -131,7 +129,7 @@ export default defineComponent({
   components: {
     EssentialLink,
     ThemeSwitcher,
-    LanguageSwitcher,
+    LanguageSwitcher
   },
 
   setup() {
@@ -155,7 +153,7 @@ export default defineComponent({
           .then(() => {
             // success!
           })
-          .catch((err) => {
+          .catch(err => {
             errorToLog(err)
             //console.log('Full screen request error=> ', err);
           })
@@ -174,10 +172,10 @@ export default defineComponent({
       event.returnValue = confirmationMessage // Standard for most browsers
       return confirmationMessage // For older browsers
     }
-    const convertToUser = (obj: object| null): { name: string; role: string; exp: any } => {
-      if(!obj) return { name: 'Unknown', role: 'User', exp: null }
-        return obj as { name: string; role: string; exp: any }
-      }
+    const convertToUser = (obj: object | null): { name: string; role: string; exp: any } => {
+      if (!obj) return { name: 'Unknown', role: 'User', exp: null }
+      return obj as { name: string; role: string; exp: any }
+    }
 
     return {
       essentialLinks: linksList,
@@ -187,9 +185,9 @@ export default defineComponent({
       logout,
       convertToUser,
       isAuth: computed(() => authStore.getAuthenticated),
-      user: computed(() => authStore.getUser),
+      user: computed(() => authStore.getUser)
     }
-  },
+  }
 })
 </script>
 <style>

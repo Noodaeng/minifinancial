@@ -34,11 +34,7 @@
         <template v-slot:after>
           <div class="q-pa-md">
             <q-card class="bg-body text-appText">
-              <PortComp
-                ref="myChild"
-                :portType="EInvestPortType.LoansReceivable"
-                :info="port"
-              ></PortComp>
+              <PortComp ref="myChild" :portType="portType" :info="port"></PortComp>
             </q-card>
           </div>
           <div class="row justify-end items-start">
@@ -54,16 +50,16 @@
   </q-page>
 </template>
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue'
+import { defineComponent, ref, onMounted, PropType, watch, computed } from 'vue'
 import PortComp from '../../components/PortComp.vue'
 import ListComp from '../../components/utils/ListComp.vue'
 import StateCtrlBtn from '../../components/utils/StateCtrlBtn.vue'
 import SaveCancelBtn from '../../components/utils/SaveCancelBtn.vue'
-import { usePortProp } from '../../hooks/usePortProp'
-import { EInvestPortType } from '../../types/myEnums'
+import { usePortProp } from '../../hooks/usePortProp.js'
+import { EInvestPortType } from '../../types/myEnums.js'
 
 export default defineComponent({
-  name: 'LoanPortPage',
+  name: 'PortPage',
   components: {
     PortComp,
     ListComp,
@@ -71,13 +67,10 @@ export default defineComponent({
     SaveCancelBtn
   },
   props: {
-    isDialog: {
-      type: Boolean,
-      default: false
-    },
-    parentCusId: {
-      type: String,
-      default: ''
+    // 1. This matches the ':portType' param string from your router file
+    portType: {
+      type: [String, Number] as PropType<string | number | EInvestPortType>,
+      default: EInvestPortType.CashAndDeposits
     }
   },
   data() {
@@ -85,11 +78,28 @@ export default defineComponent({
       childIcon: 'mdi-widgets-outline'
     }
   },
-  setup(_, { emit }) {
+  // 2. Accept 'props' here so we can access them dynamically
+  setup(props, { emit }) {
     const myChild = ref<InstanceType<typeof PortComp>>()
-    const usePort = usePortProp(EInvestPortType.LoansReceivable)
+
+    // 3. Convert the value to a Number if your enum expects numbers
+
+    // 4. Feed the route param into your hook instead of hardcoding it!
+    const usePort = usePortProp()
+
     onMounted(async () => {
       await usePort.initCustomerList()
+      await init()
+    })
+    watch(
+      () => props.portType,
+      async () => {
+        await init()
+      }
+    )
+    const init = async () => {
+      usePort.portType.value = props.portType
+
       usePort.clearValidate.value = () => {
         myChild.value?.clearValidation()
       }
@@ -97,16 +107,15 @@ export default defineComponent({
         return (await myChild.value?.getValidate()) ?? false
       }
       await usePort.Init()
-    })
+    }
+
     const save = async () => {
       const valid = await myChild.value?.getValidate()
-
-      if (!valid) {
-        return
-      }
+      if (!valid) return
     }
+
     return {
-      splitterModel: ref(35), // start at 20%
+      splitterModel: ref(35),
       listColumns: usePort.listColumns,
       filteredRows: usePort.filteredRows,
       port: usePort.item,
@@ -121,11 +130,9 @@ export default defineComponent({
       canCreate: usePort.canCreate,
       canSave: usePort.canSave,
       state: usePort.state,
-      myChild,
-      EInvestPortType
+      myChild
     }
-  },
-  methods: {}
+  }
 })
 </script>
 <style lang="sass" scoped></style>
