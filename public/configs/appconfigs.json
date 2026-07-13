@@ -2,7 +2,7 @@
   "ClientId": 1,
   "ScreenIndex": 1,
   "Theme": 1,
-  "DbUrl": "https://script.google.com/macros/s/AKfycbzVb8UmaQc3uvNJxqBR7x9GUFip1dmGMZJsD6Mwl5l6xPsP1eGZW_xcIVgU7lR6Gf0bKA/exec",
+  "DbUrl": "https://script.google.com/macros/s/AKfycbyQ2z_Hu9VmTriwf78l0e-OjlSrqdv6Ppld5OYxuKNnIW-sEm1cHPUK0wQCj2ebVriT-A/exec",
   "AuthToken": "MiniFinancial_Secret_Token_2026_XYZ",
   "PrivateKey": "finance"
 }

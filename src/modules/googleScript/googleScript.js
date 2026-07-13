@@ -93,13 +93,12 @@ function doGet(e) {
 // =========================================================================
 function doPost(e) {
   try {
-    // 💡 แก้ไขจุดที่ 1: ตรวจสอบและดึงข้อมูล jsonPayload จาก e.postData.contents
+    // ตรวจสอบและดึงข้อมูล jsonPayload จาก e.postData.contents
     var jsonPayload = {}
     if (e.postData && e.postData.contents) {
       try {
         jsonPayload = JSON.parse(e.postData.contents)
       } catch (ex) {
-        // หากฝั่ง Client ไม่ได้ส่งเป็น JSON หรือรูปแบบผิด
         return createJsonResponse({ status: 'error', message: 'รูปแบบ JSON Payload ไม่ถูกต้อง' })
       }
     }
@@ -189,9 +188,10 @@ function doPost(e) {
       return createJsonResponse({ status: 'error', message: 'Username หรือ Password ไม่ถูกต้อง' })
     }
 
-    // ➕ 2.2 คำสั่งเพิ่มข้อมูล (Insert) พร้อมสร้าง Auto-Increment ID
+    // ➕ 2.2 คำสั่งเพิ่มข้อมูล (Insert) พร้อมตรวจสอบคอลัมน์ว่าง/ข้อมูลไม่ตรงล็อก
     if (action === 'insert') {
       var rowData = jsonPayload.data
+
       if (!rowData || !Array.isArray(rowData)) {
         return createJsonResponse({
           status: 'error',
@@ -199,31 +199,39 @@ function doPost(e) {
         })
       }
 
-      // 💡 กำหนด Prefix ตามชื่อ Sheet (สามารถเพิ่มเงื่อนไขต่อได้ตามต้องการ)
-      var prefix = 'CUS-'
-      if (sheetName === 'users') {
-        prefix = 'USR-'
-      } else if (sheetName === 'customers') {
-        prefix = 'CUS-'
-      } else if (sheetName === 'ports') {
-        prefix = 'POT-'
-      } else if (sheetName === 'sessions') {
-        prefix = 'SES-'
-      } else if (sheetName === 'transactions') {
-        prefix = 'TRN-'
-      } else if (sheetName === 'brokers') {
-        prefix = 'BRK-'
+      // ตรวจสอบและนับเฉพาะหัวตารางที่ใช้งานได้จริง (ตัดช่องที่เป็นค่าว่างออก)
+      var headers = sheet.getDataRange().getValues()[0]
+      var validHeaderCount = 0
+      for (var h = 0; h < headers.length; h++) {
+        if (headers[h] !== '' && headers[h] !== null) {
+          validHeaderCount++
+        } else {
+          break // ถ้าเจอหัวตารางที่เป็นค่าว่าง ระบบจะตัดแถวข้อมูลตรงนี้ทันทีเพื่อความปลอดภัย
+        }
       }
+
+      // 💡 กำหนด Prefix ตามชื่อ Sheet
+      var prefix = 'CUS-'
+      if (sheetName === 'users') prefix = 'USR-'
+      else if (sheetName === 'customers') prefix = 'CUS-'
+      else if (sheetName === 'ports') prefix = 'POT-'
+      else if (sheetName === 'sessions') prefix = 'SES-'
+      else if (sheetName === 'transactions') prefix = 'TRN-'
+      else if (sheetName === 'brokers') prefix = 'BRK-'
+
       // 🔍 เรียกใช้ฟังก์ชันส่วนกลางเพื่อดึง ID ล่าสุดมาบวกเพิ่มอัตโนมัติ
       var newId = generateNextId(sheetName, prefix)
 
       // นำ ID ที่สร้างเสร็จแล้วไปใส่ไว้ในตำแหน่งแรกสุด (Column A) ของตาราง
       rowData[0] = newId
 
-      sheet.appendRow(rowData)
+      // 🛑 ตัดข้อมูลส่วนเกินออก บังคับกรอกลงเฉพาะเซลล์ที่มีหัวตารางกำกับจริงเท่านั้น
+      var cleanedRowData = rowData.slice(0, validHeaderCount)
+
+      sheet.appendRow(cleanedRowData)
       return createJsonResponse({
         status: 'success',
-        message: 'เพิ่มข้อมูลสำเร็จ',
+        message: 'เพิ่มข้อมูลสำเร็จ (ระบบคัดกรองและตัดข้อมูลที่ไม่มีหัวตารางออกแล้ว)',
         generated_id: newId
       })
     }
@@ -249,18 +257,46 @@ function doPost(e) {
         return createJsonResponse({ status: 'error', message: 'ไม่พบข้อมูล ID ที่ต้องการจัดการ' })
       }
 
+      // ✏️ ระบบแก้ไขข้อมูล (Update) แบบปลอดภัยสูงสุด
       if (action === 'update') {
         var updatedData = jsonPayload.data
-        if (!updatedData || !Array.isArray(updatedData)) {
+
+        // บังคับให้ส่งมาเป็นแบบ Object { หัวตาราง: ค่าใหม่ } เพื่อความแม่นยำในการตรวจจับ Match คอลัมน์
+        if (!updatedData || typeof updatedData !== 'object' || Array.isArray(updatedData)) {
           return createJsonResponse({
             status: 'error',
-            message: "ข้อมูลแก้ไขต้องเป็น Array ใน field 'data'"
+            message: "ข้อมูลแก้ไขต้องเป็น Object ใน field 'data' เช่น { 'name': 'John' }"
           })
         }
-        var range = sheet.getRange(targetRowIndex, 1, 1, updatedData.length)
-        range.setValues([updatedData])
-        return createJsonResponse({ status: 'success', message: 'แก้ไขข้อมูลสำเร็จ' })
-      } else if (action === 'delete') {
+
+        var headers = data[0]
+
+        // วนลูปตรวจสอบ Key-Value ทุกตัวที่ถูกส่งมาจาก UI
+        for (var key in updatedData) {
+          if (updatedData.hasOwnProperty(key)) {
+            var colIndex = headers.indexOf(key)
+
+            // 🛑 เงื่อนไขความปลอดภัย:
+            // 1. ต้อง Match เจอกับหัวตาราง (colIndex !== -1)
+            // 2. หัวตารางนั้นต้องมีชื่อตัวอักษร ไม่เป็นค่าว่างหรือ null
+            // 3. ห้ามแก้ไขคอลัมน์แรก (colIndex > 0) เพื่อป้องกันการเซ็ตค่าทับ ID เดิม
+            if (colIndex > 0 && headers[colIndex] !== '' && headers[colIndex] !== null) {
+              var targetCol = colIndex + 1
+              var newValue = updatedData[key]
+
+              // อัปเดตเฉพาะเซลล์ที่ผ่านเงื่อนไขความปลอดภัยและ Match ตรงกันเท่านั้น
+              sheet.getRange(targetRowIndex, targetCol).setValue(newValue)
+            }
+          }
+        }
+        return createJsonResponse({
+          status: 'success',
+          message: 'แก้ไขข้อมูลสำเร็จ (ระบบเพิกเฉยต่อคอลัมน์ที่ไม่ปลอดภัยหรือไม่มีหัวตาราง)'
+        })
+      }
+
+      // ❌ ระบบลบข้อมูล (Delete)
+      else if (action === 'delete') {
         sheet.deleteRow(targetRowIndex)
         return createJsonResponse({ status: 'success', message: 'ลบข้อมูลสำเร็จ' })
       }

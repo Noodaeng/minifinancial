@@ -141,12 +141,11 @@ export function useCrudProp<T extends BaseEntity>(
       return []
     }
   }
-
+  // ❌ Action 1: Delete an existing record
   const deleteItem = async (): Promise<boolean> => {
     try {
       const api = useApi()
 
-      // 1. Extract the raw configuration variables
       const secretToken = MyConfig.instance.AppConfig.AuthToken
       const baseUrl = MyConfig.instance.AppConfig.DbUrl
       const currentId = item.value[idKey as string]
@@ -156,7 +155,6 @@ export function useCrudProp<T extends BaseEntity>(
         return false
       }
 
-      // 2. Build the payload schema your Google Apps Script doPost expects
       const payload = {
         token: secretToken,
         sheet: sheetName,
@@ -166,21 +164,16 @@ export function useCrudProp<T extends BaseEntity>(
 
       console.log('Sending delete request to Google Apps Script:', payload)
 
-      // 3. Trigger the network execution via POST
-      //const response = await api.post(baseUrl, payload)
-
       const response = await api.post(baseUrl, JSON.stringify(payload), {
         headers: {
           'Content-Type': 'text/plain;charset=utf-8'
         }
       })
 
-      // 4. Verify the response status returned by createJsonResponse
       if (response.data && response.data.status === 'success') {
         await Init() // Trigger a visual grid refresh upon success
         return true
       } else {
-        // Handles programmatic errors (e.g., ID not found in sheet)
         throw new Error(response.data?.message || 'Unknown server error during deletion.')
       }
     } catch (err) {
@@ -188,7 +181,8 @@ export function useCrudProp<T extends BaseEntity>(
       return false
     }
   }
-  // ➕ Action 1: Create a brand new record (Insert)
+
+  // ➕ Action 2: Create a brand new record (Insert)
   const insertItem = async (): Promise<boolean> => {
     try {
       const api = useApi()
@@ -196,14 +190,14 @@ export function useCrudProp<T extends BaseEntity>(
       const secretToken = MyConfig.instance.AppConfig.AuthToken
       const baseUrl = MyConfig.instance.AppConfig.DbUrl
 
-      // Dynamically discover the strict property layout order straight from the model blueprint
+      // ดึงโครงสร้างลำดับ Keys จาก Model
       const blankInstance = new ModelConstructor()
       const itemKeys = Object.keys(blankInstance)
 
-      // Maps the user inputs into a flat array matching the model structure perfectly
-      // Column A ([0]) is forced to an empty string because the App Script generates the auto-increment ID
+      // แมปข้อมูลเป็น Flat Array ตามลำดับหัวตารางบน Sheets
+      // บังคับ Index 0 (Column A) เป็นค่าว่าง เพื่อให้ฝั่ง Apps Script รัน Auto-Increment ID ให้เอง
       const newRowArray = itemKeys.map((key, index) => {
-        if (index === 0) return '' // Column A auto-increment placeholder
+        if (index === 0) return ''
         return item.value[key] ?? ''
       })
 
@@ -211,12 +205,11 @@ export function useCrudProp<T extends BaseEntity>(
         token: secretToken,
         sheet: sheetName,
         action: 'insert',
-        data: newRowArray
+        data: newRowArray // ส่งเป็น Array ตามเงื่อนไขการใช้ appendRow ของ Apps Script
       }
 
       console.log('Sending insert request to Google Apps Script:', payload)
 
-      // Using text/plain header trick to bypass CORS checks
       const response = await api.post(baseUrl, JSON.stringify(payload), {
         headers: {
           'Content-Type': 'text/plain;charset=utf-8'
@@ -235,7 +228,7 @@ export function useCrudProp<T extends BaseEntity>(
     }
   }
 
-  // ✏️ Action 2: Modify an existing record (Update)
+  // ✏️ Action 3: Modify an existing record (Update)
   const updateItem = async (): Promise<boolean> => {
     try {
       const api = useApi()
@@ -249,22 +242,32 @@ export function useCrudProp<T extends BaseEntity>(
         return false
       }
 
-      // Safely structure keys out of the constructor template sequence
+      // 💡 [จุดปรับปรุงสำคัญ]: เปลี่ยนจาก Array มาเป็น Object (Key-Value)
+      // วนลูปสร้าง Object ใหม่เฉพาะฟิลด์ที่มีค่า และข้ามคอลัมน์ที่เป็น ID (idKey) เพื่อความปลอดภัย
+      const updatedDataObject: Record<string, any> = {}
+
       const blankInstance = new ModelConstructor()
       const itemKeys = Object.keys(blankInstance)
-      const updatedRowArray = itemKeys.map(key => item.value[key] ?? '')
+
+      itemKeys.forEach((key, index) => {
+        // เงื่อนไข:
+        // 1. ห้ามส่ง ID กลับไปแก้ไข (index 0 หรือ key ที่ตรงกับ idKey)
+        // 2. ป้องกันฟิลด์ที่ไม่มีชื่อหัวตาราง หรือค่าที่เป็น undefined/null (ให้เปลี่ยนเป็นค่าว่าง "")
+        if (index > 0 && key !== idKey) {
+          updatedDataObject[key] = item.value[key] ?? ''
+        }
+      })
 
       const payload = {
         token: secretToken,
         sheet: sheetName,
         action: 'update',
         id: currentId,
-        data: updatedRowArray
+        data: updatedDataObject // 👈 ส่งเป็น Object { หัวตาราง: ค่าใหม่ } ไปที่สคริปต์ตัวใหม่
       }
 
       console.log('Sending update request to Google Apps Script:', payload)
 
-      // Using text/plain header trick to bypass CORS checks
       const response = await api.post(baseUrl, JSON.stringify(payload), {
         headers: {
           'Content-Type': 'text/plain;charset=utf-8'
@@ -282,6 +285,146 @@ export function useCrudProp<T extends BaseEntity>(
       return false
     }
   }
+  // const deleteItem = async (): Promise<boolean> => {
+  //   try {
+  //     const api = useApi()
+
+  //     // 1. Extract the raw configuration variables
+  //     const secretToken = MyConfig.instance.AppConfig.AuthToken
+  //     const baseUrl = MyConfig.instance.AppConfig.DbUrl
+  //     const currentId = item.value[idKey as string]
+
+  //     if (!currentId) {
+  //       console.warn('Cannot delete: No item ID is currently selected.')
+  //       return false
+  //     }
+
+  //     // 2. Build the payload schema your Google Apps Script doPost expects
+  //     const payload = {
+  //       token: secretToken,
+  //       sheet: sheetName,
+  //       action: 'delete',
+  //       id: currentId
+  //     }
+
+  //     console.log('Sending delete request to Google Apps Script:', payload)
+
+  //     // 3. Trigger the network execution via POST
+  //     //const response = await api.post(baseUrl, payload)
+
+  //     const response = await api.post(baseUrl, JSON.stringify(payload), {
+  //       headers: {
+  //         'Content-Type': 'text/plain;charset=utf-8'
+  //       }
+  //     })
+
+  //     // 4. Verify the response status returned by createJsonResponse
+  //     if (response.data && response.data.status === 'success') {
+  //       await Init() // Trigger a visual grid refresh upon success
+  //       return true
+  //     } else {
+  //       // Handles programmatic errors (e.g., ID not found in sheet)
+  //       throw new Error(response.data?.message || 'Unknown server error during deletion.')
+  //     }
+  //   } catch (err) {
+  //     await showError(err)
+  //     return false
+  //   }
+  // }
+  // // ➕ Action 1: Create a brand new record (Insert)
+  // const insertItem = async (): Promise<boolean> => {
+  //   try {
+  //     const api = useApi()
+
+  //     const secretToken = MyConfig.instance.AppConfig.AuthToken
+  //     const baseUrl = MyConfig.instance.AppConfig.DbUrl
+
+  //     // Dynamically discover the strict property layout order straight from the model blueprint
+  //     const blankInstance = new ModelConstructor()
+  //     const itemKeys = Object.keys(blankInstance)
+
+  //     // Maps the user inputs into a flat array matching the model structure perfectly
+  //     // Column A ([0]) is forced to an empty string because the App Script generates the auto-increment ID
+  //     const newRowArray = itemKeys.map((key, index) => {
+  //       if (index === 0) return '' // Column A auto-increment placeholder
+  //       return item.value[key] ?? ''
+  //     })
+
+  //     const payload = {
+  //       token: secretToken,
+  //       sheet: sheetName,
+  //       action: 'insert',
+  //       data: newRowArray
+  //     }
+
+  //     console.log('Sending insert request to Google Apps Script:', payload)
+
+  //     // Using text/plain header trick to bypass CORS checks
+  //     const response = await api.post(baseUrl, JSON.stringify(payload), {
+  //       headers: {
+  //         'Content-Type': 'text/plain;charset=utf-8'
+  //       }
+  //     })
+
+  //     if (response.data && response.data.status === 'success') {
+  //       await Init() // Reload table rows view
+  //       return true
+  //     } else {
+  //       throw new Error(response.data?.message || 'Failed to insert new record.')
+  //     }
+  //   } catch (err) {
+  //     await showError(err)
+  //     return false
+  //   }
+  // }
+
+  // // ✏️ Action 2: Modify an existing record (Update)
+  // const updateItem = async (): Promise<boolean> => {
+  //   try {
+  //     const api = useApi()
+
+  //     const secretToken = MyConfig.instance.AppConfig.AuthToken
+  //     const baseUrl = MyConfig.instance.AppConfig.DbUrl
+  //     const currentId = item.value[idKey as string]
+
+  //     if (!currentId) {
+  //       console.warn('Cannot update: No item ID is currently selected.')
+  //       return false
+  //     }
+
+  //     // Safely structure keys out of the constructor template sequence
+  //     const blankInstance = new ModelConstructor()
+  //     const itemKeys = Object.keys(blankInstance)
+  //     const updatedRowArray = itemKeys.map(key => item.value[key] ?? '')
+
+  //     const payload = {
+  //       token: secretToken,
+  //       sheet: sheetName,
+  //       action: 'update',
+  //       id: currentId,
+  //       data: updatedRowArray
+  //     }
+
+  //     console.log('Sending update request to Google Apps Script:', payload)
+
+  //     // Using text/plain header trick to bypass CORS checks
+  //     const response = await api.post(baseUrl, JSON.stringify(payload), {
+  //       headers: {
+  //         'Content-Type': 'text/plain;charset=utf-8'
+  //       }
+  //     })
+
+  //     if (response.data && response.data.status === 'success') {
+  //       await Init() // Reload grid rows automatically
+  //       return true
+  //     } else {
+  //       throw new Error(response.data?.message || 'Failed to update record.')
+  //     }
+  //   } catch (err) {
+  //     await showError(err)
+  //     return false
+  //   }
+  // }
   return {
     items,
     item,
