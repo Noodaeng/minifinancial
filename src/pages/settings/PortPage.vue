@@ -51,7 +51,6 @@
         </template>
       </q-splitter>
     </div>
-    {{ brokers }}- {{ customers }}
   </q-page>
 </template>
 <script lang="ts">
