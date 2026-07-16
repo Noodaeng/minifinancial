@@ -24,16 +24,16 @@ export const useAuthStore = defineStore('auth', {
         delete api.defaults.headers.common['Authorization']
 
         const secretToken = MyConfig.instance.AppConfig.AuthToken
-        const loginUrl = 'https://minifinancial-worker.apptawee-api.workers.dev/api/login'
-        const privateKey = MyConfig.instance.AppConfig.PrivateKey
+        const loginUrl = MyConfig.instance.AppConfig.DbUrl + '/api/login'
+        //const privateKey = MyConfig.instance.AppConfig.PrivateKey
 
-        const encodeUsername = btoa(payload.username + privateKey)
-        const encodePassword = btoa(payload.password + privateKey)
-
+        // const encodeUsername = btoa(payload.username + privateKey)
+        // const encodePassword = btoa(payload.password + privateKey)
+        console.log('encode user password=>', payload.username, payload.password)
         const sendpayload = {
           token: secretToken,
-          username: encodeUsername,
-          password: encodePassword
+          username: payload.username,
+          password: payload.password
         }
 
         const response = await api.post(loginUrl, JSON.stringify(sendpayload), {
@@ -49,7 +49,7 @@ export const useAuthStore = defineStore('auth', {
           await this.setToken(sessionToken)
 
           const user = {
-            name: data.user?.userName || payload.username || 'Unknown',
+            name: payload.username || 'Unknown',
             role: data.user?.role || 'User',
             exp: null
           }

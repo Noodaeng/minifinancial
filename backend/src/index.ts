@@ -32,57 +32,34 @@ export default {
 
         // Match the secret token configured on your frontend
         const AUTH_TOKEN = 'MiniFinancial_Secret_Token_2026_XYZ'
+        const privateKey = 'finance'
         if (!body.token || body.token !== AUTH_TOKEN) {
           return Response.json(
             {
               status: 'error',
-              message: 'Unauthorized',
-              reason: 'AUTH_TOKEN mismatch'
+              message: 'Unauthorized'
             },
             { status: 401, headers: { 'Access-Control-Allow-Origin': '*' } }
           )
         }
 
-        // Match your frontend's AppConfig.PrivateKey to slice it off securely[cite: 2]
-        const PRIVATE_KEY = 'YOUR_PRIVATE_KEY'
+        // We accept the Base64 strings directly as they were sent by the frontend
+        const usernameBase64 = btoa(body.username + privateKey)
+        const passwordBase64 = btoa(body.password + privateKey)
 
-        const decode = (val: string): string => {
-          try {
-            // Decodes standard Base64[cite: 2]
-            const raw = atob(val)
-
-            // Checks if the decoded string ends with the Private Key and trims it out[cite: 2]
-            if (raw.endsWith(PRIVATE_KEY)) {
-              return raw.slice(0, -PRIVATE_KEY.length)
-            }
-            return raw
-          } catch {
-            throw new Error('Invalid encoding format')
-          }
-        }
-
-        const username = decode(body.username)
-        const password = decode(body.password)
-
-        // 3. Query your D1 Database table
+        // 3. Query your D1 Database table using the Base64 strings directly
         const user = await env.DB.prepare(
           'SELECT userId, userName, name, role FROM users WHERE userName = ? AND password = ?'
         )
-          .bind(username, password)
+          .bind(usernameBase64, passwordBase64)
           .first<UserRow>()
 
-        // 4. Debugging 401 Payload if no user matches
+        // 4. If no user matches
         if (!user) {
           return Response.json(
             {
               status: 'error',
-              message: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง',
-              debug: {
-                processedUsername: username,
-                processedPassword: password,
-                notice:
-                  'If the fields above still contain your private key text at the end, your backend PRIVATE_KEY constant does not match the frontend configuration.'
-              }
+              message: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง'
             },
             { status: 401, headers: { 'Access-Control-Allow-Origin': '*' } }
           )
@@ -115,7 +92,6 @@ export default {
         )
       }
     }
-
     // Default 404 Route
     return new Response('Not Found', { status: 404 })
   }
