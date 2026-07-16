@@ -1,5 +1,5 @@
-export default class Customer {
-  customerId = ''
+export default class Broker {
+  brokerId = ''
   cardId = ''
   name = ''
   email = ''
@@ -8,7 +8,7 @@ export default class Customer {
   lineId = ''
   creditLimit = 0
   isActive = false
-  customerType = 0
+  brokerType = 0
   createBy = ''
   createOn = ''
   remark = ''

@@ -3,17 +3,16 @@
     <q-form ref="myForm" class="q-gutter-md q-mt-sm bg-body text-appText">
       <q-card class="bg-body text-appText col-12 col-md-12">
         <q-icon class="q-ma-xs bg-body text-appText" name="mdi-account-details-outline" size="md" />
-        <div class="text-subtitle1 inline-block q-ml-sm">
-          {{ $t('Customer_Accounts') }}: {{ model?.customerId }}
-        </div>
+
+        <div class="text-subtitle1 inline-block q-ml-sm">{{ portInfo }} : {{ model.portId }}</div>
         <div class="row justify-start items-start">
           <div class="col-12 col-md-3">
             <q-input
               outlined
-              v-model="model.cardId"
-              :label="$t('Card_Id')"
+              v-model="model.description"
+              :label="$t('Port_description')"
               label-color="appLabel"
-              :hint="$t('Card_Id')"
+              :hint="$t('Port_description')"
               :readonly="false"
               :rules="strRule"
               lazy-rules
@@ -24,25 +23,31 @@
             </q-input>
           </div>
           <div class="col-12 col-md-3">
-            <q-input
-              outlined
-              v-model="model.name"
-              :label="$t('Name')"
+            <q-select
+              v-model="model.customerId"
               label-color="appLabel"
-              :hint="$t('Name')"
+              :label="$t('Customer')"
+              :hint="$t('Customer')"
+              :options="custOption"
               :readonly="false"
-              :rules="strRule"
+              :rules="custTypeRule"
               lazy-rules
               dense
-              input-class="text-appText"
+              outlined
+              borderless
+              emit-value
+              map-options
+              options-dense
+              popup-content-class="bg-body text-appText"
               class="q-ma-sm"
             >
-            </q-input>
+            </q-select>
           </div>
+
           <div class="col-12 col-md-3">
             <q-input
               outlined
-              v-model="model.email"
+              v-model="model.portType"
               :label="$t('Email')"
               label-color="appLabel"
               :hint="$t('Email')"
@@ -58,7 +63,7 @@
           <div class="col-12 col-md-3">
             <q-input
               outlined
-              v-model="model.phone"
+              v-model="model.brokerId"
               :label="$t('Phone')"
               label-color="appLabel"
               :hint="$t('Phone')"
@@ -76,7 +81,7 @@
           <div class="col-12 col-md-3">
             <q-input
               outlined
-              v-model="model.address"
+              v-model="model.amount"
               :label="$t('Address')"
               label-color="appLabel"
               :hint="$t('Address')"
@@ -92,7 +97,7 @@
           <div class="col-12 col-md-3">
             <q-input
               outlined
-              v-model="model.lineId"
+              v-model="model.interest"
               :label="$t('Line_Id')"
               label-color="appLabel"
               :hint="$t('Line_Id')"
@@ -108,7 +113,7 @@
           <div class="col-12 col-md-3">
             <q-input
               outlined
-              v-model="model.creditLimit"
+              v-model="model.paymentTerm"
               :label="$t('Credit_limit')"
               label-color="appLabel"
               :hint="$t('Credit_limit')"
@@ -124,7 +129,7 @@
           <div class="col-12 col-md-3">
             <q-input
               outlined
-              v-model="model.createOn"
+              v-model="model.paymentRate"
               :label="$t('Create_on')"
               label-color="appLabel"
               :hint="$t('Create_on')"
@@ -139,30 +144,39 @@
         </div>
         <div class="row justify-start items-start">
           <div class="col-12 col-md-3">
-            <q-select
-              v-model="model.customerType"
-              label-color="appLabel"
-              :label="$t('Customer_category')"
-              :hint="$t('Customer_category')"
-              :options="custOption"
-              :readonly="false"
-              :rules="custTypeRule"
-              lazy-rules
-              dense
-              outlined
-              borderless
-              emit-value
-              map-options
-              options-dense
-              popup-content-class="bg-body text-appText"
-              class="q-ma-sm"
-            >
-            </q-select>
-          </div>
-          <div class="col-12 col-md-6">
             <q-input
               outlined
-              v-model="model.remark"
+              v-model="model.period"
+              :label="$t('Create_on')"
+              label-color="appLabel"
+              :hint="$t('Create_on')"
+              :readonly="true"
+              lazy-rules
+              dense
+              input-class="text-appText"
+              class="q-ma-sm"
+            >
+            </q-input>
+          </div>
+          <div class="col-12 col-md-3">
+            <q-input
+              outlined
+              v-model="model.createBy"
+              :label="$t('Remark')"
+              label-color="appLabel"
+              :hint="$t('Remark')"
+              :readonly="false"
+              lazy-rules
+              dense
+              input-class="text-appText"
+              class="q-ma-sm"
+            >
+            </q-input>
+          </div>
+          <div class="col-12 col-md-3">
+            <q-input
+              outlined
+              v-model="model.createOn"
               :label="$t('Remark')"
               label-color="appLabel"
               :hint="$t('Remark')"
@@ -190,14 +204,15 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import { modelConverter, enumToQSelectOptions } from '../modules/appUtils'
-import Customer from '../models/customer'
+import { defineComponent, ref, PropType } from 'vue'
+import { modelConverter, enumToString } from '../modules/appUtils'
+import Port from '../models/port'
 import { useValidationRules } from '../hooks/useValidationRules'
 import { i18n } from '../i18n'
-import { ECreditCustomerType } from '../types/myEnums'
+import { EInvestPortType } from '../types/myEnums'
+import { QSelectOption } from '../types/myTypes'
 export default defineComponent({
-  name: 'CustomerComp',
+  name: 'PortComp',
   components: {},
   data() {
     return {}
@@ -207,6 +222,15 @@ export default defineComponent({
     info: {
       type: Object,
       default: () => ({})
+    },
+    portType: {
+      // Highlighted change: added String alongside Number
+      type: [Number, String] as PropType<string | number | EInvestPortType>,
+      default: EInvestPortType.CashAndDeposits
+    },
+    custOption: {
+      type: Array<QSelectOption>,
+      default: []
     }
   },
   setup(props, { emit }) {
@@ -226,10 +250,10 @@ export default defineComponent({
     const emailRule = rules.email()
     const creditRule = rules.floatRange(0, 1000000)
     const custTypeRule = rules.enumSelect()
-
+    //const portInfo = computed(() => enumToString(EInvestPortType, Number(props.portType)))
     return {
-      model: modelConverter<Customer>(props.info) ?? new Customer(),
-      custOption: enumToQSelectOptions(ECreditCustomerType),
+      model: modelConverter<Port>(props.info) ?? new Port(),
+      portInfo: enumToString(EInvestPortType, Number(props.portType)),
       strRule,
       emailRule,
       creditRule,

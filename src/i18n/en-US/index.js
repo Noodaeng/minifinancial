@@ -12,7 +12,9 @@ export default {
   failed: 'Action failed',
   success: 'Action was successful',
   //+++++++Customer+++++++++++++++++
+  Customer: 'Customer',
   Customers: 'Customers',
+  Customers_and_Brokers: 'Customers and Brokers',
   Customer_Accounts: 'Customer Accounts',
   Card_Id: 'Card Id',
   Name: 'Name',
@@ -22,5 +24,24 @@ export default {
   Line_Id: 'Line Id',
   Address: 'Address',
   Credit_limit: 'Credit limit',
-  Create_on: 'Create on'
+  Create_on: 'Create on',
+  Customer_category: 'Customer category',
+  Remark: 'Remark',
+  SuperPrime: 'Super-prime', // ลูกค้าชั้นพิเศษ
+  Prime: 'Prime', // ลูกค้าชั้นดี
+  NearPrime: 'Near-prime', // ลูกค้ากึ่งดี
+  Subprime: 'Subprime', // ลูกค้าชั้นเลว
+  Customer_Id: 'Customer Id',
+  Customer_Name: 'Customer Name',
+  //++++++Broker++++++++
+  Broker_Accounts: 'Broker Accounts',
+  //+++++++++Port investment+++++++++++
+  Ports: 'Ports',
+  CashAndDeposits: 'Cash And Deposits',
+  LoansReceivable: 'Loans Receivable',
+  Securities: 'Securities',
+  EquityHoldings: 'Equity Holdings',
+  OtherInvestments: 'Other investments',
+  Port_Investments: 'Port investments',
+  Port_description: 'Port description'
 }

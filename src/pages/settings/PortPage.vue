@@ -34,11 +34,12 @@
         <template v-slot:after>
           <div class="q-pa-md">
             <q-card class="bg-body text-appText">
-              <<<<<<< HEAD
-              <CustomerComp :info="customer"></CustomerComp>
-              =======
-              <CustomerComp ref="myChild" :info="customer"></CustomerComp>
-              >>>>>>> main
+              <PortComp
+                ref="myChild"
+                :custOption="custOption"
+                :portType="portType"
+                :info="port"
+              ></PortComp>
             </q-card>
           </div>
           <div class="row justify-end items-start">
@@ -50,71 +51,94 @@
         </template>
       </q-splitter>
     </div>
-    {{ state }}- {{ customer }}
   </q-page>
 </template>
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue'
-import CustomerComp from '../../components/CustomerComp.vue'
+import { defineComponent, ref, onMounted, PropType, watch, computed } from 'vue'
+import PortComp from '../../components/PortComp.vue'
 import ListComp from '../../components/utils/ListComp.vue'
 import StateCtrlBtn from '../../components/utils/StateCtrlBtn.vue'
 import SaveCancelBtn from '../../components/utils/SaveCancelBtn.vue'
-import { useCustomerProp } from '../../hooks/useCustomerProp'
+import { usePortProp } from '../../hooks/usePortProp.js'
+import { EInvestPortType } from '../../types/myEnums.js'
+
 export default defineComponent({
-  name: 'CustomerPage',
+  name: 'PortPage',
   components: {
-    CustomerComp,
+    PortComp,
     ListComp,
     StateCtrlBtn,
     SaveCancelBtn
+  },
+  props: {
+    // 1. This matches the ':portType' param string from your router file
+    portType: {
+      type: [String, Number] as PropType<string | number | EInvestPortType>,
+      default: EInvestPortType.CashAndDeposits
+    }
   },
   data() {
     return {
       childIcon: 'mdi-widgets-outline'
     }
   },
-  setup(_, { emit }) {
-<<<<<<< HEAD
-=======
-    const myChild = ref<InstanceType<typeof CustomerComp>>()
-    const useCustomer = useCustomerProp()
+  // 2. Accept 'props' here so we can access them dynamically
+  setup(props, { emit }) {
+    const myChild = ref<InstanceType<typeof PortComp>>()
+
+    // 3. Convert the value to a Number if your enum expects numbers
+
+    // 4. Feed the route param into your hook instead of hardcoding it!
+    const usePort = usePortProp()
+
     onMounted(async () => {
-      useCustomer.clearValidate.value = () => {
+      await usePort.initOtherList()
+      await init()
+    })
+    watch(
+      () => props.portType,
+      async () => {
+        await init()
+      }
+    )
+    const init = async () => {
+      usePort.portType.value = props.portType
+
+      usePort.clearValidate.value = () => {
         myChild.value?.clearValidation()
       }
-      useCustomer.getValidate.value = async (): Promise<boolean> => {
+      usePort.getValidate.value = async (): Promise<boolean> => {
         return (await myChild.value?.getValidate()) ?? false
       }
-      await useCustomer.Init()
-    })
+      await usePort.Init()
+    }
+
     const save = async () => {
       const valid = await myChild.value?.getValidate()
-
-      if (!valid) {
-        return
-      }
+      if (!valid) return
     }
->>>>>>> main
+    const custOption = computed(() => usePort.customerToQSelectOptions(usePort.customers.value))
     return {
-      splitterModel: ref(35), // start at 20%
-      listColumns: useCustomer.listColumns,
-      filteredRows: useCustomer.filteredRows,
-      customer: useCustomer.item,
-      customers: useCustomer.items,
-      onRowClick: useCustomer.onRowClick,
-      onFilter: useCustomer.onFilter,
-      onCreate: useCustomer.onCreate,
-      onDelete: useCustomer.onDelete,
-      onSave: useCustomer.onSave,
-      canDelete: useCustomer.canDelete,
-      canCreate: useCustomer.canCreate,
-      canSave: useCustomer.canSave,
-      state: useCustomer.state,
+      splitterModel: ref(35),
+      custOption,
+      listColumns: usePort.listColumns,
+      filteredRows: usePort.filteredRows,
+      port: usePort.item,
+      ports: usePort.items,
+      customers: usePort.customers,
+      brokers: usePort.brokers,
+      onRowClick: usePort.onRowClick,
+      onFilter: usePort.onFilter,
+      onCreate: usePort.onCreate,
+      onDelete: usePort.onDelete,
+      onSave: usePort.onSave,
+      canDelete: usePort.canDelete,
+      canCreate: usePort.canCreate,
+      canSave: usePort.canSave,
+      state: usePort.state,
       myChild
->>>>>>> main
     }
-  },
-  methods: {}
+  }
 })
 </script>
 <style lang="sass" scoped></style>

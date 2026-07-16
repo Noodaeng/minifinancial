@@ -4,7 +4,7 @@
       <q-card class="bg-body text-appText col-12 col-md-12">
         <q-icon class="q-ma-xs bg-body text-appText" name="mdi-account-details-outline" size="md" />
         <div class="text-subtitle1 inline-block q-ml-sm">
-          {{ $t('Customer_Accounts') }}: {{ model?.customerId }}
+          {{ $t('Broker_Accounts') }}: {{ model?.brokerId }}
         </div>
         <div class="row justify-start items-start">
           <div class="col-12 col-md-3">
@@ -140,7 +140,7 @@
         <div class="row justify-start items-start">
           <div class="col-12 col-md-3">
             <q-select
-              v-model="model.customerType"
+              v-model="model.brokerType"
               label-color="appLabel"
               :label="$t('Customer_category')"
               :hint="$t('Customer_category')"
@@ -192,12 +192,12 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { modelConverter, enumToQSelectOptions } from '../modules/appUtils'
-import Customer from '../models/customer'
+import Broker from '../models/broker'
 import { useValidationRules } from '../hooks/useValidationRules'
 import { i18n } from '../i18n'
 import { ECreditCustomerType } from '../types/myEnums'
 export default defineComponent({
-  name: 'CustomerComp',
+  name: 'BrokerComp',
   components: {},
   data() {
     return {}
@@ -228,7 +228,7 @@ export default defineComponent({
     const custTypeRule = rules.enumSelect()
 
     return {
-      model: modelConverter<Customer>(props.info) ?? new Customer(),
+      model: modelConverter<Broker>(props.info) ?? new Broker(),
       custOption: enumToQSelectOptions(ECreditCustomerType),
       strRule,
       emailRule,

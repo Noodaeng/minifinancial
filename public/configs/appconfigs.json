@@ -2,11 +2,8 @@
   "ClientId": 1,
   "ScreenIndex": 1,
   "Theme": 1,
-<<<<<<< HEAD
-  "DbUrl": "https://script.google.com/macros/s/AKfycbz5GpF7IeXAqcLSNAqtlAXJTw_9s6_c_g8Nu-SZKumHNPqYacMdqtPJDFS5T8DtCgsneg/exec",
-=======
-  "DbUrl": "https://script.google.com/macros/s/AKfycbxXMSnv9DdAaCJvLPNel31CZS4IyPJdfp6nejKTuMUpNGwj5qLV5SE4dLwxCFfb-PNBpg/exec",
->>>>>>> main
+  "DbUrl": "https://script.google.com/macros/s/AKfycbyQ2z_Hu9VmTriwf78l0e-OjlSrqdv6Ppld5OYxuKNnIW-sEm1cHPUK0wQCj2ebVriT-A/exec",
   "AuthToken": "MiniFinancial_Secret_Token_2026_XYZ",
-  "PrivateKey": "finance"
+  "PrivateKey": "finance",
+  "cloudApi": "https://apptawee-api.workers.dev"
 }

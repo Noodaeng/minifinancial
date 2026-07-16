@@ -5,9 +5,7 @@
         <q-item-section avatar>
           <q-avatar :icon="icon" />
         </q-item-section>
-        <q-item-section @click="$router.replace(link)">{{
-          $t(title)
-        }}</q-item-section>
+        <q-item-section @click="$router.replace(link)">{{ $t(title) }}</q-item-section>
       </q-item>
     </div>
     <div v-else>
@@ -23,15 +21,12 @@
           :header-inset-level="level"
           default-closed
         >
-          <EssentialLink v-for="child in children" :key="child" v-bind="child">
-          </EssentialLink>
+          <EssentialLink v-for="child in children" :key="child" v-bind="child"> </EssentialLink>
         </q-expansion-item>
       </div>
       <div v-else>
         <q-item clickable v-ripple :inset-level="level">
-          <q-item-section @click="$router.replace(link)">{{
-            $t(title)
-          }}</q-item-section>
+          <q-item-section @click="$router.replace(link)">{{ $t(title) }}</q-item-section>
         </q-item>
       </div>
     </div>
@@ -44,32 +39,32 @@ export default {
   props: {
     title: {
       type: String,
-      required: true,
+      required: true
     },
 
     caption: {
       type: String,
-      default: '',
+      default: ''
     },
 
     link: {
       type: String,
-      default: '#',
+      default: '#'
     },
 
     icon: {
       type: String,
-      default: '',
+      default: ''
     },
 
     level: {
       type: Number,
-      default: 0,
+      default: 0
     },
     children: {
       type: Object,
-      default: null,
-    },
-  },
-};
+      default: null
+    }
+  }
+}
 </script>

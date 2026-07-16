@@ -1,7 +1,8 @@
 import NotifyMsg from '../models/notifyMsg'
 import { i18n } from '../i18n'
 import { EAlarmLevel } from '../types/myEnums'
-import { Notify } from 'quasar'
+import { FuncBoolAsync, QSelectOption } from '../types/myTypes'
+import { Notify, QVueGlobals } from 'quasar'
 import MyConfig from './myConfig'
 
 export const showError = async (err: any) => {
@@ -140,4 +141,71 @@ export const modelsConverter = <T>(models: object): T[] | undefined => {
     console.error('Error', err)
     return undefined
   }
+}
+
+export const enumToQSelectOptions = (myEnum: Record<string, string | number>): QSelectOption[] => {
+  const { t } = i18n.global
+  return Object.keys(myEnum)
+    .filter(key => isNaN(Number(key)))
+    .map(key => ({
+      // Using the non-null assertion operator (!) tells TypeScript
+      // we guarantee this key exists on the enum object.
+      value: myEnum[key]!,
+      label: t(key)
+    }))
+}
+export const enumToString = (myEnum: Record<string, number | string>, enumKey: number): string => {
+  const { t } = i18n.global
+  for (const key in myEnum) {
+    if (Number(myEnum[key]) === enumKey) {
+      return t(String(key))
+    }
+  }
+  return '-'
+}
+export const confirmDelete = ($q: QVueGlobals, info: string, delFunc: FuncBoolAsync) => {
+  const { t } = i18n.global
+
+  // Change from Dialog.create to $q.dialog
+  $q.dialog({
+    title: t('Confirm'),
+    message: t('Would_you_like_to_delete') + info + '?',
+    persistent: true,
+    class: 'bg-body text-appText',
+    cancel: {
+      label: t('Cancel'),
+      color: 'body'
+    },
+    ok: {
+      label: t('OK'),
+      color: 'body'
+    }
+  })
+    .onOk(async () => {
+      try {
+        // Change from Loading.show to $q.loading.show
+        $q.loading.show({ message: 'Deleting...' })
+
+        if (delFunc) {
+          await delFunc()
+        }
+
+        // Change from Notify.create to $q.notify
+        $q.notify({
+          type: 'positive',
+          message: 'Item deleted successfully.'
+        })
+      } catch (err) {
+        $q.notify({
+          type: 'negative',
+          message: `Failed to delete item. ${err instanceof Error ? err.message : ''}`
+        })
+      } finally {
+        // Change from Loading.hide to $q.loading.hide
+        $q.loading.hide()
+      }
+    })
+    .onCancel(() => {
+      console.log('Deletion cancelled by user.')
+    })
 }

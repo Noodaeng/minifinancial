@@ -93,13 +93,12 @@ function doGet(e) {
 // =========================================================================
 function doPost(e) {
   try {
-    // 💡 แก้ไขจุดที่ 1: ตรวจสอบและดึงข้อมูล jsonPayload จาก e.postData.contents
+    // ตรวจสอบและดึงข้อมูล jsonPayload จาก e.postData.contents
     var jsonPayload = {}
     if (e.postData && e.postData.contents) {
       try {
         jsonPayload = JSON.parse(e.postData.contents)
       } catch (ex) {
-        // หากฝั่ง Client ไม่ได้ส่งเป็น JSON หรือรูปแบบผิด
         return createJsonResponse({ status: 'error', message: 'รูปแบบ JSON Payload ไม่ถูกต้อง' })
       }
     }
@@ -189,9 +188,10 @@ function doPost(e) {
       return createJsonResponse({ status: 'error', message: 'Username หรือ Password ไม่ถูกต้อง' })
     }
 
-    // ➕ 2.2 คำสั่งเพิ่มข้อมูล (Insert) พร้อมสร้าง Auto-Increment ID
+    // ➕ 2.2 คำสั่งเพิ่มข้อมูล (Insert) พร้อมตรวจสอบคอลัมน์ว่าง/ข้อมูลไม่ตรงล็อก
     if (action === 'insert') {
       var rowData = jsonPayload.data
+
       if (!rowData || !Array.isArray(rowData)) {
         return createJsonResponse({
           status: 'error',
@@ -199,11 +199,25 @@ function doPost(e) {
         })
       }
 
-      // 💡 กำหนด Prefix ตามชื่อ Sheet (สามารถเพิ่มเงื่อนไขต่อได้ตามต้องการ)
-      var prefix = 'CUST-'
-      if (sheetName === 'users') {
-        prefix = 'USER-'
+      // ตรวจสอบและนับเฉพาะหัวตารางที่ใช้งานได้จริง (ตัดช่องที่เป็นค่าว่างออก)
+      var headers = sheet.getDataRange().getValues()[0]
+      var validHeaderCount = 0
+      for (var h = 0; h < headers.length; h++) {
+        if (headers[h] !== '' && headers[h] !== null) {
+          validHeaderCount++
+        } else {
+          break // ถ้าเจอหัวตารางที่เป็นค่าว่าง ระบบจะตัดแถวข้อมูลตรงนี้ทันทีเพื่อความปลอดภัย
+        }
       }
+
+      // 💡 กำหนด Prefix ตามชื่อ Sheet
+      var prefix = 'CUS-'
+      if (sheetName === 'users') prefix = 'USR-'
+      else if (sheetName === 'customers') prefix = 'CUS-'
+      else if (sheetName === 'ports') prefix = 'POT-'
+      else if (sheetName === 'sessions') prefix = 'SES-'
+      else if (sheetName === 'transactions') prefix = 'TRN-'
+      else if (sheetName === 'brokers') prefix = 'BRK-'
 
       // 🔍 เรียกใช้ฟังก์ชันส่วนกลางเพื่อดึง ID ล่าสุดมาบวกเพิ่มอัตโนมัติ
       var newId = generateNextId(sheetName, prefix)
@@ -211,10 +225,13 @@ function doPost(e) {
       // นำ ID ที่สร้างเสร็จแล้วไปใส่ไว้ในตำแหน่งแรกสุด (Column A) ของตาราง
       rowData[0] = newId
 
-      sheet.appendRow(rowData)
+      // 🛑 ตัดข้อมูลส่วนเกินออก บังคับกรอกลงเฉพาะเซลล์ที่มีหัวตารางกำกับจริงเท่านั้น
+      var cleanedRowData = rowData.slice(0, validHeaderCount)
+
+      sheet.appendRow(cleanedRowData)
       return createJsonResponse({
         status: 'success',
-        message: 'เพิ่มข้อมูลสำเร็จ',
+        message: 'เพิ่มข้อมูลสำเร็จ (ระบบคัดกรองและตัดข้อมูลที่ไม่มีหัวตารางออกแล้ว)',
         generated_id: newId
       })
     }
@@ -240,18 +257,46 @@ function doPost(e) {
         return createJsonResponse({ status: 'error', message: 'ไม่พบข้อมูล ID ที่ต้องการจัดการ' })
       }
 
+      // ✏️ ระบบแก้ไขข้อมูล (Update) แบบปลอดภัยสูงสุด
       if (action === 'update') {
         var updatedData = jsonPayload.data
-        if (!updatedData || !Array.isArray(updatedData)) {
+
+        // บังคับให้ส่งมาเป็นแบบ Object { หัวตาราง: ค่าใหม่ } เพื่อความแม่นยำในการตรวจจับ Match คอลัมน์
+        if (!updatedData || typeof updatedData !== 'object' || Array.isArray(updatedData)) {
           return createJsonResponse({
             status: 'error',
-            message: "ข้อมูลแก้ไขต้องเป็น Array ใน field 'data'"
+            message: "ข้อมูลแก้ไขต้องเป็น Object ใน field 'data' เช่น { 'name': 'John' }"
           })
         }
-        var range = sheet.getRange(targetRowIndex, 1, 1, updatedData.length)
-        range.setValues([updatedData])
-        return createJsonResponse({ status: 'success', message: 'แก้ไขข้อมูลสำเร็จ' })
-      } else if (action === 'delete') {
+
+        var headers = data[0]
+
+        // วนลูปตรวจสอบ Key-Value ทุกตัวที่ถูกส่งมาจาก UI
+        for (var key in updatedData) {
+          if (updatedData.hasOwnProperty(key)) {
+            var colIndex = headers.indexOf(key)
+
+            // 🛑 เงื่อนไขความปลอดภัย:
+            // 1. ต้อง Match เจอกับหัวตาราง (colIndex !== -1)
+            // 2. หัวตารางนั้นต้องมีชื่อตัวอักษร ไม่เป็นค่าว่างหรือ null
+            // 3. ห้ามแก้ไขคอลัมน์แรก (colIndex > 0) เพื่อป้องกันการเซ็ตค่าทับ ID เดิม
+            if (colIndex > 0 && headers[colIndex] !== '' && headers[colIndex] !== null) {
+              var targetCol = colIndex + 1
+              var newValue = updatedData[key]
+
+              // อัปเดตเฉพาะเซลล์ที่ผ่านเงื่อนไขความปลอดภัยและ Match ตรงกันเท่านั้น
+              sheet.getRange(targetRowIndex, targetCol).setValue(newValue)
+            }
+          }
+        }
+        return createJsonResponse({
+          status: 'success',
+          message: 'แก้ไขข้อมูลสำเร็จ (ระบบเพิกเฉยต่อคอลัมน์ที่ไม่ปลอดภัยหรือไม่มีหัวตาราง)'
+        })
+      }
+
+      // ❌ ระบบลบข้อมูล (Delete)
+      else if (action === 'delete') {
         sheet.deleteRow(targetRowIndex)
         return createJsonResponse({ status: 'success', message: 'ลบข้อมูลสำเร็จ' })
       }
@@ -282,7 +327,7 @@ function createJsonResponse(output) {
 >>>>>>> main
  */
 function generateNextId(sheetName, prefix) {
-  prefix = prefix || 'CUST-'
+  prefix = prefix || 'CUS-'
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName)
 <<<<<<< HEAD
   var nextId = prefix + '0001' // ค่าเริ่มต้นถ้าแผ่นงานว่างเปล่า
@@ -308,7 +353,7 @@ function generateNextId(sheetName, prefix) {
   var yy = String(today.getFullYear()).slice(-2)
   var mm = String(today.getMonth() + 1).padStart(2, '0')
   var dd = String(today.getDate()).padStart(2, '0')
-  var dateStr = yy + mm + dd // ผลลัพธ์ เช่น "260710" (ปี 2026 เดือน 07 วันที่ 10)
+  var dateStr = yy + mm + dd // ผลลัพธ์ เช่น "260713"
 
   // ค่าเริ่มต้นสำหรับวันใหม่
   var defaultId = prefix + dateStr + '0001'
@@ -320,19 +365,22 @@ function generateNextId(sheetName, prefix) {
     // 2. ดึง ID ล่าสุดจากแถวท้ายสุด คอลัมน์แรก (A)
     var lastIdStr = sheet.getRange(lastRow, 1).getValue().toString()
 
-    // ตัดส่วน Prefix ออกเพื่อให้เหลือแค่ YYMMDDXXXX
-    var cleanIdStr = lastIdStr.replace(prefix, '')
+    // ค้นหาตำแหน่งที่วันที่ (dateStr) เริ่มต้นขึ้น เพื่อความแม่นยำ ไม่ว่า Prefix จะยาวเท่าไหร่ก็ตาม
+    var dateIndex = lastIdStr.indexOf(dateStr)
 
-    // แยกส่วนวันที่ และ เลขวิ่งออกจากกัน
-    var lastIdDate = cleanIdStr.substring(0, 6) // ส่วน YYMMDD ของ ID ล่าสุด
-    var lastIdNumStr = cleanIdStr.substring(6) // ส่วน XXXX ของ ID ล่าสุด
-    var lastIdNum = parseInt(lastIdNumStr, 10)
+    if (dateIndex !== -1) {
+      // ตัดสตริงเอาเฉพาะพาร์ท "วันที่ + เลขวิ่ง" โดยเริ่มจากจุดที่เจอ dateStr
+      var cleanIdStr = lastIdStr.substring(dateIndex)
 
-    // 3. ตรวจสอบว่า ID ล่าสุดตรงกับวันที่ปัจจุบันหรือไม่
-    if (lastIdDate === dateStr && !isNaN(lastIdNum)) {
-      // เป็นวันเดียวกัน -> เพิ่มเลขวิ่งขึ้น 1 ค่า และเติมศูนย์ให้ครบ 4 หลัก
-      var nextNumStr = String(lastIdNum + 1).padStart(4, '0')
-      return prefix + dateStr + nextNumStr
+      var lastIdDate = cleanIdStr.substring(0, 6) // ส่วน YYMMDD ของ ID ล่าสุด
+      var lastIdNumStr = cleanIdStr.substring(6) // ส่วน XXXX ของ ID ล่าสุด
+      var lastIdNum = parseInt(lastIdNumStr, 10)
+
+      // 3. ตรวจสอบความถูกต้องและเพิ่มเลขวิ่ง
+      if (lastIdDate === dateStr && !isNaN(lastIdNum)) {
+        var nextNumStr = String(lastIdNum + 1).padStart(4, '0')
+        return prefix + dateStr + nextNumStr
+      }
     }
   }
 

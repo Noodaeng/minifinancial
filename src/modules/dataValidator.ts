@@ -18,7 +18,7 @@ export const numberValidate = (val: string): boolean => {
   return typeof val !== 'undefined' && !isNaN(Number(val))
 }
 export const enumSelectValidate = (val: string): boolean => {
-  return typeof val !== 'undefined' && isInt(val.toString())
+  return typeof val !== 'undefined' && (isInt(val.toString()) || !isEmpty(val.toString()))
 }
 
 export const intValidate = (val: string): boolean => {

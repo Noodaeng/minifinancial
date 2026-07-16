@@ -29,8 +29,9 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, PropType } from 'vue'
 import { QTableColumn } from 'quasar'
+import PortDto from '../../models/portDto'
 
 export default defineComponent({
   name: 'ListComp',
@@ -40,11 +41,12 @@ export default defineComponent({
   props: {
     rows: {
       type: Array<any>,
-      required: true
+      default: []
     },
+
     columns: {
       type: Array<QTableColumn>,
-      required: true
+      default: []
     }
   },
   setup() {

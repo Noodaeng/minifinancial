@@ -1,16 +1,16 @@
 import { ref, computed } from 'vue' // 1. Bring in Vue's reactivity tools
-import Customer from '../models/customer'
+import Broker from '../models/broker'
 import { useCrudProp } from './useCrudProp'
 
-export function useCustomerProp() {
+export function useBrokerProp() {
   // Destructure what you need from the generic composable
-  const crud = useCrudProp<Customer>('customerId', 'customers', Customer, t => [
+  const crud = useCrudProp<Broker>('brokerId', 'brokers', Broker, t => [
     {
-      name: 'customerId',
+      name: 'brokerId',
       required: true,
       label: t('Id'),
       align: 'left',
-      field: 'customerId',
+      field: 'brokerId',
       sortable: true
     },
     {
@@ -36,13 +36,13 @@ export function useCustomerProp() {
 
     const lowerFilter = filter.value.toLowerCase()
 
-    return crud.items.value.filter((customer: Customer) => {
+    return crud.items.value.filter((broker: Broker) => {
       // You now have explicit autocomplete & strict typing!
       // You can filter by specific properties instead of blanket Object.values:
       return (
-        String(customer.customerId).toLowerCase().includes(lowerFilter) ||
-        String(customer.cardId).toLowerCase().includes(lowerFilter) ||
-        String(customer.name).toLowerCase().includes(lowerFilter)
+        String(broker.brokerId).toLowerCase().includes(lowerFilter) ||
+        String(broker.cardId).toLowerCase().includes(lowerFilter) ||
+        String(broker.name).toLowerCase().includes(lowerFilter)
       )
     })
   })

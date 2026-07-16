@@ -34,11 +34,7 @@
         <template v-slot:after>
           <div class="q-pa-md">
             <q-card class="bg-body text-appText">
-              <<<<<<< HEAD
-              <CustomerComp :info="customer"></CustomerComp>
-              =======
-              <CustomerComp ref="myChild" :info="customer"></CustomerComp>
-              >>>>>>> main
+              <BrokerComp ref="myChild" :info="broker"></BrokerComp>
             </q-card>
           </div>
           <div class="row justify-end items-start">
@@ -50,20 +46,20 @@
         </template>
       </q-splitter>
     </div>
-    {{ state }}- {{ customer }}
+    {{ state }}- {{ broker }}
   </q-page>
 </template>
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue'
-import CustomerComp from '../../components/CustomerComp.vue'
+import BrokerComp from '../../components/BrokerComp.vue'
 import ListComp from '../../components/utils/ListComp.vue'
 import StateCtrlBtn from '../../components/utils/StateCtrlBtn.vue'
 import SaveCancelBtn from '../../components/utils/SaveCancelBtn.vue'
-import { useCustomerProp } from '../../hooks/useCustomerProp'
+import { useBrokerProp } from '../../hooks/useBrokerProp'
 export default defineComponent({
-  name: 'CustomerPage',
+  name: 'BrokerPage',
   components: {
-    CustomerComp,
+    BrokerComp,
     ListComp,
     StateCtrlBtn,
     SaveCancelBtn
@@ -74,18 +70,16 @@ export default defineComponent({
     }
   },
   setup(_, { emit }) {
-<<<<<<< HEAD
-=======
-    const myChild = ref<InstanceType<typeof CustomerComp>>()
-    const useCustomer = useCustomerProp()
+    const myChild = ref<InstanceType<typeof BrokerComp>>()
+    const useBroker = useBrokerProp()
     onMounted(async () => {
-      useCustomer.clearValidate.value = () => {
+      useBroker.clearValidate.value = () => {
         myChild.value?.clearValidation()
       }
-      useCustomer.getValidate.value = async (): Promise<boolean> => {
+      useBroker.getValidate.value = async (): Promise<boolean> => {
         return (await myChild.value?.getValidate()) ?? false
       }
-      await useCustomer.Init()
+      await useBroker.Init()
     })
     const save = async () => {
       const valid = await myChild.value?.getValidate()
@@ -94,24 +88,22 @@ export default defineComponent({
         return
       }
     }
->>>>>>> main
     return {
       splitterModel: ref(35), // start at 20%
-      listColumns: useCustomer.listColumns,
-      filteredRows: useCustomer.filteredRows,
-      customer: useCustomer.item,
-      customers: useCustomer.items,
-      onRowClick: useCustomer.onRowClick,
-      onFilter: useCustomer.onFilter,
-      onCreate: useCustomer.onCreate,
-      onDelete: useCustomer.onDelete,
-      onSave: useCustomer.onSave,
-      canDelete: useCustomer.canDelete,
-      canCreate: useCustomer.canCreate,
-      canSave: useCustomer.canSave,
-      state: useCustomer.state,
+      listColumns: useBroker.listColumns,
+      filteredRows: useBroker.filteredRows,
+      broker: useBroker.item,
+      brokers: useBroker.items,
+      onRowClick: useBroker.onRowClick,
+      onFilter: useBroker.onFilter,
+      onCreate: useBroker.onCreate,
+      onDelete: useBroker.onDelete,
+      onSave: useBroker.onSave,
+      canDelete: useBroker.canDelete,
+      canCreate: useBroker.canCreate,
+      canSave: useBroker.canSave,
+      state: useBroker.state,
       myChild
->>>>>>> main
     }
   },
   methods: {}
