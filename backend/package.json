@@ -8,5 +8,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260716.1",
+    "typescript": "^7.0.2",
+    "wrangler": "^4.111.0"
   }
 }
