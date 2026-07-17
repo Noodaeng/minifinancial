@@ -34,11 +34,7 @@
         <template v-slot:after>
           <div class="q-pa-md">
             <q-card class="bg-body text-appText">
-              <<<<<<< HEAD
-              <CustomerComp :info="customer"></CustomerComp>
-              =======
               <CustomerComp ref="myChild" :info="customer"></CustomerComp>
-              >>>>>>> main
             </q-card>
           </div>
           <div class="row justify-end items-start">
@@ -74,8 +70,6 @@ export default defineComponent({
     }
   },
   setup(_, { emit }) {
-<<<<<<< HEAD
-=======
     const myChild = ref<InstanceType<typeof CustomerComp>>()
     const useCustomer = useCustomerProp()
     onMounted(async () => {
@@ -94,7 +88,6 @@ export default defineComponent({
         return
       }
     }
->>>>>>> main
     return {
       splitterModel: ref(35), // start at 20%
       listColumns: useCustomer.listColumns,
@@ -111,7 +104,6 @@ export default defineComponent({
       canSave: useCustomer.canSave,
       state: useCustomer.state,
       myChild
->>>>>>> main
     }
   },
   methods: {}
