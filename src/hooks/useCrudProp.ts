@@ -8,22 +8,20 @@ import { Action, FuncBoolAsync, ActionSingle } from '../types/myTypes'
 import { useDataState } from './useDataState'
 import { EDataState } from '@/types/myEnums'
 
-// Define a structural constraint for the generic type T.
-// We guarantee T has an identifier field and can be instantiated anew.
 interface BaseEntity {
   [key: string]: any
 }
 
 export function useCrudProp<T extends BaseEntity>(
   idKey: keyof T,
-  sheetName: string,
+  tableName: string, // Changed from sheetName to tableName
   ModelConstructor: new () => T,
   columnsConfig: (t: (key: string) => string) => QTableColumn[]
 ) {
   const $q = useQuasar()
   const { t } = i18n.global
 
-  const items = ref<T[]>([]) as any // Explicit casting for safety
+  const items = ref<T[]>([]) as any
   const item = ref<T>(new ModelConstructor())
   const clearValidate = ref<Action | undefined>(undefined)
   const justSave = ref(false)
@@ -34,11 +32,9 @@ export function useCrudProp<T extends BaseEntity>(
   })
   const dataState = useDataState()
 
-  // Watch for deep object mutations
   watch(
     () => ({ ...item.value }),
     async (newVal, oldVal) => {
-      // Access the identity key generically
       if (newVal[idKey as string] !== oldVal[idKey as string]) {
         if (clearValidate.value) {
           clearValidate.value()
@@ -67,7 +63,6 @@ export function useCrudProp<T extends BaseEntity>(
         clearValidate.value()
       }
 
-      // Fixed: Properly check and invoke the assignInit ref
       if (assignInit.value && items.value && items.value.length > 0) {
         assignInit.value(items.value)
         dataState.stateCtrl(false, true, false, false)
@@ -79,7 +74,6 @@ export function useCrudProp<T extends BaseEntity>(
       await showError(err)
     }
   }
-  // +++++++ Utils +++++++++++++++++++++++
 
   // +++++++ Event handling +++++++++++++++++
   const onRowClick = (row: any) => {
@@ -100,7 +94,6 @@ export function useCrudProp<T extends BaseEntity>(
   }
 
   const onDelete = () => {
-    // 💡 Removed the C# style queueMicrotask unless explicitly needed for tick adjustments
     if (item.value && item.value[idKey as string] !== '') {
       confirmDelete($q, String(item.value[idKey as string]), deleteItem)
     }
@@ -110,13 +103,12 @@ export function useCrudProp<T extends BaseEntity>(
     if (!item.value) return
 
     let success = false
-
-    if (dataState.state.value === EDataState.ValidEdit) {
-      // 💡 Execute our freshly built generic update function
-      success = await updateItem()
-    } else if (dataState.state.value === EDataState.ValidNew) {
-      // 💡 Placeholder for your insert logic (uses similar layout configuration structural payload)
-      success = await insertItem()
+    if (
+      dataState.state.value === EDataState.ValidEdit ||
+      dataState.state.value === EDataState.ValidNew
+    ) {
+      // Cloudflare Worker handles both via post-insertorupdate
+      success = await saveItem()
     }
 
     if (success) {
@@ -125,29 +117,39 @@ export function useCrudProp<T extends BaseEntity>(
   }
 
   // +++++++ Call Api +++++++++++++++++++++++
-  const getBaseUrl = () => {
+  const getApiContext = (operation: string) => {
     const secretToken = MyConfig.instance.AppConfig.AuthToken
-    const baseUrl = MyConfig.instance.AppConfig.DbUrl
-    return `${baseUrl}?token=${encodeURIComponent(secretToken)}&sheet=${sheetName}`
+    const baseUrl = MyConfig.instance.AppConfig.DbUrl // e.g. "https://your-worker.workers.dev"
+
+    return {
+      url: `${baseUrl}/api/crud/${operation}`,
+      token: secretToken
+    }
   }
 
+  // 🔍 Action 1: Get All Data
   const getAllItems = async (): Promise<T[]> => {
     try {
       const api = useApi()
-      const response = await api.get(getBaseUrl())
-      return response.data || []
+      const { url, token } = getApiContext('get-alldata')
+
+      const response = await api.post(url, {
+        token: token,
+        table: tableName
+      })
+
+      return response.data?.data || []
     } catch (err) {
       await showError(err)
       return []
     }
   }
-  // ❌ Action 1: Delete an existing record
+
+  // ❌ Action 2: Delete Item
   const deleteItem = async (): Promise<boolean> => {
     try {
       const api = useApi()
-
-      const secretToken = MyConfig.instance.AppConfig.AuthToken
-      const baseUrl = MyConfig.instance.AppConfig.DbUrl
+      const { url, token } = getApiContext('post-delete')
       const currentId = item.value[idKey as string]
 
       if (!currentId) {
@@ -155,23 +157,14 @@ export function useCrudProp<T extends BaseEntity>(
         return false
       }
 
-      const payload = {
-        token: secretToken,
-        sheet: sheetName,
-        action: 'delete',
-        id: currentId
-      }
-
-      console.log('Sending delete request to Google Apps Script:', payload)
-
-      const response = await api.post(baseUrl, JSON.stringify(payload), {
-        headers: {
-          'Content-Type': 'text/plain;charset=utf-8'
-        }
+      const response = await api.post(url, {
+        token: token,
+        table: tableName,
+        id: String(currentId)
       })
 
       if (response.data && response.data.status === 'success') {
-        await Init() // Trigger a visual grid refresh upon success
+        await Init()
         return true
       } else {
         throw new Error(response.data?.message || 'Unknown server error during deletion.')
@@ -182,45 +175,33 @@ export function useCrudProp<T extends BaseEntity>(
     }
   }
 
-  // ➕ Action 2: Create a brand new record (Insert)
-  const insertItem = async (): Promise<boolean> => {
+  // 💾 Action 3: Unified Save (Insert or Update)
+  const saveItem = async (): Promise<boolean> => {
     try {
       const api = useApi()
+      const { url, token } = getApiContext('post-insertorupdate')
 
-      const secretToken = MyConfig.instance.AppConfig.AuthToken
-      const baseUrl = MyConfig.instance.AppConfig.DbUrl
-
-      // ดึงโครงสร้างลำดับ Keys จาก Model
+      // Clean up inputs and build a strong typed record object payload for D1
+      const recordData: Record<string, any> = {}
       const blankInstance = new ModelConstructor()
       const itemKeys = Object.keys(blankInstance)
 
-      // แมปข้อมูลเป็น Flat Array ตามลำดับหัวตารางบน Sheets
-      // บังคับ Index 0 (Column A) เป็นค่าว่าง เพื่อให้ฝั่ง Apps Script รัน Auto-Increment ID ให้เอง
-      const newRowArray = itemKeys.map((key, index) => {
-        if (index === 0) return ''
-        return item.value[key] ?? ''
+      itemKeys.forEach(key => {
+        // Enforce fallback boundaries so we don't pass undefined values to SQLite queries
+        recordData[key] = item.value[key] ?? null
       })
 
-      const payload = {
-        token: secretToken,
-        sheet: sheetName,
-        action: 'insert',
-        data: newRowArray // ส่งเป็น Array ตามเงื่อนไขการใช้ appendRow ของ Apps Script
-      }
-
-      console.log('Sending insert request to Google Apps Script:', payload)
-
-      const response = await api.post(baseUrl, JSON.stringify(payload), {
-        headers: {
-          'Content-Type': 'text/plain;charset=utf-8'
-        }
+      const response = await api.post(url, {
+        token: token,
+        table: tableName,
+        data: recordData
       })
 
       if (response.data && response.data.status === 'success') {
-        await Init() // Reload table rows view
+        await Init()
         return true
       } else {
-        throw new Error(response.data?.message || 'Failed to insert new record.')
+        throw new Error(response.data?.message || 'Failed to save record.')
       }
     } catch (err) {
       await showError(err)
@@ -228,203 +209,6 @@ export function useCrudProp<T extends BaseEntity>(
     }
   }
 
-  // ✏️ Action 3: Modify an existing record (Update)
-  const updateItem = async (): Promise<boolean> => {
-    try {
-      const api = useApi()
-
-      const secretToken = MyConfig.instance.AppConfig.AuthToken
-      const baseUrl = MyConfig.instance.AppConfig.DbUrl
-      const currentId = item.value[idKey as string]
-
-      if (!currentId) {
-        console.warn('Cannot update: No item ID is currently selected.')
-        return false
-      }
-
-      // 💡 [จุดปรับปรุงสำคัญ]: เปลี่ยนจาก Array มาเป็น Object (Key-Value)
-      // วนลูปสร้าง Object ใหม่เฉพาะฟิลด์ที่มีค่า และข้ามคอลัมน์ที่เป็น ID (idKey) เพื่อความปลอดภัย
-      const updatedDataObject: Record<string, any> = {}
-
-      const blankInstance = new ModelConstructor()
-      const itemKeys = Object.keys(blankInstance)
-
-      itemKeys.forEach((key, index) => {
-        // เงื่อนไข:
-        // 1. ห้ามส่ง ID กลับไปแก้ไข (index 0 หรือ key ที่ตรงกับ idKey)
-        // 2. ป้องกันฟิลด์ที่ไม่มีชื่อหัวตาราง หรือค่าที่เป็น undefined/null (ให้เปลี่ยนเป็นค่าว่าง "")
-        if (index > 0 && key !== idKey) {
-          updatedDataObject[key] = item.value[key] ?? ''
-        }
-      })
-
-      const payload = {
-        token: secretToken,
-        sheet: sheetName,
-        action: 'update',
-        id: currentId,
-        data: updatedDataObject // 👈 ส่งเป็น Object { หัวตาราง: ค่าใหม่ } ไปที่สคริปต์ตัวใหม่
-      }
-
-      console.log('Sending update request to Google Apps Script:', payload)
-
-      const response = await api.post(baseUrl, JSON.stringify(payload), {
-        headers: {
-          'Content-Type': 'text/plain;charset=utf-8'
-        }
-      })
-
-      if (response.data && response.data.status === 'success') {
-        await Init() // Reload grid rows automatically
-        return true
-      } else {
-        throw new Error(response.data?.message || 'Failed to update record.')
-      }
-    } catch (err) {
-      await showError(err)
-      return false
-    }
-  }
-  // const deleteItem = async (): Promise<boolean> => {
-  //   try {
-  //     const api = useApi()
-
-  //     // 1. Extract the raw configuration variables
-  //     const secretToken = MyConfig.instance.AppConfig.AuthToken
-  //     const baseUrl = MyConfig.instance.AppConfig.DbUrl
-  //     const currentId = item.value[idKey as string]
-
-  //     if (!currentId) {
-  //       console.warn('Cannot delete: No item ID is currently selected.')
-  //       return false
-  //     }
-
-  //     // 2. Build the payload schema your Google Apps Script doPost expects
-  //     const payload = {
-  //       token: secretToken,
-  //       sheet: sheetName,
-  //       action: 'delete',
-  //       id: currentId
-  //     }
-
-  //     console.log('Sending delete request to Google Apps Script:', payload)
-
-  //     // 3. Trigger the network execution via POST
-  //     //const response = await api.post(baseUrl, payload)
-
-  //     const response = await api.post(baseUrl, JSON.stringify(payload), {
-  //       headers: {
-  //         'Content-Type': 'text/plain;charset=utf-8'
-  //       }
-  //     })
-
-  //     // 4. Verify the response status returned by createJsonResponse
-  //     if (response.data && response.data.status === 'success') {
-  //       await Init() // Trigger a visual grid refresh upon success
-  //       return true
-  //     } else {
-  //       // Handles programmatic errors (e.g., ID not found in sheet)
-  //       throw new Error(response.data?.message || 'Unknown server error during deletion.')
-  //     }
-  //   } catch (err) {
-  //     await showError(err)
-  //     return false
-  //   }
-  // }
-  // // ➕ Action 1: Create a brand new record (Insert)
-  // const insertItem = async (): Promise<boolean> => {
-  //   try {
-  //     const api = useApi()
-
-  //     const secretToken = MyConfig.instance.AppConfig.AuthToken
-  //     const baseUrl = MyConfig.instance.AppConfig.DbUrl
-
-  //     // Dynamically discover the strict property layout order straight from the model blueprint
-  //     const blankInstance = new ModelConstructor()
-  //     const itemKeys = Object.keys(blankInstance)
-
-  //     // Maps the user inputs into a flat array matching the model structure perfectly
-  //     // Column A ([0]) is forced to an empty string because the App Script generates the auto-increment ID
-  //     const newRowArray = itemKeys.map((key, index) => {
-  //       if (index === 0) return '' // Column A auto-increment placeholder
-  //       return item.value[key] ?? ''
-  //     })
-
-  //     const payload = {
-  //       token: secretToken,
-  //       sheet: sheetName,
-  //       action: 'insert',
-  //       data: newRowArray
-  //     }
-
-  //     console.log('Sending insert request to Google Apps Script:', payload)
-
-  //     // Using text/plain header trick to bypass CORS checks
-  //     const response = await api.post(baseUrl, JSON.stringify(payload), {
-  //       headers: {
-  //         'Content-Type': 'text/plain;charset=utf-8'
-  //       }
-  //     })
-
-  //     if (response.data && response.data.status === 'success') {
-  //       await Init() // Reload table rows view
-  //       return true
-  //     } else {
-  //       throw new Error(response.data?.message || 'Failed to insert new record.')
-  //     }
-  //   } catch (err) {
-  //     await showError(err)
-  //     return false
-  //   }
-  // }
-
-  // // ✏️ Action 2: Modify an existing record (Update)
-  // const updateItem = async (): Promise<boolean> => {
-  //   try {
-  //     const api = useApi()
-
-  //     const secretToken = MyConfig.instance.AppConfig.AuthToken
-  //     const baseUrl = MyConfig.instance.AppConfig.DbUrl
-  //     const currentId = item.value[idKey as string]
-
-  //     if (!currentId) {
-  //       console.warn('Cannot update: No item ID is currently selected.')
-  //       return false
-  //     }
-
-  //     // Safely structure keys out of the constructor template sequence
-  //     const blankInstance = new ModelConstructor()
-  //     const itemKeys = Object.keys(blankInstance)
-  //     const updatedRowArray = itemKeys.map(key => item.value[key] ?? '')
-
-  //     const payload = {
-  //       token: secretToken,
-  //       sheet: sheetName,
-  //       action: 'update',
-  //       id: currentId,
-  //       data: updatedRowArray
-  //     }
-
-  //     console.log('Sending update request to Google Apps Script:', payload)
-
-  //     // Using text/plain header trick to bypass CORS checks
-  //     const response = await api.post(baseUrl, JSON.stringify(payload), {
-  //       headers: {
-  //         'Content-Type': 'text/plain;charset=utf-8'
-  //       }
-  //     })
-
-  //     if (response.data && response.data.status === 'success') {
-  //       await Init() // Reload grid rows automatically
-  //       return true
-  //     } else {
-  //       throw new Error(response.data?.message || 'Failed to update record.')
-  //     }
-  //   } catch (err) {
-  //     await showError(err)
-  //     return false
-  //   }
-  // }
   return {
     items,
     item,
