@@ -74,8 +74,6 @@ export default defineComponent({
     }
   },
   setup(_, { emit }) {
-<<<<<<< HEAD
-=======
     const myChild = ref<InstanceType<typeof CustomerComp>>()
     const useCustomer = useCustomerProp()
     onMounted(async () => {
@@ -94,7 +92,6 @@ export default defineComponent({
         return
       }
     }
->>>>>>> main
     return {
       splitterModel: ref(35), // start at 20%
       listColumns: useCustomer.listColumns,
