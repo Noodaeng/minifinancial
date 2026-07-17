@@ -34,11 +34,7 @@
         <template v-slot:after>
           <div class="q-pa-md">
             <q-card class="bg-body text-appText">
-              <<<<<<< HEAD
-              <CustomerComp :info="customer"></CustomerComp>
-              =======
               <CustomerComp ref="myChild" :info="customer"></CustomerComp>
-              >>>>>>> main
             </q-card>
           </div>
           <div class="row justify-end items-start">
@@ -108,7 +104,6 @@ export default defineComponent({
       canSave: useCustomer.canSave,
       state: useCustomer.state,
       myChild
->>>>>>> main
     }
   },
   methods: {}
