@@ -2,9 +2,12 @@
   <q-layout view="lHh lpR lFf" class="window-height window-width">
     <!-- Header -->
     <q-header elevated class="bg-appLayout text-appText">
-      <q-toolbar class="q-px-md row no-wrap items-center justify-between" style="min-height: 64px">
+      <q-toolbar
+        class="q-px-sm q-px-md-md row no-wrap items-center justify-between"
+        style="min-height: 64px"
+      >
         <!-- Left Section: Menu Button & Title -->
-        <div class="row items-center no-wrap q-gutter-sm">
+        <div class="row items-center no-wrap q-gutter-xs q-gutter-sm-sm">
           <q-btn
             flat
             dense
@@ -15,14 +18,15 @@
             @click="toggleLeftDrawer"
             :disable="!isAuth"
           />
-          <q-toolbar-title class="text-weight-bold text-subtitle1 text-sm-h6 no-wrap">
-            💰 {{ $t('Mini_Financial') }} 💰
+          <q-toolbar-title class="text-weight-bold text-subtitle2 text-sm-h6 no-wrap q-ml-xs">
+            💰 <span class="gt-xs">{{ $t('Mini_Financial') }}</span
+            ><span class="lt-sm">Mini Fin</span> 💰
           </q-toolbar-title>
         </div>
 
-        <!-- Right Section: Actions & User Meta -->
-        <div class="row items-center no-wrap q-gutter-sm sm-gutter-md">
-          <!-- Fullscreen Switcher Utility -->
+        <!-- Right Section: Actions & Language Selector (Always Visible) -->
+        <div class="row items-center no-wrap q-gutter-xs q-gutter-sm-sm">
+          <!-- Fullscreen Utility Toggle -->
           <q-btn
             flat
             round
@@ -30,34 +34,40 @@
             :icon="isFullscreen ? 'fullscreen_exit' : 'fullscreen'"
             color="white"
             @click="toggleFullScreen"
+            class="gt-xs"
           />
 
-          <ThemeSwitcher />
-          <LanguageSwitcher />
-
-          <q-separator vertical dark inset class="q-mx-sm gt-xs" />
-
-          <!-- User Display Profile Profile Card -->
-          <div class="row items-center no-wrap gt-xs q-gutter-sm">
-            <div class="text-right column justify-center">
-              <span class="text-weight-medium text-caption text-sm-body2 text-white">
-                {{ convertToUser(user).name }}
-              </span>
-              <span class="text-grey-4" style="font-size: 10px"> v{{ version }} </span>
-            </div>
-            <q-btn
-              flat
-              round
-              dense
-              icon="logout"
-              color="negative"
-              @click="logout"
-              class="q-ml-xs"
-            />
+          <!-- Switchers (Kept compact and visible across all form factors) -->
+          <div class="row items-center no-wrap">
+            <ThemeSwitcher />
+            <LanguageSwitcher />
           </div>
 
-          <!-- Mobile Quick Logout Control Only -->
-          <q-btn flat round dense icon="logout" color="negative" @click="logout" class="lt-sm" />
+          <q-separator vertical dark inset class="q-mx-xs gt-xs" />
+
+          <!-- Desktop User Profile Details Layout -->
+          <div class="row items-center no-wrap gt-xs q-gutter-xs">
+            <div class="text-right column justify-center q-mr-xs">
+              <span class="text-weight-medium style-user-text text-white">
+                {{ convertToUser(user).name }}
+              </span>
+              <span class="text-grey-4" style="font-size: 10px; line-height: 1">
+                v{{ version }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Application Sign Out Trigger -->
+          <q-btn
+            flat
+            round
+            dense
+            icon="logout"
+            color="negative"
+            @click="logout"
+            size="sm"
+            class="q-ml-xs"
+          />
         </div>
       </q-toolbar>
     </q-header>
