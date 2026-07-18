@@ -18,7 +18,8 @@ export function useCrudProp<T extends BaseEntity, S>(
   tableName: string, // Changed from sheetName to tableName
   ModelConstructor: new () => T,
   columnsConfig: (t: (key: string) => string) => QTableColumn[],
-  BaseConstructor: (new () => S) | undefined
+  BaseConstructor: (new () => S) | undefined,
+  assignInit: ActionSingle<T[]> | undefined
 ) {
   const $q = useQuasar()
   const { t } = i18n.global
@@ -27,7 +28,7 @@ export function useCrudProp<T extends BaseEntity, S>(
   const item = ref<T>(new ModelConstructor())
   const clearValidate = ref<Action | undefined>(undefined)
   const justSave = ref(false)
-  const assignInit = ref<ActionSingle<T[]> | undefined>(undefined)
+  //const assignInit = ref<ActionSingle<T[]> | undefined>(undefined)
 
   const getValidate = ref<FuncBoolAsync>(async () => {
     return false
@@ -65,8 +66,8 @@ export function useCrudProp<T extends BaseEntity, S>(
         clearValidate.value()
       }
 
-      if (assignInit.value && items.value && items.value.length > 0) {
-        assignInit.value(items.value)
+      if (assignInit && items.value && items.value.length > 0) {
+        assignInit(items.value)
         dataState.stateCtrl(false, true, false, false)
       } else if (items.value && items.value.length > 0) {
         Object.assign(item.value, items.value[0])
@@ -246,7 +247,6 @@ export function useCrudProp<T extends BaseEntity, S>(
     onSave,
     Init,
     getAllItems,
-    getDataOptions,
-    assignInit
+    getDataOptions
   }
 }

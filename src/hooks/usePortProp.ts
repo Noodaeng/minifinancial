@@ -14,6 +14,14 @@ export function usePortProp() {
   const filter = ref('')
   const portType: Ref<string | number | EInvestPortType> = ref(EInvestPortType.CashAndDeposits)
   // 1. Initialize our generic CRUD composable
+  const setItem = (ports: PortDto[]) => {
+    const filter = ports.filter(p => p.portType == portType.value)
+    if (filter && filter.length > 0) {
+      Object.assign(crud.item.value, filter[0])
+    } else {
+      Object.assign(crud.item.value, new PortDto())
+    }
+  }
   const crud = useCrudProp<PortDto, Port>(
     'portId',
     'ports',
@@ -52,7 +60,8 @@ export function usePortProp() {
         sortable: true
       }
     ],
-    Port
+    Port,
+    setItem
   )
 
   const rawOptionToQSelectOptions = (source: string): QSelectOption[] => {

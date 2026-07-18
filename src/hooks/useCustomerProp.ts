@@ -33,6 +33,7 @@ export function useCustomerProp() {
         sortable: true
       }
     ],
+    undefined,
     undefined
   )
 
