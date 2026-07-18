@@ -51,7 +51,7 @@
         </template>
       </q-splitter>
     </div>
-    {{ rawOptions }}
+    {{ portType }} {{ rawOptions }}
   </q-page>
 </template>
 <script lang="ts">
@@ -131,7 +131,7 @@ export default defineComponent({
       rawOptions: usePort.rawOptions,
       onRowClick: usePort.onRowClick,
       onFilter: usePort.onFilter,
-      onCreate: usePort.onCreate,
+      onCreate: usePort.onCreatePort,
       onDelete: usePort.onDelete,
       onSave: usePort.onSave,
       canDelete: usePort.canDelete,

@@ -95,6 +95,10 @@ export function usePortProp() {
     crud.onRowClick(row)
   }
 
+  const onCreatePort = () => {
+    crud.onCreate()
+    crud.item.value.portType = Number(portType.value)
+  }
   // +++++++ Call other Api +++++++++++++++++++++++
 
   const initOtherList = async () => {
@@ -124,6 +128,7 @@ export function usePortProp() {
     onFilter,
     initOtherList,
     rawOptionToQSelectOptions,
+    onCreatePort,
     portType,
     rawOptions
   }
