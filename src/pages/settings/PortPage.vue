@@ -37,6 +37,7 @@
               <PortComp
                 ref="myChild"
                 :custOption="custOption"
+                :brokerOption="brokerOption"
                 :portType="portType"
                 :info="port"
               ></PortComp>

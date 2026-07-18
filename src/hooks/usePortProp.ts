@@ -5,12 +5,12 @@ import DataOption from '../models/dataOption'
 import { useCrudProp } from './useCrudProp'
 import { EInvestPortType } from '../types/myEnums'
 import { QSelectOption } from '../types/myTypes'
-
+import { i18n } from '../i18n'
 import { showError } from '../modules/appUtils'
 
 export function usePortProp() {
   const rawOptions = ref<DataOption[]>([])
-
+  const { t } = i18n.global
   const filter = ref('')
   const portType: Ref<string | number | EInvestPortType> = ref(EInvestPortType.CashAndDeposits)
   // 1. Initialize our generic CRUD composable
@@ -56,12 +56,14 @@ export function usePortProp() {
   )
 
   const rawOptionToQSelectOptions = (source: string): QSelectOption[] => {
-    return (rawOptions.value || [])
+    const opt = (rawOptions.value || [])
       .filter(c => c.Id !== undefined && c.name !== null && c.source === source)
       .map(c => ({
         value: c.Id,
         label: c.name || 'Unnamed' // Fallback in case name is missing/blank
       }))
+    opt.push({ value: '0', label: t('Unknow_name') })
+    return opt
   }
 
   // 3. Update filtering logic to look through the enriched rows and filter by portType
@@ -98,6 +100,8 @@ export function usePortProp() {
   const onCreatePort = () => {
     crud.onCreate()
     crud.item.value.portType = Number(portType.value)
+    crud.item.value.customerId = '0'
+    crud.item.value.brokerId = '0'
   }
   // +++++++ Call other Api +++++++++++++++++++++++
 
