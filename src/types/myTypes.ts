@@ -8,6 +8,9 @@ export type DefaultValues<T> = {
 }
 export type MyRecord = Record<number, string>
 export type MyWorkAbilityVal = Record<number, number>
+export type OptionalData =
+  'customerOptions' | 'portOptions' | 'brokerOptions' | 'allOptions' | 'custBrokerOptions'
+//+++++++++++++Interface++++++++++++++++
 export interface QSelectOption {
   value: string | number
   label: string

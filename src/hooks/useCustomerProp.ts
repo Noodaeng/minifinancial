@@ -3,25 +3,38 @@ import Customer from '../models/customer'
 import { useCrudProp } from './useCrudProp'
 
 export function useCustomerProp() {
-  const crud = useCrudProp<Customer>('customerId', 'customers', Customer, t => [
-    {
-      name: 'customerId',
-      required: true,
-      label: t('Id'),
-      align: 'left',
-      field: 'customerId',
-      sortable: true
-    },
-    {
-      name: 'cardId',
-      required: true,
-      label: t('Card_Id'),
-      align: 'left',
-      field: 'cardId',
-      sortable: true
-    },
-    { name: 'name', required: true, label: t('Name'), align: 'left', field: 'name', sortable: true }
-  ])
+  const crud = useCrudProp<Customer, Customer>(
+    'customerId',
+    'customers',
+    Customer,
+    t => [
+      {
+        name: 'customerId',
+        required: true,
+        label: t('Id'),
+        align: 'left',
+        field: 'customerId',
+        sortable: true
+      },
+      {
+        name: 'cardId',
+        required: true,
+        label: t('Card_Id'),
+        align: 'left',
+        field: 'cardId',
+        sortable: true
+      },
+      {
+        name: 'name',
+        required: true,
+        label: t('Name'),
+        align: 'left',
+        field: 'name',
+        sortable: true
+      }
+    ],
+    undefined
+  )
 
   const filter = ref('')
 

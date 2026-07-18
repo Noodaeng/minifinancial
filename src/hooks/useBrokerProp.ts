@@ -4,25 +4,38 @@ import { useCrudProp } from './useCrudProp'
 
 export function useBrokerProp() {
   // Destructure what you need from the generic composable
-  const crud = useCrudProp<Broker>('brokerId', 'brokers', Broker, t => [
-    {
-      name: 'brokerId',
-      required: true,
-      label: t('Id'),
-      align: 'left',
-      field: 'brokerId',
-      sortable: true
-    },
-    {
-      name: 'cardId',
-      required: true,
-      label: t('Card_Id'),
-      align: 'left',
-      field: 'cardId',
-      sortable: true
-    },
-    { name: 'name', required: true, label: t('Name'), align: 'left', field: 'name', sortable: true }
-  ])
+  const crud = useCrudProp<Broker, Broker>(
+    'brokerId',
+    'brokers',
+    Broker,
+    t => [
+      {
+        name: 'brokerId',
+        required: true,
+        label: t('Id'),
+        align: 'left',
+        field: 'brokerId',
+        sortable: true
+      },
+      {
+        name: 'cardId',
+        required: true,
+        label: t('Card_Id'),
+        align: 'left',
+        field: 'cardId',
+        sortable: true
+      },
+      {
+        name: 'name',
+        required: true,
+        label: t('Name'),
+        align: 'left',
+        field: 'name',
+        sortable: true
+      }
+    ],
+    undefined
+  )
 
   // 2. Setup your local filter text state
   const filter = ref('')

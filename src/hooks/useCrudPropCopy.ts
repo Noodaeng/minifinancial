@@ -13,12 +13,11 @@ interface BaseEntity {
   [key: string]: any
 }
 
-export function useCrudProp<T extends BaseEntity, S>(
+export function useCrudPropCopy<T extends BaseEntity>(
   idKey: keyof T,
   tableName: string, // Changed from sheetName to tableName
   ModelConstructor: new () => T,
-  columnsConfig: (t: (key: string) => string) => QTableColumn[],
-  BaseConstructor: (new () => S) | undefined
+  columnsConfig: (t: (key: string) => string) => QTableColumn[]
 ) {
   const $q = useQuasar()
   const { t } = i18n.global
@@ -186,8 +185,7 @@ export function useCrudProp<T extends BaseEntity, S>(
       // Clean up inputs and build a strong typed record object payload for D1
       const recordData: Record<string, any> = {}
       const blankInstance = new ModelConstructor()
-      const baseInstance = BaseConstructor !== undefined ? new BaseConstructor() : undefined
-      const itemKeys = !baseInstance ? Object.keys(blankInstance) : Object.keys(baseInstance)
+      const itemKeys = Object.keys(blankInstance)
 
       itemKeys.forEach(key => {
         // Enforce fallback boundaries so we don't pass undefined values to SQLite queries

@@ -113,15 +113,15 @@ import { defineComponent, ref, onMounted, computed, onBeforeUnmount, watch } fro
 import EssentialLink from './EssentialLink.vue'
 import LanguageSwitcher from './LanguageSwitcher.vue'
 import ThemeSwitcher from './ThemeSwitcher.vue'
-import linksList from './menuList'
+import linksList from './menuList.js'
 import { AppFullscreen } from 'quasar'
-import { useAuthStore } from '../stores/authStore'
+import { useAuthStore } from '../stores/authStore.js'
 import { useRouter } from 'vue-router'
-import { errorToLog } from '../modules/appUtils'
-import MyConfig from '../modules/myConfig'
+import { errorToLog } from '../modules/appUtils.js'
+import MyConfig from '../modules/myConfig.js'
 
 export default defineComponent({
-  name: 'MainLayout',
+  name: 'MainLayoutCopy',
   data() {
     return {}
   },

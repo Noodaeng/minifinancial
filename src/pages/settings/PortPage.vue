@@ -51,6 +51,7 @@
         </template>
       </q-splitter>
     </div>
+    {{ rawOptions }}
   </q-page>
 </template>
 <script lang="ts">
@@ -117,16 +118,17 @@ export default defineComponent({
       const valid = await myChild.value?.getValidate()
       if (!valid) return
     }
-    const custOption = computed(() => usePort.customerToQSelectOptions(usePort.customers.value))
+    const custOption = computed(() => usePort.rawOptionToQSelectOptions('customers'))
+    const brokerOption = computed(() => usePort.rawOptionToQSelectOptions('brokers'))
     return {
       splitterModel: ref(35),
       custOption,
+      brokerOption,
       listColumns: usePort.listColumns,
       filteredRows: usePort.filteredRows,
       port: usePort.item,
       ports: usePort.items,
-      customers: usePort.customers,
-      brokers: usePort.brokers,
+      rawOptions: usePort.rawOptions,
       onRowClick: usePort.onRowClick,
       onFilter: usePort.onFilter,
       onCreate: usePort.onCreate,
