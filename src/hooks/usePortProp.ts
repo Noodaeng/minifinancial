@@ -6,11 +6,12 @@ import { useCrudProp } from './useCrudProp'
 import { EInvestPortType } from '../types/myEnums'
 import { QSelectOption } from '../types/myTypes'
 import { i18n } from '../i18n'
-import { showError } from '../modules/appUtils'
+import { showError, currentDateTimeStr } from '../modules/appUtils'
 
 export function usePortProp() {
   const rawOptions = ref<DataOption[]>([])
   const { t } = i18n.global
+
   const filter = ref('')
   const portType: Ref<string | number | EInvestPortType> = ref(EInvestPortType.CashAndDeposits)
   // 1. Initialize our generic CRUD composable
@@ -111,6 +112,8 @@ export function usePortProp() {
     crud.item.value.portType = Number(portType.value)
     crud.item.value.customerId = '0'
     crud.item.value.brokerId = '0'
+    crud.item.value.createBy = crud.currentUser
+    crud.item.value.createOn = currentDateTimeStr
   }
   // +++++++ Call other Api +++++++++++++++++++++++
 

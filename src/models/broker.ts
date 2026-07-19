@@ -7,7 +7,7 @@ export default class Broker {
   address = ''
   lineId = ''
   creditLimit = 0
-  isActive = false
+  isActive = 0
   brokerType = 0
   createBy = ''
   createOn = ''

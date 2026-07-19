@@ -4,11 +4,11 @@ import { showError, confirmDelete } from '../modules/appUtils'
 import MyConfig from '../modules/myConfig'
 import { QTableColumn, useQuasar } from 'quasar'
 import { i18n } from '../i18n'
-import { Action, FuncBoolAsync, ActionSingle, OptionalData } from '../types/myTypes'
+import { Action, ActionSingle, OptionalData } from '../types/myTypes'
 import DataOption from '../models/dataOption'
 import { useDataState } from './useDataState'
 import { EDataState } from '@/types/myEnums'
-
+import { useAuthStore } from '../stores/authStore'
 interface BaseEntity {
   [key: string]: any
 }
@@ -23,16 +23,16 @@ export function useCrudProp<T extends BaseEntity, S>(
 ) {
   const $q = useQuasar()
   const { t } = i18n.global
-
+  const authStore = useAuthStore()
   const items = ref<T[]>([]) as any
   const item = ref<T>(new ModelConstructor())
   const clearValidate = ref<Action | undefined>(undefined)
   const justSave = ref(false)
   //const assignInit = ref<ActionSingle<T[]> | undefined>(undefined)
 
-  const getValidate = ref<FuncBoolAsync>(async () => {
-    return false
-  })
+  // const getValidate = ref<FuncBoolAsync>(async () => {
+  //   return false
+  // })
   const dataState = useDataState()
 
   watch(
@@ -48,14 +48,18 @@ export function useCrudProp<T extends BaseEntity, S>(
         justSave.value = false
         return
       } else {
-        const valid = await getValidate.value()
-        dataState.stateCtrl(false, false, valid, false)
+        // const valid = await getValidate.value()
+        dataState.stateCtrl(false, false, true, false)
       }
     }
   )
 
   const listColumns = ref<QTableColumn[]>(columnsConfig(t))
-
+  const convertToUser = (obj: object | null): { name: string; role: string; exp: any } => {
+    if (!obj) return { name: 'Unknown', role: 'User', exp: null }
+    return obj as { name: string; role: string; exp: any }
+  }
+  const currentUser = convertToUser(authStore.getUser).name
   // +++++++ Init +++++++++++++++++++++++
   const Init = async () => {
     try {
@@ -96,9 +100,15 @@ export function useCrudProp<T extends BaseEntity, S>(
     dataState.stateCtrl(false, false, false, true)
   }
 
-  const onDelete = () => {
+  const onDelete = async () => {
+    //await deleteItem()
     if (item.value && item.value[idKey as string] !== '') {
-      confirmDelete($q, String(item.value[idKey as string]), deleteItem)
+      const success = await confirmDelete($q, String(item.value[idKey as string]), () =>
+        deleteItem()
+      )
+      if (success) {
+        await Init() // Refresh list only on actual success!
+      }
     }
   }
 
@@ -112,10 +122,14 @@ export function useCrudProp<T extends BaseEntity, S>(
     ) {
       // Cloudflare Worker handles both via post-insertorupdate
       success = await saveItem()
-    }
-
-    if (success) {
-      justSave.value = true
+      if (success) {
+        $q.notify({
+          type: 'positive',
+          message: t('Item_saved_successfully')
+        })
+        justSave.value = true
+        await Init()
+      }
     }
   }
 
@@ -167,7 +181,6 @@ export function useCrudProp<T extends BaseEntity, S>(
       })
 
       if (response.data && response.data.status === 'success') {
-        await Init()
         return true
       } else {
         throw new Error(response.data?.message || 'Unknown server error during deletion.')
@@ -231,22 +244,18 @@ export function useCrudProp<T extends BaseEntity, S>(
   }
 
   return {
+    ...dataState,
     items,
     item,
     listColumns,
-    canCreate: dataState.canCreate,
-    canDelete: dataState.canDelete,
-    canSave: dataState.canSave,
-    state: dataState.state,
     clearValidate,
-    getValidate,
-    stateCtrl: dataState.stateCtrl,
     onRowClick,
     onCreate,
     onDelete,
     onSave,
     Init,
     getAllItems,
-    getDataOptions
+    getDataOptions,
+    currentUser
   }
 }

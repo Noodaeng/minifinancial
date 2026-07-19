@@ -1,7 +1,7 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file
 
-import { defineConfig } from "#q-app";
+import { defineConfig } from '#q-app'
 
 export default defineConfig(ctx => {
   return {
@@ -11,14 +11,14 @@ export default defineConfig(ctx => {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ["i18n","appInit"],
+    boot: ['i18n', 'appInit'],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#css
-    css: ["app.scss"],
+    css: ['app.scss'],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
     extras: [
-        // 'ionicons-v4',
+      // 'ionicons-v4',
       'mdi-v7',
       'fontawesome-v7', // ◄ ⚠️ ต้องเป็นขีดกลางแบบนี้เป๊ะๆ ครับ ห้ามสะกดผิดเป็นตัวอื่น
       'eva-icons',
@@ -26,17 +26,16 @@ export default defineConfig(ctx => {
       'line-awesome',
       // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!
 
-      "roboto-font", // optional, you are not bound to it
-      "material-icons" // optional, you are not bound to it
+      'roboto-font', // optional, you are not bound to it
+      'material-icons' // optional, you are not bound to it
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#build
     build: {
-     target: {
+      target: {
         browser: ['es2022', 'firefox115', 'chrome115', 'safari14'],
-        node: 'node20',
+        node: 'node20'
       },
-
 
       typescript: {
         strict: true,
@@ -47,7 +46,7 @@ export default defineConfig(ctx => {
       // https://v2.quasar.dev/quasar-cli-vite/page-routing-with-vue-router#filename-based-routing
       filenameBasedRouting: false,
 
-      vueRouterMode: "hash", // available values: 'hash', 'history'
+      vueRouterMode: 'hash', // available values: 'hash', 'history'
       // vueRouterBase,
       // vueDevtools,
 
@@ -63,7 +62,7 @@ export default defineConfig(ctx => {
 
       vitePlugins: [
         [
-          "@intlify/unplugin-vue-i18n/vite",
+          '@intlify/unplugin-vue-i18n/vite',
           {
             // if you want to use Vue I18n Legacy API, you need to set `compositionOnly: false`
             // compositionOnly: false,
@@ -72,20 +71,20 @@ export default defineConfig(ctx => {
             // you need to set `runtimeOnly: false`
             // runtimeOnly: false,
 
-            ssr: ctx.modeName === "ssr",
+            ssr: ctx.modeName === 'ssr',
 
             // you need to set i18n resource including paths !
-            include: [ctx.appPaths.resolve.app("src/i18n")]
+            include: [ctx.appPaths.resolve.app('src/i18n')]
           }
         ]
       ]
     },
 
     //https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#devserver
-     devServer: {
+    devServer: {
       // https: true,
       open: true, // opens browser window automatically
-      port: 9999,
+      port: 9999
     },
     // devServer: {
     //   open: true,
@@ -114,7 +113,7 @@ export default defineConfig(ctx => {
       // directives: [],
 
       // Quasar plugins
-     plugins: ['Notify', 'Dialog'],
+      plugins: ['Loading', 'Notify', 'Dialog']
     },
 
     // animations: 'all', // --- includes all animations
@@ -140,7 +139,7 @@ export default defineConfig(ctx => {
       // (gets superseded if process.env.PORT is specified at runtime)
 
       middlewares: [
-        "render" // keep this as last one
+        'render' // keep this as last one
       ],
 
       // extendSSRPackageJson (pkgJson) {},
@@ -160,7 +159,7 @@ export default defineConfig(ctx => {
 
     // https://v2.quasar.dev/quasar-cli-vite/developing-pwa/configuring-pwa
     pwa: {
-      workboxMode: "GenerateSW" // 'GenerateSW' or 'InjectManifest'
+      workboxMode: 'GenerateSW' // 'GenerateSW' or 'InjectManifest'
       // swFilename: 'sw.js',
       // manifestFilename: 'manifest.json',
       // extendPWAManifestJson (json) {},
@@ -187,12 +186,12 @@ export default defineConfig(ctx => {
       // extendElectronPackageJson (pkgJson) {},
 
       // Electron preload scripts (if any) from /src-electron, WITHOUT file extension
-      preloadScripts: ["electron-preload"],
+      preloadScripts: ['electron-preload'],
 
       // specify the debugging port to use for the Electron app when running in development mode
       inspectPort: 5858,
 
-      bundler: "packager", // 'packager' or 'builder'
+      bundler: 'packager', // 'packager' or 'builder'
 
       packager: {
         // https://github.com/electron-userland/electron-packager/blob/master/docs/api.md#options
@@ -208,7 +207,7 @@ export default defineConfig(ctx => {
       builder: {
         // https://www.electron.build/configuration
 
-        appId: "minifinancial"
+        appId: 'minifinancial'
       }
     },
 
@@ -227,5 +226,5 @@ export default defineConfig(ctx => {
        */
       extraScripts: []
     }
-  };
-});
+  }
+})

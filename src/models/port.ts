@@ -17,5 +17,5 @@ export default class Port {
   paymentTerm = 0
   paymentRate = 0
   period = 0
-  isActive = false
+  isActive = 0
 }

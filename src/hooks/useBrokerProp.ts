@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue' // 1. Bring in Vue's reactivity tools
 import Broker from '../models/broker'
 import { useCrudProp } from './useCrudProp'
-
+import { currentDateTimeStr } from '../modules/appUtils'
 export function useBrokerProp() {
   // Destructure what you need from the generic composable
   const crud = useCrudProp<Broker, Broker>(
@@ -65,12 +65,17 @@ export function useBrokerProp() {
   const onFilter = (val: string) => {
     filter.value = val
   }
-
+  const onCreateBroker = () => {
+    crud.onCreate()
+    crud.item.value.createBy = crud.currentUser
+    crud.item.value.createOn = currentDateTimeStr
+  }
   // 5. Spread all generic methods and merge your local overrides
   return {
     ...crud,
     filter,
     filteredRows,
-    onFilter
+    onFilter,
+    onCreateBroker
   }
 }

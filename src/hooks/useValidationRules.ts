@@ -1,4 +1,4 @@
-import { Ref } from 'vue'
+import {} from 'vue'
 import type { ComposerTranslation } from 'vue-i18n'
 
 import {
@@ -16,8 +16,9 @@ import {
 } from '@/modules/dataValidator'
 
 export function useValidationRules(t: ComposerTranslation) {
-  const createRule = (validator: (value: string) => boolean, getMessage: () => string) => {
-    return [(value: string) => validator(value) || getMessage()]
+  // 1. Changed (value: string) to (value: any) to support Booleans and Arrays
+  const createRule = (validator: (value: any) => boolean, getMessage: () => string) => {
+    return [(value: any) => validator(value) || getMessage()]
   }
 
   const string = (message?: string) =>
@@ -86,9 +87,17 @@ export function useValidationRules(t: ComposerTranslation) {
       () => message ?? t('Invalid_IP_Address')
     )
 
+  // 2. Updated email signature type for consistency
   const email = (message?: string) => [
-    (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) || (message ?? t('Invalid_email'))
+    (val: any) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(val)) || (message ?? t('Invalid_email'))
   ]
+
+  // 3. NEW: Rule specifically for required checkboxes
+  const requiredCheckbox = (message?: string) =>
+    createRule(
+      val => val === true || val === false,
+      () => message ?? t('Field_is_required') // Or a generic translation key like t('Field_is_required')
+    )
 
   return {
     string,
@@ -102,6 +111,7 @@ export function useValidationRules(t: ComposerTranslation) {
     intMin,
     intRange,
     ip,
-    email
+    email,
+    requiredCheckbox // Export it here
   }
 }

@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import Customer from '../models/customer'
 import { useCrudProp } from './useCrudProp'
-
+import { currentDateTimeStr } from '../modules/appUtils'
 export function useCustomerProp() {
   const crud = useCrudProp<Customer, Customer>(
     'customerId',
@@ -58,11 +58,16 @@ export function useCustomerProp() {
   const onFilter = (val: string) => {
     filter.value = val
   }
-
+  const onCreateCustomer = () => {
+    crud.onCreate()
+    crud.item.value.createBy = crud.currentUser
+    crud.item.value.createOn = currentDateTimeStr
+  }
   return {
     ...crud,
     filter,
     filteredRows,
-    onFilter
+    onFilter,
+    onCreateCustomer
   }
 }

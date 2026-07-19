@@ -1,58 +1,57 @@
 <template>
-  <q-page class="row items-center justify-evenly bg-body text-appText">
-    <div class="q-pa-md fit">
-      <q-splitter
-        v-model="splitterModel"
-        before-class="bg-body text-appText "
-        after-class="bg-body text-appText fit"
-        style="height: 80vh"
-      >
-        <template v-slot:before>
-          <div class="q-pa-md">
-            <q-card class="bg-body text-appText">
-              <div class="row justify-start items-start">
-                <div class="col-12 col-md-5">
-                  <StateCtrlBtn
-                    :enbBtnCreate="canCreate"
-                    :enbBtnEdit="false"
-                    :enbBtnDelete="canDelete"
-                    @onClickCreate="onCreate"
-                    @onClickDelete="onDelete"
-                  ></StateCtrlBtn>
-                </div>
-              </div>
-              <q-separator />
-              <ListComp
-                :rows="filteredRows"
-                :columns="listColumns"
-                @onRowClick="onRowClick"
-                @onFilter="onFilter"
-              ></ListComp>
-            </q-card>
+  <q-page class="bg-body text-appText q-pa-md">
+    <!-- Responsive main grid container -->
+    <div class="row q-col-gutter-md">
+      <!-- LEFT / TOP SIDE: Controls & List Component -->
+      <div class="col-12 col-md-4">
+        <q-card class="bg-body text-appText flat bordered full-height-card">
+          <div class="row justify-between items-center q-pa-sm">
+            <StateCtrlBtn
+              :enbBtnCreate="canCreate"
+              :enbBtnEdit="false"
+              :enbBtnDelete="canDelete"
+              @onClickCreate="onCreate"
+              @onClickDelete="onDelete"
+            />
           </div>
-        </template>
-        <template v-slot:after>
-          <div class="q-pa-md">
-            <q-card class="bg-body text-appText">
-              <PortComp
-                ref="myChild"
-                :custOption="custOption"
-                :brokerOption="brokerOption"
-                :portType="portType"
-                :info="port"
-              ></PortComp>
-            </q-card>
-          </div>
-          <div class="row justify-end items-start">
-            <div class="col-12 col-md-6 bg-body text-appText">
-              <SaveCancelBtn :enbBtnDiscard="false" :enbBtnSave="canSave" @onClickSave="onSave">
-              </SaveCancelBtn>
+          <q-separator />
+
+          <ListComp
+            :rows="filteredRows"
+            :columns="listColumns"
+            @onRowClick="onRowClick"
+            @onFilter="onFilter"
+          />
+        </q-card>
+      </div>
+
+      <!-- RIGHT / BOTTOM SIDE: Form Details & Actions -->
+      <div class="col-12 col-md-8">
+        <div class="column justify-between full-height">
+          <q-card class="bg-body text-appText flat bordered q-mb-md">
+            <PortComp
+              ref="myChild"
+              :custOption="custOption"
+              :brokerOption="brokerOption"
+              :portType="portType"
+              :info="port"
+            />
+          </q-card>
+
+          <!-- Bottom Action Buttons aligned dynamically -->
+          <div class="row justify-end items-center q-mt-sm">
+            <div class="col-12 col-sm-auto bg-body text-appText">
+              <SaveCancelBtn
+                class="full-width"
+                :enbBtnDiscard="false"
+                :enbBtnSave="canSave"
+                @onClickSave="onSave"
+              />
             </div>
           </div>
-        </template>
-      </q-splitter>
+        </div>
+      </div>
     </div>
-    {{ portType }} {{ rawOptions }}
   </q-page>
 </template>
 <script lang="ts">
@@ -109,15 +108,19 @@ export default defineComponent({
       usePort.clearValidate.value = () => {
         myChild.value?.clearValidation()
       }
-      usePort.getValidate.value = async (): Promise<boolean> => {
-        return (await myChild.value?.getValidate()) ?? false
-      }
+      // usePort.getValidate.value = async (): Promise<boolean> => {
+      //   return (await myChild.value?.getValidate()) ?? false
+      // }
       await usePort.Init()
     }
 
     const save = async () => {
       const valid = await myChild.value?.getValidate()
-      if (!valid) return
+      if (!valid) {
+        usePort.resetDataState()
+        return
+      }
+      usePort.onSave()
     }
     const custOption = computed(() => usePort.rawOptionToQSelectOptions('customers'))
     const brokerOption = computed(() => usePort.rawOptionToQSelectOptions('brokers'))
@@ -134,7 +137,7 @@ export default defineComponent({
       onFilter: usePort.onFilter,
       onCreate: usePort.onCreatePort,
       onDelete: usePort.onDelete,
-      onSave: usePort.onSave,
+      onSave: save,
       canDelete: usePort.canDelete,
       canCreate: usePort.canCreate,
       canSave: usePort.canSave,
@@ -144,4 +147,9 @@ export default defineComponent({
   }
 })
 </script>
-<style lang="sass" scoped></style>
+<style lang="sass" scoped>
+// Ensures cards are consistent in height on desktop viewports
+@media (min-width: 1024px)
+  .full-height-card
+    min-height: 80vh
+</style>

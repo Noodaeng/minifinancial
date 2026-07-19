@@ -1,6 +1,7 @@
 import { ApplicationTheme } from '../types/myTypes'
 import { ref, Ref } from 'vue'
 import axios from 'axios'
+
 export default class MyConfig {
   private constructor() {
     this.isConstructed = true
@@ -15,6 +16,7 @@ export default class MyConfig {
 
   initialized = false
   isConstructed = false
+
   get publicPath(): string {
     return location.origin.toString() ? location.origin.toString() : 'http://localhost:9000'
   }

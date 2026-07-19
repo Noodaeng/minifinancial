@@ -163,49 +163,63 @@ export const enumToString = (myEnum: Record<string, number | string>, enumKey: n
   }
   return '-'
 }
-export const confirmDelete = ($q: QVueGlobals, info: string, delFunc: FuncBoolAsync) => {
+export const confirmDelete = (
+  $q: QVueGlobals,
+  info: string,
+  delFunc: FuncBoolAsync
+): Promise<boolean> => {
   const { t } = i18n.global
 
-  // Change from Dialog.create to $q.dialog
-  $q.dialog({
-    title: t('Confirm'),
-    message: t('Would_you_like_to_delete') + info + '?',
-    persistent: true,
-    class: 'bg-body text-appText',
-    cancel: {
-      label: t('Cancel'),
-      color: 'body'
-    },
-    ok: {
-      label: t('OK'),
-      color: 'body'
-    }
-  })
-    .onOk(async () => {
-      try {
-        // Change from Loading.show to $q.loading.show
-        $q.loading.show({ message: 'Deleting...' })
+  return new Promise(resolve => {
+    $q.dialog({
+      title: t('Confirm'),
+      message: `${t('Would_you_like_to_delete')} ${info} ?`,
+      persistent: true,
+      class: 'bg-body text-appText',
+      cancel: { label: t('Cancel'), color: 'body' },
+      ok: { label: t('OK'), color: 'body' }
+    })
+      .onOk(async () => {
+        try {
+          $q.loading.show({ message: 'Deleting...' })
 
-        if (delFunc) {
-          await delFunc()
+          if (delFunc) {
+            const success = await delFunc()
+            if (success) {
+              $q.notify({
+                type: 'positive',
+                message: t('Item_deleted_successfully')
+              })
+            }
+          }
+
+          resolve(true) // Success
+        } catch (err) {
+          $q.notify({
+            type: 'negative',
+            message: `${t('Failed_to_delete_item')} ${err instanceof Error ? err.message : ''}`
+          })
+          resolve(false) // Failed
+        } finally {
+          $q.loading?.hide()
         }
-
-        // Change from Notify.create to $q.notify
-        $q.notify({
-          type: 'positive',
-          message: 'Item deleted successfully.'
-        })
-      } catch (err) {
-        $q.notify({
-          type: 'negative',
-          message: `Failed to delete item. ${err instanceof Error ? err.message : ''}`
-        })
-      } finally {
-        // Change from Loading.hide to $q.loading.hide
-        $q.loading.hide()
-      }
-    })
-    .onCancel(() => {
-      console.log('Deletion cancelled by user.')
-    })
+      })
+      .onCancel(() => {
+        console.log(t('Deletion_cancelled_by_user'))
+        resolve(false) // Cancelled
+      })
+  })
 }
+// Options to control the output parts precisely
+const formatter = new Intl.DateTimeFormat('en-GB', {
+  timeZone: 'Asia/Bangkok',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  hour12: false // Use 24-hour clock
+})
+
+export const currentDateTimeStr = formatter.format(new Date())

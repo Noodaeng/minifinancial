@@ -69,12 +69,19 @@ export function useDataState() {
   const canSave = computed(() => {
     return state.value === EDataState.ValidEdit || state.value === EDataState.ValidNew
   })
-
+  const resetDataState = () => {
+    if (canSave) {
+      stateCtrl(false, false, false, false)
+    } else {
+      stateCtrl(true, false, false, false)
+    }
+  }
   return {
     state,
     canCreate,
     canDelete,
     canSave,
-    stateCtrl
+    stateCtrl,
+    resetDataState
   }
 }

@@ -1,127 +1,118 @@
 <template>
   <div class="q-pa-md">
-    <q-form ref="myForm" class="q-gutter-md q-mt-sm bg-body text-appText">
-      <q-card class="bg-body text-appText col-12 col-md-12">
-        <q-icon class="q-ma-xs bg-body text-appText" name="mdi-account-details-outline" size="md" />
-        <div class="text-subtitle1 inline-block q-ml-sm">
-          {{ $t('Customer_Accounts') }}: {{ model?.customerId }}
+    <q-form ref="myForm" class="bg-body text-appText">
+      <q-card flat class="bg-body text-appText col-12">
+        <!-- Header Zone -->
+        <div class="row items-center q-mb-md">
+          <q-icon name="mdi-account-details-outline" size="md" />
+          <div class="text-subtitle1 q-ml-sm">
+            {{ $t('Customer_Accounts') }}: {{ model?.customerId }}
+          </div>
         </div>
-        <div class="row justify-start items-start">
-          <div class="col-12 col-md-3">
+
+        <!-- Coordinated Gutter Layout Grid -->
+        <div class="row q-col-gutter-md">
+          <!-- Row segment 1 elements -->
+          <div class="col-12 col-sm-6 col-md-3">
             <q-input
               outlined
               v-model="model.cardId"
               :label="$t('Card_Id')"
               label-color="appLabel"
               :hint="$t('Card_Id')"
-              :readonly="false"
               :rules="strRule"
               lazy-rules
               dense
               input-class="text-appText"
-              class="q-ma-sm"
-            >
-            </q-input>
+            />
           </div>
-          <div class="col-12 col-md-3">
+
+          <div class="col-12 col-sm-6 col-md-3">
             <q-input
               outlined
               v-model="model.name"
               :label="$t('Name')"
               label-color="appLabel"
               :hint="$t('Name')"
-              :readonly="false"
               :rules="strRule"
               lazy-rules
               dense
               input-class="text-appText"
-              class="q-ma-sm"
-            >
-            </q-input>
+            />
           </div>
-          <div class="col-12 col-md-3">
+
+          <div class="col-12 col-sm-6 col-md-3">
             <q-input
               outlined
               v-model="model.email"
               :label="$t('Email')"
               label-color="appLabel"
               :hint="$t('Email')"
-              :readonly="false"
-              :rules="strRule"
+              :rules="emailRule"
               lazy-rules
               dense
               input-class="text-appText"
-              class="q-ma-sm"
-            >
-            </q-input>
+            />
           </div>
-          <div class="col-12 col-md-3">
+
+          <div class="col-12 col-sm-6 col-md-3">
             <q-input
               outlined
               v-model="model.phone"
               :label="$t('Phone')"
               label-color="appLabel"
               :hint="$t('Phone')"
-              :readonly="false"
               :rules="strRule"
               lazy-rules
               dense
               input-class="text-appText"
-              class="q-ma-sm"
-            >
-            </q-input>
+            />
           </div>
-        </div>
-        <div class="row justify-start items-start">
-          <div class="col-12 col-md-3">
+
+          <!-- Row segment 2 elements -->
+          <div class="col-12 col-sm-6 col-md-3">
             <q-input
               outlined
               v-model="model.address"
               :label="$t('Address')"
               label-color="appLabel"
               :hint="$t('Address')"
-              :readonly="false"
               :rules="strRule"
               lazy-rules
               dense
               input-class="text-appText"
-              class="q-ma-sm"
-            >
-            </q-input>
+            />
           </div>
-          <div class="col-12 col-md-3">
+
+          <div class="col-12 col-sm-6 col-md-3">
             <q-input
               outlined
               v-model="model.lineId"
               :label="$t('Line_Id')"
               label-color="appLabel"
               :hint="$t('Line_Id')"
-              :readonly="false"
               :rules="strRule"
               lazy-rules
               dense
               input-class="text-appText"
-              class="q-ma-sm"
-            >
-            </q-input>
+            />
           </div>
-          <div class="col-12 col-md-3">
+
+          <div class="col-12 col-sm-6 col-md-3">
             <q-input
               outlined
               v-model="model.creditLimit"
               :label="$t('Credit_limit')"
               label-color="appLabel"
               :hint="$t('Credit_limit')"
-              :readonly="false"
               :rules="creditRule"
               lazy-rules
               dense
               input-class="text-appText"
-              class="q-ma-sm"
-            >
-            </q-input>
+            />
           </div>
-          <div class="col-12 col-md-3">
+
+          <div class="col-12 col-sm-6 col-md-3">
             <q-input
               outlined
               v-model="model.createOn"
@@ -129,59 +120,50 @@
               label-color="appLabel"
               :hint="$t('Create_on')"
               :readonly="true"
-              lazy-rules
               dense
               input-class="text-appText"
-              class="q-ma-sm"
-            >
-            </q-input>
+            />
           </div>
-        </div>
-        <div class="row justify-start items-start">
-          <div class="col-12 col-md-3">
+
+          <!-- Row segment 3 elements -->
+          <div class="col-12 col-sm-6 col-md-3">
             <q-select
               v-model="model.customerType"
               label-color="appLabel"
               :label="$t('Customer_category')"
               :hint="$t('Customer_category')"
               :options="custOption"
-              :readonly="false"
               :rules="custTypeRule"
               lazy-rules
               dense
               outlined
-              borderless
               emit-value
               map-options
               options-dense
               popup-content-class="bg-body text-appText"
-              class="q-ma-sm"
-            >
-            </q-select>
+            />
           </div>
-          <div class="col-12 col-md-6">
+
+          <!-- Remark gets extra breathing room on larger screens -->
+          <div class="col-12 col-sm-6 col-md-6">
             <q-input
               outlined
               v-model="model.remark"
               :label="$t('Remark')"
               label-color="appLabel"
               :hint="$t('Remark')"
-              :readonly="false"
-              lazy-rules
               dense
               input-class="text-appText"
-              class="q-ma-sm"
-            >
-            </q-input>
+            />
           </div>
-          <div class="col-12 col-md-3">
+
+          <div class="col-12 col-sm-12 col-md-3 flex items-center justify-start q-pt-sm">
             <q-checkbox
-              :disable="false"
               :true-value="1"
               :false-value="0"
               v-model="model.isActive"
               :label="$t('Active')"
-              :rules="custTypeRule"
+              :rules="checkboxRule"
             />
           </div>
         </div>
@@ -226,7 +208,7 @@ export default defineComponent({
     const emailRule = rules.email()
     const creditRule = rules.floatRange(0, 1000000)
     const custTypeRule = rules.enumSelect()
-
+    const checkboxRule = rules.integer()
     return {
       model: modelConverter<Customer>(props.info) ?? new Customer(),
       custOption: enumToQSelectOptions(ECreditCustomerType),
@@ -235,6 +217,7 @@ export default defineComponent({
       creditRule,
       custTypeRule,
       myForm,
+      checkboxRule,
       clearValidation,
       getValidate
     }

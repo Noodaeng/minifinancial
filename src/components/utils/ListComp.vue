@@ -62,25 +62,29 @@ export default defineComponent({
 </script>
 <style lang="sass" scoped>
 .my-sticky-dynamic
-  /* height or max-height is important */
-  height: 63vh
+  /* Default fluid style for mobile viewports */
+  height: auto
+  max-height: 50vh
+
+  /* Desktop breakpoint logic overrides */
+  @media (min-width: 1024px)
+    height: 70vh
+    max-height: 75vh
+
   .q-table__top,
   .q-table__bottom,
-  thead tr:first-child th /* bg color is important for th; just specify one */
+  thead tr:first-child th
     background-color: #2E3745
 
   thead tr th
     position: sticky
     z-index: 1
-  /* this will be the loading indicator */
+
   thead tr:last-child th
-    /* height of all previous header rows */
     top: 48px
   thead tr:first-child th
     top: 0
 
-  /* prevent scrolling behind sticky top row on focus */
   tbody
-    /* height of all previous header rows */
     scroll-margin-top: 48px
 </style>
