@@ -29,20 +29,13 @@
       <div class="col-12 col-md-8">
         <div class="column justify-between full-height">
           <q-card class="bg-body text-appText flat bordered q-mb-md">
-            <CustomerComp ref="myChild" :info="customer" />
+            <CustomerComp
+              ref="myChild"
+              :info="customer"
+              :enbBtnSave="canSave"
+              @onClickSave="onSave"
+            />
           </q-card>
-
-          <!-- Bottom Action Buttons aligned dynamically -->
-          <div class="row justify-end items-center q-mt-sm">
-            <div class="col-12 col-sm-auto bg-body text-appText">
-              <SaveCancelBtn
-                class="full-width"
-                :enbBtnDiscard="false"
-                :enbBtnSave="canSave"
-                @onClickSave="onSave"
-              />
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -54,15 +47,13 @@ import { defineComponent, ref, onMounted } from 'vue'
 import CustomerComp from '../../components/CustomerComp.vue'
 import ListComp from '../../components/utils/ListComp.vue'
 import StateCtrlBtn from '../../components/utils/StateCtrlBtn.vue'
-import SaveCancelBtn from '../../components/utils/SaveCancelBtn.vue'
 import { useCustomerProp } from '../../hooks/useCustomerProp'
 export default defineComponent({
   name: 'CustomerPage',
   components: {
     CustomerComp,
     ListComp,
-    StateCtrlBtn,
-    SaveCancelBtn
+    StateCtrlBtn
   },
   data() {
     return {

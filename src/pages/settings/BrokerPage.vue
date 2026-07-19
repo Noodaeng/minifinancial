@@ -29,20 +29,8 @@
       <div class="col-12 col-md-8">
         <div class="column justify-between full-height">
           <q-card class="bg-body text-appText flat bordered q-mb-md">
-            <BrokerComp ref="myChild" :info="broker" />
+            <BrokerComp ref="myChild" :info="broker" :enbBtnSave="canSave" @onClickSave="onSave" />
           </q-card>
-
-          <!-- Bottom Action Buttons Strip -->
-          <div class="row justify-end items-center q-mt-sm">
-            <div class="col-12 col-sm-auto bg-body text-appText">
-              <SaveCancelBtn
-                class="full-width"
-                :enbBtnDiscard="false"
-                :enbBtnSave="canSave"
-                @onClickSave="onSave"
-              />
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -55,7 +43,6 @@ import { defineComponent, ref, onMounted } from 'vue'
 import BrokerComp from '../../components/BrokerComp.vue'
 import ListComp from '../../components/utils/ListComp.vue'
 import StateCtrlBtn from '../../components/utils/StateCtrlBtn.vue'
-import SaveCancelBtn from '../../components/utils/SaveCancelBtn.vue'
 import { useBrokerProp } from '../../hooks/useBrokerProp'
 
 export default defineComponent({
@@ -63,8 +50,7 @@ export default defineComponent({
   components: {
     BrokerComp,
     ListComp,
-    StateCtrlBtn,
-    SaveCancelBtn
+    StateCtrlBtn
   },
   setup() {
     const myChild = ref<InstanceType<typeof BrokerComp>>()

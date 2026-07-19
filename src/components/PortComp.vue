@@ -10,7 +10,7 @@
         <!-- Using q-col-gutter-md manages padding between controls fluidly -->
         <div class="row q-col-gutter-md">
           <!-- Row 1 Items -->
-          <div class="col-12 col-sm-6 col-md-4">
+          <div class="col-12 col-sm-6 col-md-6">
             <q-input
               outlined
               v-model="model.description"
@@ -24,7 +24,7 @@
             />
           </div>
 
-          <div class="col-12 col-sm-6 col-md-4">
+          <div class="col-12 col-sm-6 col-md-3">
             <q-select
               v-model="model.portType"
               label-color="appLabel"
@@ -43,7 +43,7 @@
             />
           </div>
 
-          <div class="col-12 col-sm-6 col-md-4">
+          <div class="col-12 col-sm-6 col-md-3">
             <q-input
               outlined
               v-model="model.createOn"
@@ -57,7 +57,7 @@
           </div>
 
           <!-- Row 2 Items -->
-          <div class="col-12 col-sm-6 col-md-4">
+          <div class="col-12 col-sm-6 col-md-3">
             <q-input
               outlined
               v-model="model.status"
@@ -72,7 +72,7 @@
           </div>
 
           <!-- Remark can scale wider on desktop screens -->
-          <div class="col-12 col-md-8">
+          <div class="col-12 col-md-9">
             <q-input
               outlined
               v-model="model.remark"
@@ -148,7 +148,7 @@
           </div>
 
           <!-- Row 4 Items -->
-          <div class="col-12 col-sm-4 col-md-4">
+          <div class="col-12 col-sm-4 col-md-3">
             <q-select
               v-model="model.paymentTerm"
               label-color="appLabel"
@@ -166,7 +166,7 @@
             />
           </div>
 
-          <div class="col-12 col-sm-4 col-md-4">
+          <div class="col-12 col-sm-4 col-md-3">
             <q-input
               outlined
               v-model="model.paymentRate"
@@ -178,7 +178,7 @@
             />
           </div>
 
-          <div class="col-12 col-sm-4 col-md-4 flex items-center justify-between">
+          <div class="col-12 col-sm-4 col-md-3">
             <q-input
               outlined
               v-model="model.period"
@@ -189,12 +189,24 @@
               input-class="text-appText"
               class="full-width q-mb-sm"
             />
+          </div>
+          <div class="col-12 col-sm-4 col-md-3">
             <q-checkbox
               :true-value="1"
               :false-value="0"
               v-model="model.isActive"
               :label="$t('Active')"
               :rules="checkboxRule"
+            />
+          </div>
+        </div>
+        <div class="row justify-end items-center q-mt-sm">
+          <div class="col-12 col-sm-auto bg-body text-appText">
+            <SaveCancelBtn
+              class="full-width"
+              :enbBtnDiscard="false"
+              :enbBtnSave="enbBtnSave"
+              @onClickSave="$emit('onClickSave')"
             />
           </div>
         </div>
@@ -210,9 +222,10 @@ import { useValidationRules } from '../hooks/useValidationRules'
 import { i18n } from '../i18n'
 import { EInvestPortType, EPaymentTerm } from '../types/myEnums'
 import { QSelectOption } from '../types/myTypes'
+import SaveCancelBtn from '../components/utils/SaveCancelBtn.vue'
 export default defineComponent({
   name: 'PortComp',
-  components: {},
+  components: { SaveCancelBtn },
   data() {
     return {}
   },
@@ -234,6 +247,10 @@ export default defineComponent({
     brokerOption: {
       type: Array<QSelectOption>,
       default: []
+    },
+    enbBtnSave: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, { emit }) {

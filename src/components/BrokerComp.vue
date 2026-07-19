@@ -165,6 +165,16 @@
             />
           </div>
         </div>
+        <div class="row justify-end items-center q-mt-sm">
+          <div class="col-12 col-sm-auto bg-body text-appText">
+            <SaveCancelBtn
+              class="full-width"
+              :enbBtnDiscard="false"
+              :enbBtnSave="enbBtnSave"
+              @onClickSave="$emit('onClickSave')"
+            />
+          </div>
+        </div>
       </q-card>
     </q-form>
   </div>
@@ -177,13 +187,18 @@ import Broker from '../models/broker'
 import { useValidationRules } from '../hooks/useValidationRules'
 import { i18n } from '../i18n'
 import { ECreditCustomerType } from '../types/myEnums'
-
+import SaveCancelBtn from '../components/utils/SaveCancelBtn.vue'
 export default defineComponent({
   name: 'BrokerComp',
+  components: { SaveCancelBtn },
   props: {
     info: {
       type: Object,
       default: () => ({})
+    },
+    enbBtnSave: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props) {

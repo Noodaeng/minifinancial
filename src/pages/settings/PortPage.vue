@@ -35,20 +35,10 @@
               :brokerOption="brokerOption"
               :portType="portType"
               :info="port"
+              :enbBtnSave="canSave"
+              @onClickSave="onSave"
             />
           </q-card>
-
-          <!-- Bottom Action Buttons aligned dynamically -->
-          <div class="row justify-end items-center q-mt-sm">
-            <div class="col-12 col-sm-auto bg-body text-appText">
-              <SaveCancelBtn
-                class="full-width"
-                :enbBtnDiscard="false"
-                :enbBtnSave="canSave"
-                @onClickSave="onSave"
-              />
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -59,7 +49,6 @@ import { defineComponent, ref, onMounted, PropType, watch, computed } from 'vue'
 import PortComp from '../../components/PortComp.vue'
 import ListComp from '../../components/utils/ListComp.vue'
 import StateCtrlBtn from '../../components/utils/StateCtrlBtn.vue'
-import SaveCancelBtn from '../../components/utils/SaveCancelBtn.vue'
 import { usePortProp } from '../../hooks/usePortProp.js'
 import { EInvestPortType } from '../../types/myEnums.js'
 
@@ -68,8 +57,7 @@ export default defineComponent({
   components: {
     PortComp,
     ListComp,
-    StateCtrlBtn,
-    SaveCancelBtn
+    StateCtrlBtn
   },
   props: {
     // 1. This matches the ':portType' param string from your router file
