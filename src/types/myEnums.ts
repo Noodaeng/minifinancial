@@ -58,3 +58,43 @@ export enum EPaymentTerm {
   Monthly = 1,
   Yearly = 2
 }
+// Cash & Deposits
+export enum CashTransactionType {
+  Deposit = 0, // ฝากเงิน
+  Withdrawal = 1, // ถอนเงิน
+  InterestIncome = 2, // รับดอกเบี้ย
+  Transfer = 3 // โอนเงิน
+}
+
+// Loans
+export enum LoanTransactionType {
+  LoanIssued = 0, // ปล่อยกู้
+  LoanRepayment = 1, // รับชำระคืน
+  InterestAccrual = 2, // ดอกเบี้ยค้างรับ
+  BadDebtWriteOff = 3, // ตัดหนี้สูญ
+  ReFinance = 4 // รีไฟแนนซ์ / ปรับโครงสร้างหนี้
+}
+
+// Securities
+export enum SecurityTransactionType {
+  SecurityPurchase = 0, // ซื้อพันธบัตร/หุ้นกู้
+  SecuritySale = 1, // ขายพันธบัตร/หุ้นกู้
+  CouponPayment = 2, // รับคูปอง/ดอกเบี้ย
+  FairValueAdjustment = 3 // ปรับมูลค่ายุติธรรม
+}
+
+// Equity
+export enum EquityTransactionType {
+  EquityPurchase = 0, // ซื้อหุ้น
+  EquitySale = 1, // ขายหุ้น
+  DividendReceived = 2, // รับเงินปันผล
+  EquityMethodAdjustment = 3 // ปรับตามวิธีส่วนได้เสีย
+}
+
+// Other Investments
+export enum OtherTransactionType {
+  RealEstatePurchase = 0, // ซื้ออสังหาริมทรัพย์
+  RentalIncome = 1, // รับค่าเช่า
+  MutualFundInvestment = 2, // ลงทุนกองทุนรวม
+  DisposalGainLoss = 3 // กำไร/ขาดทุนจากการจำหน่าย
+}
