@@ -39,7 +39,7 @@
               @onClickSave="onSave"
             />
           </q-card>
-          <div class="row q-col-gutter-md col-grow">
+          <div class="row q-col-gutter-md">
             <div class="col-12 col-md-6">
               <q-card class="bg-body text-appText flat bordered full-height">
                 <ListComp
