@@ -210,6 +210,26 @@
             />
           </div>
         </div>
+        <div class="row q-col-gutter-md">
+          <div class="col-12 col-sm-6 col-md-3">
+            <q-card> Card#1 </q-card>
+          </div>
+          <div class="col-12 col-sm-6 col-md-3">
+            <q-card> Card#2 </q-card>
+          </div>
+          <div class="col-12 col-sm-6 col-md-3">
+            <q-card> Card#3 </q-card>
+          </div>
+          <div class="col-12 col-sm-6 col-md-3">
+            <q-card> Card#4 </q-card>
+          </div>
+          <div class="col-12 col-sm-6 col-md-3">
+            <q-card> Card#5 </q-card>
+          </div>
+          <div class="col-12 col-sm-6 col-md-3">
+            <q-card> Card#6 </q-card>
+          </div>
+        </div>
       </q-card>
     </q-form>
   </div>
