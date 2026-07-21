@@ -1,8 +1,8 @@
 <template>
   <q-page class="bg-body text-appText q-pa-md">
-    <!-- Responsive main grid container -->
-    <div class="row q-col-gutter-md">
-      <!-- LEFT / TOP SIDE: Controls & List Component -->
+    <!-- Main responsive grid: items-stretch keeps left & right heights synchronized -->
+    <div class="row q-col-gutter-md items-stretch">
+      <!-- LEFT SIDE: Controls & Main List -->
       <div class="col-12 col-md-4">
         <q-card class="bg-body text-appText flat bordered full-height-card">
           <div class="row justify-between items-center q-pa-sm">
@@ -14,7 +14,10 @@
               @onClickDelete="onDelete"
             />
           </div>
+
           <q-separator />
+
+          <!-- Main List Container -->
 
           <ListComp
             :rows="filteredRows"
@@ -25,9 +28,10 @@
         </q-card>
       </div>
 
-      <!-- RIGHT / BOTTOM SIDE: Form Details & Actions -->
+      <!-- RIGHT SIDE: Form Details & Secondary Lists -->
       <div class="col-12 col-md-8">
-        <div class="column justify-between full-height">
+        <div class="column full-height justify-between">
+          <!-- Top Section: Main Form -->
           <q-card class="bg-body text-appText flat bordered q-mb-md">
             <PortComp
               ref="myChild"
@@ -39,6 +43,31 @@
               @onClickSave="onSave"
             />
           </q-card>
+
+          <!-- Bottom Section: Symmetrical Twin Lists -->
+          <div class="row q-col-gutter-md col-grow">
+            <div class="col-12 col-md-6">
+              <q-card class="bg-body text-appText flat bordered full-height">
+                <ListComp
+                  :rows="filteredRows"
+                  :columns="listColumns"
+                  @onRowClick="onRowClick"
+                  @onFilter="onFilter"
+                />
+              </q-card>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <q-card class="bg-body text-appText flat bordered full-height">
+                <ListComp
+                  :rows="filteredRows"
+                  :columns="listColumns"
+                  @onRowClick="onRowClick"
+                  @onFilter="onFilter"
+                />
+              </q-card>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -53,7 +82,7 @@ import { usePortProp } from '../../hooks/usePortProp.js'
 import { EInvestPortType } from '../../types/myEnums.js'
 
 export default defineComponent({
-  name: 'PortPageCopy',
+  name: 'PortPageTest',
   components: {
     PortComp,
     ListComp,
