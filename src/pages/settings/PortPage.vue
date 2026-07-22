@@ -1,7 +1,7 @@
 <template>
   <q-page class="bg-body text-appText q-pa-md">
     <div class="row q-col-gutter-md">
-      <!-- LEFT SIDE: Controls & List -->
+      <!-- LEFT SIDE -->
       <div class="col-12 col-md-4">
         <q-card class="bg-body text-appText flat bordered full-height-card">
           <div class="row justify-between items-center q-pa-sm">
@@ -14,7 +14,6 @@
             />
           </div>
           <q-separator />
-
           <ListComp
             :rows="filteredRows"
             :columns="listColumns"
@@ -24,10 +23,10 @@
         </q-card>
       </div>
 
-      <!-- RIGHT SIDE: Integrated Card -->
+      <!-- RIGHT SIDE -->
       <div class="col-12 col-md-8">
-        <q-card class="bg-body text-appText flat bordered full-height-card q-pa-md">
-          <!-- Top: PortComp -->
+        <q-card class="bg-body text-appText flat bordered full-height-card q-pa-md fit">
+          <!-- Top PortComp -->
           <PortComp
             ref="myChild"
             :custOption="custOption"
@@ -39,7 +38,7 @@
             class="q-mb-md"
           />
 
-          <!-- Responsive row for ListComp + PortComp -->
+          <!-- Responsive row -->
           <div class="row q-col-gutter-md">
             <div class="col-12 col-sm-6">
               <ListComp
@@ -159,13 +158,11 @@ export default defineComponent({
 @media (max-width: 600px)
   .full-height-card
     min-height: auto
+    width: 100%
     margin-bottom: 1rem
 
   .q-card
     font-size: 0.9rem
     padding: 8px
-
-@media (min-width: 1024px)
-  .full-height-card
-    min-height: 80vh
+    box-sizing: border-box
 </style>
