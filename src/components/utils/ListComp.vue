@@ -2,11 +2,11 @@
   <div class="full-height column no-wrap q-pa-sm">
     <!-- Top Search Input -->
     <div class="row q-mb-sm">
-      <div class="col-12 col-sm-6 col-md-4">
+      <div class="col-12">
         <q-input
           filled
           dense
-          class="bg-body text-appText"
+          class="bg-body text-appText full-width"
           v-model="filter"
           :label="$t('Search')"
           debounce="300"
@@ -20,20 +20,22 @@
     </div>
 
     <!-- Table Container -->
-    <div class="col column overflow-hidden">
-      <q-table
-        class="my-sticky-dynamic bg-body text-appText fit"
-        virtual-scroll
-        flat
-        bordered
-        :pagination="pagination"
-        :rows-per-page-options="[0]"
-        :virtual-scroll-sticky-size-start="48"
-        row-key="Id"
-        :rows="rows"
-        :columns="columns"
-        @row-click="(evt, row) => $emit('onRowClick', row)"
-      />
+    <div class="row">
+      <div class="col-12">
+        <q-table
+          class="my-sticky-dynamic bg-body text-appText fit"
+          virtual-scroll
+          flat
+          bordered
+          :pagination="pagination"
+          :rows-per-page-options="[0]"
+          :virtual-scroll-sticky-size-start="48"
+          row-key="Id"
+          :rows="rows"
+          :columns="columns"
+          @row-click="(evt, row) => $emit('onRowClick', row)"
+        />
+      </div>
     </div>
   </div>
 </template>

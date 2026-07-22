@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh lpR lFf" class="window-height window-width">
+  <q-layout view="lHh lpR lFf">
     <!-- Header -->
     <q-header elevated class="bg-appLayout text-appText">
       <q-toolbar
@@ -97,7 +97,7 @@
 
     <!-- Main Dynamic Application Container Target Space -->
     <q-page-container>
-      <router-view />
+      <router-view class="fit" />
     </q-page-container>
 
     <!-- Footer Area Base Component Layout -->
@@ -228,5 +228,17 @@ export default defineComponent({
 .q-field__suffix,
 .q-field__input {
   color: var(--v-primary-base);
+}
+@media (max-width: 600px) {
+  .q-header {
+    min-height: 56px !important;
+  }
+  .q-footer {
+    min-height: 28px !important;
+    font-size: 0.75rem;
+  }
+  .q-toolbar-title {
+    font-size: 0.9rem;
+  }
 }
 </style>
