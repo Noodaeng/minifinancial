@@ -1,24 +1,25 @@
 <template>
-  <!-- Main container forced to fill parent card height -->
   <div class="full-height column no-wrap q-pa-sm">
-    <!-- Top Search Input (takes only needed height) -->
-    <div class="col-auto q-mb-sm">
-      <q-input
-        filled
-        dense
-        class="bg-body text-appText"
-        v-model="filter"
-        :label="$t('Search')"
-        debounce="300"
-        @update:model-value="val => $emit('onFilter', val)"
-      >
-        <template v-slot:prepend>
-          <q-icon name="mdi-magnify" />
-        </template>
-      </q-input>
+    <!-- Top Search Input -->
+    <div class="row q-mb-sm">
+      <div class="col-12 col-sm-6 col-md-4">
+        <q-input
+          filled
+          dense
+          class="bg-body text-appText"
+          v-model="filter"
+          :label="$t('Search')"
+          debounce="300"
+          @update:model-value="val => $emit('onFilter', val)"
+        >
+          <template v-slot:prepend>
+            <q-icon name="mdi-magnify" />
+          </template>
+        </q-input>
+      </div>
     </div>
 
-    <!-- Table Container (expands to fill all remaining height) -->
+    <!-- Table Container -->
     <div class="col column overflow-hidden">
       <q-table
         class="my-sticky-dynamic bg-body text-appText fit"
