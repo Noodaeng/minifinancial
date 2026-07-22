@@ -1,9 +1,8 @@
 <template>
   <q-page class="bg-body text-appText q-pa-md">
-    <!-- Responsive main grid container -->
     <div class="row q-col-gutter-md">
-      <!-- LEFT / TOP SIDE: Controls & List Component -->
-      <div class="col-12 col-sm-12 col-md-4">
+      <!-- LEFT SIDE: Controls & List -->
+      <div class="col-12 col-md-4">
         <q-card class="bg-body text-appText flat bordered full-height-card">
           <div class="row justify-between items-center q-pa-sm">
             <StateCtrlBtn
@@ -25,47 +24,44 @@
         </q-card>
       </div>
 
-      <!-- RIGHT / BOTTOM SIDE: Form Details & Actions -->
-      <div class="col-12 col-sm-12 col-md-8">
-        <div class="column justify-between full-height">
-          <q-card class="bg-body text-appText flat bordered q-mb-md">
-            <PortComp
-              ref="myChild"
-              :custOption="custOption"
-              :brokerOption="brokerOption"
-              :portType="portType"
-              :info="port"
-              :enbBtnSave="canSave"
-              @onClickSave="onSave"
-            />
-          </q-card>
-          <!-- Responsive nested row -->
+      <!-- RIGHT SIDE: Integrated Card -->
+      <div class="col-12 col-md-8">
+        <q-card class="bg-body text-appText flat bordered full-height-card q-pa-md">
+          <!-- Top: PortComp -->
+          <PortComp
+            ref="myChild"
+            :custOption="custOption"
+            :brokerOption="brokerOption"
+            :portType="portType"
+            :info="port"
+            :enbBtnSave="canSave"
+            @onClickSave="onSave"
+            class="q-mb-md"
+          />
+
+          <!-- Responsive row for ListComp + PortComp -->
           <div class="row q-col-gutter-md">
             <div class="col-12 col-sm-6">
-              <q-card class="bg-body text-appText flat bordered q-mb-md">
-                <ListComp
-                  :rows="filteredRows"
-                  :columns="listColumns"
-                  @onRowClick="onRowClick"
-                  @onFilter="onFilter"
-                />
-              </q-card>
+              <ListComp
+                :rows="filteredRows"
+                :columns="listColumns"
+                @onRowClick="onRowClick"
+                @onFilter="onFilter"
+              />
             </div>
             <div class="col-12 col-sm-6">
-              <q-card class="bg-body text-appText flat bordered q-mb-md">
-                <PortComp
-                  ref="myChild"
-                  :custOption="custOption"
-                  :brokerOption="brokerOption"
-                  :portType="portType"
-                  :info="port"
-                  :enbBtnSave="canSave"
-                  @onClickSave="onSave"
-                />
-              </q-card>
+              <PortComp
+                ref="myChild"
+                :custOption="custOption"
+                :brokerOption="brokerOption"
+                :portType="portType"
+                :info="port"
+                :enbBtnSave="canSave"
+                @onClickSave="onSave"
+              />
             </div>
           </div>
-        </div>
+        </q-card>
       </div>
     </div>
   </q-page>
@@ -160,7 +156,15 @@ export default defineComponent({
 })
 </script>
 <style lang="sass" scoped>
-// Ensures cards are consistent in height on desktop viewports
+@media (max-width: 600px)
+  .full-height-card
+    min-height: auto
+    margin-bottom: 1rem
+
+  .q-card
+    font-size: 0.9rem
+    padding: 8px
+
 @media (min-width: 1024px)
   .full-height-card
     min-height: 80vh
