@@ -39,31 +39,29 @@
               @onClickSave="onSave"
             />
           </q-card>
-          <q-card class="bg-body text-appText flat bordered q-mb-md">
-            <div class="row q-col-gutter-md col-grow">
-              <div class="col-12 col-md-6">
-                <q-card class="bg-body text-appText flat bordered full-height">
-                  <ListComp
-                    :rows="filteredRows"
-                    :columns="listColumns"
-                    @onRowClick="onRowClick"
-                    @onFilter="onFilter"
-                  />
-                </q-card>
-              </div>
-
-              <div class="col-12 col-md-6">
-                <q-card class="bg-body text-appText flat bordered full-height">
-                  <ListComp
-                    :rows="filteredRows"
-                    :columns="listColumns"
-                    @onRowClick="onRowClick"
-                    @onFilter="onFilter"
-                  />
-                </q-card>
-              </div>
+          <div class="row q-col-gutter-md col-grow">
+            <div class="col-12 col-sm-6 col-md-6">
+              <q-card class="bg-body text-appText flat bordered full-height">
+                <ListComp
+                  :rows="filteredRows"
+                  :columns="listColumns"
+                  @onRowClick="onRowClick"
+                  @onFilter="onFilter"
+                />
+              </q-card>
             </div>
-          </q-card>
+
+            <div class="col-12 col-sm-6 col-md-6">
+              <q-card class="bg-body text-appText flat bordered full-height">
+                <ListComp
+                  :rows="filteredRows"
+                  :columns="listColumns"
+                  @onRowClick="onRowClick"
+                  @onFilter="onFilter"
+                />
+              </q-card>
+            </div>
+          </div>
         </div>
       </div>
     </div>
