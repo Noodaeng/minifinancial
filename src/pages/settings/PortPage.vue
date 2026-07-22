@@ -41,7 +41,20 @@
           </q-card>
           <!-- Testtttttttttttt -->
           <div class="row q-col-gutter-md">
-            <div class="col-12 col-md-12">
+            <div class="col-12 col-md-6">
+              <q-card class="bg-body text-appText flat bordered q-mb-md">
+                <PortComp
+                  ref="myChild"
+                  :custOption="custOption"
+                  :brokerOption="brokerOption"
+                  :portType="portType"
+                  :info="port"
+                  :enbBtnSave="canSave"
+                  @onClickSave="onSave"
+                />
+              </q-card>
+            </div>
+            <div class="col-12 col-md-6">
               <q-card class="bg-body text-appText flat bordered q-mb-md">
                 <PortComp
                   ref="myChild"
