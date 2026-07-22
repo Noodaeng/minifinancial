@@ -40,28 +40,6 @@
             />
           </q-card>
         </div>
-        <div class="row q-col-gutter-md col-grow">
-          <div class="col-12 col-sm-6 col-md-6">
-            <q-card flat class="bg-body text-appText col-12">
-              <ListComp
-                :rows="filteredRows"
-                :columns="listColumns"
-                @onRowClick="onRowClick"
-                @onFilter="onFilter"
-              />
-            </q-card>
-          </div>
-          <div class="col-12 col-sm-6 col-md-6">
-            <q-card flat class="bg-body text-appText col-12">
-              <ListComp
-                :rows="filteredRows"
-                :columns="listColumns"
-                @onRowClick="onRowClick"
-                @onFilter="onFilter"
-              />
-            </q-card>
-          </div>
-        </div>
       </div>
     </div>
   </q-page>
