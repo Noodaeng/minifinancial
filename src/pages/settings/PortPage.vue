@@ -3,7 +3,7 @@
     <!-- Responsive main grid container -->
     <div class="row q-col-gutter-md">
       <!-- LEFT / TOP SIDE: Controls & List Component -->
-      <div class="col-12 col-md-4">
+      <div class="col-12 col-sm-12 col-md-4">
         <q-card class="bg-body text-appText flat bordered full-height-card">
           <div class="row justify-between items-center q-pa-sm">
             <StateCtrlBtn
@@ -26,7 +26,7 @@
       </div>
 
       <!-- RIGHT / BOTTOM SIDE: Form Details & Actions -->
-      <div class="col-12 col-md-8">
+      <div class="col-12 col-sm-12 col-md-8">
         <div class="column justify-between full-height">
           <q-card class="bg-body text-appText flat bordered q-mb-md">
             <PortComp
@@ -40,9 +40,10 @@
             />
           </q-card>
         </div>
-        <!-- Testtttttttttttt -->
+
+        <!-- Responsive nested row -->
         <div class="row q-col-gutter-md">
-          <div class="col-12 col-md-6">
+          <div class="col-12 col-sm-6">
             <q-card class="bg-body text-appText flat bordered q-mb-md">
               <ListComp
                 :rows="filteredRows"
@@ -52,7 +53,7 @@
               />
             </q-card>
           </div>
-          <div class="col-12 col-md-6">
+          <div class="col-12 col-sm-6">
             <q-card class="bg-body text-appText flat bordered q-mb-md">
               <PortComp
                 ref="myChild"
@@ -70,6 +71,7 @@
     </div>
   </q-page>
 </template>
+
 <script lang="ts">
 import { defineComponent, ref, onMounted, PropType, watch, computed } from 'vue'
 import PortComp from '../../components/PortComp.vue'
