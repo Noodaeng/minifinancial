@@ -39,32 +39,31 @@
               @onClickSave="onSave"
             />
           </q-card>
-        </div>
-
-        <!-- Responsive nested row -->
-        <div class="row q-col-gutter-md">
-          <div class="col-12 col-sm-6">
-            <q-card class="bg-body text-appText flat bordered q-mb-md">
-              <ListComp
-                :rows="filteredRows"
-                :columns="listColumns"
-                @onRowClick="onRowClick"
-                @onFilter="onFilter"
-              />
-            </q-card>
-          </div>
-          <div class="col-12 col-sm-6">
-            <q-card class="bg-body text-appText flat bordered q-mb-md">
-              <PortComp
-                ref="myChild"
-                :custOption="custOption"
-                :brokerOption="brokerOption"
-                :portType="portType"
-                :info="port"
-                :enbBtnSave="canSave"
-                @onClickSave="onSave"
-              />
-            </q-card>
+          <!-- Responsive nested row -->
+          <div class="row q-col-gutter-md">
+            <div class="col-12 col-sm-6">
+              <q-card class="bg-body text-appText flat bordered q-mb-md">
+                <ListComp
+                  :rows="filteredRows"
+                  :columns="listColumns"
+                  @onRowClick="onRowClick"
+                  @onFilter="onFilter"
+                />
+              </q-card>
+            </div>
+            <div class="col-12 col-sm-6">
+              <q-card class="bg-body text-appText flat bordered q-mb-md">
+                <PortComp
+                  ref="myChild"
+                  :custOption="custOption"
+                  :brokerOption="brokerOption"
+                  :portType="portType"
+                  :info="port"
+                  :enbBtnSave="canSave"
+                  @onClickSave="onSave"
+                />
+              </q-card>
+            </div>
           </div>
         </div>
       </div>
