@@ -41,7 +41,7 @@
           </q-card>
           <div class="row q-col-gutter-md col-grow">
             <div class="col-12 col-sm-6 col-md-6">
-              <q-card class="bg-body text-appText flat bordered full-height">
+              <q-card flat class="bg-body text-appText col-12">
                 <ListComp
                   :rows="filteredRows"
                   :columns="listColumns"
@@ -52,7 +52,7 @@
             </div>
 
             <div class="col-12 col-sm-6 col-md-6">
-              <q-card class="bg-body text-appText flat bordered full-height">
+              <q-card flat class="bg-body text-appText col-12">
                 <ListComp
                   :rows="filteredRows"
                   :columns="listColumns"
