@@ -15,3 +15,10 @@ export interface QSelectOption {
   value: string | number
   label: string
 }
+export interface PortDetail {
+  enble: boolean
+  visible: boolean
+  description: string
+  iconName: string
+  actClick: Action
+}

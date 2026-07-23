@@ -43,5 +43,14 @@ export default {
   EquityHoldings: 'Equity Holdings',
   OtherInvestments: 'Other investments',
   Port_Investments: 'Port investments',
-  Port_description: 'Port description'
+  Port_description: 'Port description',
+  Deposit: 'Deposit', // ฝากเงิน
+  Withdrawal: 'Withdrawal', // ถอนเงิน
+  InterestIncome: 'Interest Income', // รับดอกเบี้ย
+  Transfer: 'Transfer', // โอนเงิน
+  LoanIssued: 'Loan Issued', // ปล่อยกู้
+  LoanRepayment: 'Loan Repayment', // รับชำระคืน
+  InterestAccrual: 'Interest Accrual', // ดอกเบี้ยค้างรับ
+  BadDebtWriteOff: 'Bad Debt Write Off', // ตัดหนี้สูญ
+  ReFinance: 'Re-Finance' // รีไฟแนนซ์ / ปรับโครงสร้างหนี้
 }

@@ -49,15 +49,7 @@
               />
             </div>
             <div class="col-12 col-sm-6">
-              <PortComp
-                ref="myChild"
-                :custOption="custOption"
-                :brokerOption="brokerOption"
-                :portType="portType"
-                :info="port"
-                :enbBtnSave="canSave"
-                @onClickSave="onSave"
-              />
+              <PortDetailComp />
             </div>
           </div>
         </q-card>
@@ -69,6 +61,7 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted, PropType, watch, computed } from 'vue'
 import PortComp from '../../components/PortComp.vue'
+import PortDetailComp from '../../components/PortDetailComp.vue'
 import ListComp from '../../components/utils/ListComp.vue'
 import StateCtrlBtn from '../../components/utils/StateCtrlBtn.vue'
 import { usePortProp } from '../../hooks/usePortProp.js'
@@ -79,7 +72,8 @@ export default defineComponent({
   components: {
     PortComp,
     ListComp,
-    StateCtrlBtn
+    StateCtrlBtn,
+    PortDetailComp
   },
   props: {
     // 1. This matches the ':portType' param string from your router file
