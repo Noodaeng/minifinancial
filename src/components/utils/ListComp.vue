@@ -37,6 +37,7 @@
         />
       </div>
     </div>
+    <slot name="append"></slot>
   </div>
 </template>
 
