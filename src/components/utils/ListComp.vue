@@ -59,6 +59,7 @@ export default defineComponent({
   emits: ['onFilter', 'onRowClick'],
   setup() {
     const filter = ref('')
+
     return {
       filter,
       pagination: ref({
