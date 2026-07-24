@@ -45,15 +45,17 @@
                 <template v-slot:append>
                   <div ref="popupAnchor">
                     <q-popup-proxy
+                      class="bg-body text-appText"
                       ref="popupRef"
                       anchor="center middle"
                       self="center middle"
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <PortDialogComp class="q-pa-md"></PortDialogComp>
-                    </q-popup-proxy></div
-                ></template>
+                      <PortDialogComp></PortDialogComp>
+                    </q-popup-proxy>
+                  </div>
+                </template>
               </ListComp>
             </div>
             <div class="col-12 col-sm-6">
