@@ -41,12 +41,21 @@
           <!-- Responsive row -->
           <div class="row q-col-gutter-md">
             <div class="col-12 col-sm-6">
-              <ListComp
-                :rows="filteredRows"
-                :columns="listColumns"
-                @onRowClick="onRowClick"
-                @onFilter="onFilter"
-              />
+              <ListComp :rows="filteredRows" :columns="listColumns" @onRowClick="onRowClickTest">
+                <template v-slot:append>
+                  <div ref="popupAnchor">
+                    <q-popup-proxy
+                      ref="popupRef"
+                      anchor="center middle"
+                      self="center middle"
+                      transition-show="scale"
+                      transition-hide="scale"
+                    >
+                      <q-card class="q-pa-md"> 555555!!!! </q-card>
+                    </q-popup-proxy>
+                  </div></template
+                >
+              </ListComp>
             </div>
             <div class="col-12 col-sm-6">
               <PortDetailComp />
@@ -66,7 +75,7 @@ import ListComp from '../../components/utils/ListComp.vue'
 import StateCtrlBtn from '../../components/utils/StateCtrlBtn.vue'
 import { usePortProp } from '../../hooks/usePortProp.js'
 import { EInvestPortType } from '../../types/myEnums.js'
-
+import { QPopupProxy } from 'quasar'
 export default defineComponent({
   name: 'PortPage',
   components: {
@@ -125,6 +134,12 @@ export default defineComponent({
     }
     const custOption = computed(() => usePort.rawOptionToQSelectOptions('customers'))
     const brokerOption = computed(() => usePort.rawOptionToQSelectOptions('brokers'))
+    const popupRef = ref<QPopupProxy | null>(null)
+    const popupAnchor = ref<HTMLElement | null>(null)
+    const onRowClickTest = (row: any) => {
+      if (row) popupRef.value?.show()
+      console.log('!!!!!!!----rowcccccc', popupRef.value)
+    }
     return {
       splitterModel: ref(35),
       custOption,
@@ -139,6 +154,9 @@ export default defineComponent({
       onCreate: usePort.onCreatePort,
       onDelete: usePort.onDelete,
       onSave: save,
+      onRowClickTest,
+      popupRef,
+      popupAnchor,
       canDelete: usePort.canDelete,
       canCreate: usePort.canCreate,
       canSave: usePort.canSave,
