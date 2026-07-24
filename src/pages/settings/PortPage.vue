@@ -51,10 +51,9 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-card class="q-pa-md"> 555555!!!! </q-card>
-                    </q-popup-proxy>
-                  </div></template
-                >
+                      <PortDialogComp class="q-pa-md"></PortDialogComp>
+                    </q-popup-proxy></div
+                ></template>
               </ListComp>
             </div>
             <div class="col-12 col-sm-6">
@@ -71,6 +70,7 @@
 import { defineComponent, ref, onMounted, PropType, watch, computed } from 'vue'
 import PortComp from '../../components/PortComp.vue'
 import PortDetailComp from '../../components/PortDetailComp.vue'
+import PortDialogComp from '../../components/PortDialogComp.vue'
 import ListComp from '../../components/utils/ListComp.vue'
 import StateCtrlBtn from '../../components/utils/StateCtrlBtn.vue'
 import { usePortProp } from '../../hooks/usePortProp.js'
@@ -82,7 +82,8 @@ export default defineComponent({
     PortComp,
     ListComp,
     StateCtrlBtn,
-    PortDetailComp
+    PortDetailComp,
+    PortDialogComp
   },
   props: {
     // 1. This matches the ':portType' param string from your router file
