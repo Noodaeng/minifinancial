@@ -59,7 +59,7 @@
               </ListComp>
             </div>
             <div class="col-12 col-sm-6">
-              <PortDetailComp />
+              <PortDetailComp :details="sessions" />
             </div>
           </div>
         </q-card>
@@ -137,6 +137,7 @@ export default defineComponent({
     }
     const custOption = computed(() => usePort.rawOptionToQSelectOptions('customers'))
     const brokerOption = computed(() => usePort.rawOptionToQSelectOptions('brokers'))
+    const sessions = computed(() => usePort.getPortSessionInfo(props.portType))
     const popupRef = ref<QPopupProxy | null>(null)
     const popupAnchor = ref<HTMLElement | null>(null)
     const onRowClickTest = (row: any) => {
@@ -164,6 +165,7 @@ export default defineComponent({
       canCreate: usePort.canCreate,
       canSave: usePort.canSave,
       state: usePort.state,
+      sessions,
       myChild
     }
   }

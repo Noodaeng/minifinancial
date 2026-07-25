@@ -44,13 +44,31 @@ export default {
   OtherInvestments: 'Other investments',
   Port_Investments: 'Port investments',
   Port_description: 'Port description',
+  //++++++++++++
   Deposit: 'Deposit', // ฝากเงิน
   Withdrawal: 'Withdrawal', // ถอนเงิน
   InterestIncome: 'Interest Income', // รับดอกเบี้ย
   Transfer: 'Transfer', // โอนเงิน
+  //++++++++++++
   LoanIssued: 'Loan Issued', // ปล่อยกู้
   LoanRepayment: 'Loan Repayment', // รับชำระคืน
   InterestAccrual: 'Interest Accrual', // ดอกเบี้ยค้างรับ
   BadDebtWriteOff: 'Bad Debt Write Off', // ตัดหนี้สูญ
-  ReFinance: 'Re-Finance' // รีไฟแนนซ์ / ปรับโครงสร้างหนี้
+  ReFinance: 'Re-Finance', // รีไฟแนนซ์ / ปรับโครงสร้างหนี้
+  //+++++++++++++
+  SecurityPurchase: 'Security Purchase', // ซื้อพันธบัตร/หุ้นกู้
+  SecuritySale: 'Security Sale', // ขายพันธบัตร/หุ้นกู้
+  CouponPayment: 'Coupon Payment', // รับคูปอง/ดอกเบี้ย
+  FairValueAdjustment: 'FairValue Adjustment', // ปรับมูลค่ายุติธรรม
+  //+++++++++++++
+  EquityPurchase: 'Equity Purchase', // ซื้อหุ้น
+  EquitySale: 'Equity Sale', // ขายหุ้น
+  DividendReceived: 'Dividend Received', // รับเงินปันผล
+  EquityMethodAdjustment: 'Equity Method Adjustment', // ปรับตามวิธีส่วนได้เสีย
+  //+++++++++++++
+  RealEstatePurchase: 'Real Estate Purchase', // ซื้ออสังหาริมทรัพย์
+  RentalIncome: 'Rental Income', // รับค่าเช่า
+  MutualFundInvestment: 'Mutual Fund Investment', // ลงทุนกองทุนรวม
+  DisposalGain: 'Disposal Gain ', // กำไร/ขาดทุนจากการจำหน่าย
+  DisposalLoss: 'Disposal Loss' // ขาดทุนจากการจำหน่าย
 }

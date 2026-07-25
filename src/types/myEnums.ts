@@ -96,5 +96,6 @@ export enum OtherTransactionType {
   RealEstatePurchase = 0, // ซื้ออสังหาริมทรัพย์
   RentalIncome = 1, // รับค่าเช่า
   MutualFundInvestment = 2, // ลงทุนกองทุนรวม
-  DisposalGainLoss = 3 // กำไร/ขาดทุนจากการจำหน่าย
+  DisposalGain = 3, // กำไรจากการจำหน่าย
+  DisposalLoss = 4 // ขาดทุนจากการจำหน่าย
 }
