@@ -124,6 +124,11 @@ export default defineComponent({
       usePort.clearValidate.value = () => {
         myChild.value?.clearValidation()
       }
+
+      usePort.sessionClicks.value[0] = () => {
+        console.log('tesssssssssss-------..cccclllliiiccckk')
+      }
+
       await usePort.Init()
     }
 

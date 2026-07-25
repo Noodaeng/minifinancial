@@ -15,10 +15,19 @@
             v-bind="session"
             class="col-12 col-sm-6 col-md-6"
           >
-            <q-btn :disable="!session.enble" class="bg-body text-appText" @click="session.actClick">
-              <q-icon left size="sm" :name="session.iconName" />
-              <div>{{ session.description }}</div>
-            </q-btn>
+            <q-card
+              v-if="session.enble"
+              @click="session.actClick"
+              class="bg-body text-appText cursor-pointer q-pa-sm"
+            >
+              <!-- Inline Icon + Title -->
+              <div class="row items-center">
+                <q-icon size="sm" :name="session.iconName" class="q-mr-xs" />
+                <div class="text-subtitle1">{{ session.description }}</div>
+              </div>
+
+              <div class="text-subtitle2">by John Doe</div>
+            </q-card>
           </div>
         </div>
       </q-card>
