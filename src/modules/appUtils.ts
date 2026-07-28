@@ -190,6 +190,23 @@ export const getSessionType = (
   }
 }
 
+export const sessionTypeToQSelectOptions = (
+  portType: string | number | EInvestPortType
+): QSelectOption[] => {
+  switch (Number(portType)) {
+    case 1:
+      return enumToQSelectOptions(LoanTransactionType)
+    case 2:
+      return enumToQSelectOptions(SecurityTransactionType)
+    case 3:
+      return enumToQSelectOptions(EquityTransactionType)
+    case 4:
+      return enumToQSelectOptions(OtherTransactionType)
+    default:
+      return enumToQSelectOptions(CashTransactionType)
+  }
+}
+
 export const confirmDelete = (
   $q: QVueGlobals,
   info: string,

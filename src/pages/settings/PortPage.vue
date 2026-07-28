@@ -44,7 +44,7 @@
               <ListComp
                 :rows="sesFilterRows"
                 :columns="sesListColumns"
-                @onRowClick="useSession.onRowClick"
+                @onRowClick="onSesRowClick"
                 @onFilter="useSession.onFilter"
               >
                 <template v-slot:append>
@@ -57,7 +57,11 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <PortDialogComp></PortDialogComp>
+                      <PortDialogComp
+                        :info="useSession.item"
+                        :portType="portType"
+                        :enbBtnSave="sesCanSave"
+                      ></PortDialogComp>
                     </q-popup-proxy>
                   </div>
                 </template>
@@ -161,9 +165,11 @@ export default defineComponent({
     const sessionDetails = computed(() => useSession.getPortSessionInfo())
     const popupRef = ref<QPopupProxy | null>(null)
     const popupAnchor = ref<HTMLElement | null>(null)
-    const onRowClickTest = (row: any) => {
-      if (row) popupRef.value?.show()
-      console.log('!!!!!!!----rowcccccc', popupRef.value)
+    const onSesRowClick = (row: any) => {
+      if (row) {
+        useSession.onRowClick(row)
+        popupRef.value?.show()
+      }
     }
     return {
       splitterModel: ref(35),
@@ -179,7 +185,7 @@ export default defineComponent({
       onCreate: usePort.onCreatePort,
       onDelete: usePort.onDelete,
       onSave: save,
-      onRowClickTest,
+      onSesRowClick,
       popupRef,
       popupAnchor,
       canDelete: usePort.canDelete,
@@ -190,7 +196,8 @@ export default defineComponent({
       useSession,
       sessions: useSession.items,
       sesFilterRows: useSession.filteredRows,
-      sesListColumns: useSession.listColumns
+      sesListColumns: useSession.listColumns,
+      sesCanSave: useSession.canSave
     }
   }
 })

@@ -26,7 +26,8 @@ export default {
   Line_Id: 'Line Id',
   Address: 'Address',
   Credit_limit: 'Credit limit',
-  Create_on: 'Create on',
+  Create_On: 'Create On',
+  Create_By: 'Create By',
   Customer_category: 'Customer category',
   Remark: 'Remark',
   SuperPrime: 'Super-prime', // ลูกค้าชั้นพิเศษ
@@ -72,5 +73,9 @@ export default {
   RentalIncome: 'Rental Income', // รับค่าเช่า
   MutualFundInvestment: 'Mutual Fund Investment', // ลงทุนกองทุนรวม
   DisposalGain: 'Disposal Gain ', // กำไร/ขาดทุนจากการจำหน่าย
-  DisposalLoss: 'Disposal Loss' // ขาดทุนจากการจำหน่าย
+  DisposalLoss: 'Disposal Loss', // ขาดทุนจากการจำหน่าย
+  //++++++Session++++++++++
+  Port_Id: 'Port Id',
+  Credit_Port_Id: 'Credit Port Id',
+  Debit_Port_Id: 'Debit Port Id'
 }

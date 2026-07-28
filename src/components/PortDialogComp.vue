@@ -3,7 +3,7 @@
     <!-- Header -->
     <q-card-section class="row items-center q-pb-none">
       <q-icon name="mdi-account-details-outline" size="md" color="primary" />
-      <div class="text-h6 q-ml-sm">{{ portInfo }} : {{ model.portId || 'New' }}</div>
+      <div class="text-h6 q-ml-sm">{{ portInfo }} : {{ model.sessionId || 'New' }}</div>
       <q-space />
       <!-- v-close-popup works automatically inside q-popup-proxy -->
       <q-btn icon="close" flat round dense v-close-popup />
@@ -14,13 +14,13 @@
       <q-form ref="myForm">
         <div class="row q-col-gutter-md">
           <!-- Row 1 -->
-          <div class="col-12 col-sm-6 col-md-6">
+          <div class="col-12 col-sm-3 col-md-3">
             <q-input
               outlined
-              v-model="model.description"
-              :label="$t('Port_description')"
+              v-model="model.portId"
+              :label="$t('Port_Id')"
               label-color="appLabel"
-              :hint="$t('Port_description')"
+              :hint="$t('Port_Id')"
               :rules="strRule"
               lazy-rules
               dense
@@ -28,13 +28,13 @@
             />
           </div>
 
-          <div class="col-12 col-sm-6 col-md-3">
+          <div class="col-12 col-sm-3 col-md-3">
             <q-select
-              v-model="model.portType"
+              v-model="model.sessionType"
               label-color="appLabel"
-              :label="$t('Port_type')"
-              :hint="$t('Port_type')"
-              :options="portTypeOption"
+              :label="$t('Session_Type')"
+              :hint="$t('Session_Type')"
+              :options="sessionTypeOptions"
               readonly
               :rules="selectorRule"
               lazy-rules
@@ -47,13 +47,14 @@
             />
           </div>
 
-          <div class="col-12 col-sm-6 col-md-3">
+          <div class="col-12 col-sm-3 col-md-3">
             <q-input
               outlined
-              v-model="model.createOn"
-              :label="$t('Create_on')"
+              v-model="model.amount"
+              :label="$t('Amount')"
               label-color="appLabel"
-              :hint="$t('Create_on')"
+              :hint="$t('Amount')"
+              :rules="amountRule"
               readonly
               dense
               input-class="text-appText"
@@ -61,145 +62,117 @@
           </div>
 
           <!-- Row 2 -->
-          <div class="col-12 col-sm-6 col-md-3">
+          <div class="col-12 col-sm-3 col-md-3">
             <q-input
               outlined
-              v-model="model.status"
-              :label="$t('Status')"
+              v-model="model.creditPortId"
+              :label="$t('Credit_Port_Id')"
               label-color="appLabel"
-              :hint="$t('Status')"
+              :hint="$t('Credit_Port_Id')"
               :rules="strRule"
               lazy-rules
               dense
               input-class="text-appText"
-            />
+              ><template v-slot:append>
+                <q-icon
+                  name="mdi-dots-horizontal"
+                  class="bg-body text-appText"
+                  @click="() => popupCreditRef?.show()"
+                />
+                <div ref="popupAnchor">
+                  <q-popup-proxy
+                    class="bg-body text-appText relative-position"
+                    ref="popupCreditRef"
+                    anchor="center middle"
+                    self="center middle"
+                    transition-show="scale"
+                    transition-hide="scale"
+                  >
+                    <q-btn
+                      icon="close"
+                      flat
+                      round
+                      dense
+                      v-close-popup
+                      class="absolute-top-right z-max q-pa-none"
+                      style="top: 10px; right: 10px"
+                    />
+                    <!-- Padding container to push ListComp below the button -->
+                    <div class="q-pt-xl q-px-md q-pb-md">
+                      <ListComp></ListComp>
+                    </div>
+                  </q-popup-proxy>
+                </div> </template
+            ></q-input>
           </div>
 
-          <div class="col-12 col-sm-6 col-md-9">
+          <div class="col-12 col-sm-3 col-md-3">
             <q-input
               outlined
-              v-model="model.remark"
-              :label="$t('Remark')"
+              v-model="model.debitPortId"
+              :label="$t('Debit_Port_Id')"
               label-color="appLabel"
-              :hint="$t('Remark')"
+              :hint="$t('Debit_Port_Id')"
               :rules="strRule"
               lazy-rules
               dense
               input-class="text-appText"
-            />
+              ><template v-slot:append>
+                <q-icon
+                  name="mdi-dots-horizontal"
+                  class="bg-body text-appText"
+                  @click="() => popupDebitRef?.show()"
+                />
+                <div ref="popupAnchor">
+                  <q-popup-proxy
+                    class="bg-body text-appText relative-position"
+                    ref="popupDebitRef"
+                    anchor="center middle"
+                    self="center middle"
+                    transition-show="scale"
+                    transition-hide="scale"
+                  >
+                    <!-- Absolute top-right close button -->
+                    <q-btn
+                      icon="close"
+                      flat
+                      round
+                      dense
+                      v-close-popup
+                      class="absolute-top-right z-max q-pa-none"
+                      style="top: 10px; right: 10px"
+                    />
+
+                    <!-- Padding container to push ListComp below the button -->
+                    <div class="q-pt-xl q-px-md q-pb-md">
+                      <ListComp></ListComp>
+                    </div>
+                  </q-popup-proxy>
+                </div>
+              </template>
+            </q-input>
           </div>
 
-          <!-- Row 3 -->
-          <div class="col-12 col-sm-6 col-md-3">
-            <q-select
-              v-model="model.customerId"
-              label-color="appLabel"
-              :label="$t('Customer')"
-              :hint="$t('Customer')"
-              :options="custOption"
-              :rules="selectorRule"
-              lazy-rules
-              dense
-              outlined
-              emit-value
-              map-options
-              options-dense
-              popup-content-class="bg-body text-appText"
-            />
-          </div>
-
-          <div class="col-12 col-sm-6 col-md-3">
-            <q-select
-              v-model="model.brokerId"
-              label-color="appLabel"
-              :label="$t('Broker')"
-              :hint="$t('Broker')"
-              :options="brokerOption"
-              :rules="selectorRule"
-              lazy-rules
-              dense
-              outlined
-              emit-value
-              map-options
-              options-dense
-              popup-content-class="bg-body text-appText"
-            />
-          </div>
-
-          <div class="col-12 col-sm-6 col-md-3">
+          <div class="col-12 col-sm-3 col-md-3">
             <q-input
               outlined
-              v-model="model.amount"
-              :label="$t('Amount')"
+              v-model="model.createBy"
+              :label="$t('Create_By')"
               label-color="appLabel"
-              :hint="$t('Amount')"
+              :hint="$t('Create_By')"
               dense
               input-class="text-appText"
             />
           </div>
-
-          <div class="col-12 col-sm-6 col-md-3">
+          <div class="col-12 col-sm-3 col-md-3">
             <q-input
               outlined
-              v-model="model.interest"
-              :label="$t('Interest') + ' (%)'"
+              v-model="model.createOn"
+              :label="$t('Create_On')"
               label-color="appLabel"
-              :hint="$t('Interest')"
+              :hint="$t('Create_On')"
               dense
               input-class="text-appText"
-            />
-          </div>
-
-          <!-- Row 4 -->
-          <div class="col-12 col-sm-6 col-md-3">
-            <q-select
-              v-model="model.paymentTerm"
-              label-color="appLabel"
-              :label="$t('Payment_term')"
-              :hint="$t('Payment_term')"
-              :options="paymentOption"
-              :rules="selectorRule"
-              lazy-rules
-              dense
-              outlined
-              emit-value
-              map-options
-              options-dense
-              popup-content-class="bg-body text-appText"
-            />
-          </div>
-
-          <div class="col-12 col-sm-6 col-md-3">
-            <q-input
-              outlined
-              v-model="model.paymentRate"
-              :label="$t('Payment_rate')"
-              label-color="appLabel"
-              :hint="$t('Payment_rate')"
-              dense
-              input-class="text-appText"
-            />
-          </div>
-
-          <div class="col-12 col-sm-6 col-md-3">
-            <q-input
-              outlined
-              v-model="model.period"
-              :label="$t('Period')"
-              label-color="appLabel"
-              :hint="$t('Period')"
-              dense
-              input-class="text-appText"
-            />
-          </div>
-
-          <div class="col-12 col-sm-6 col-md-3 flex items-center">
-            <q-checkbox
-              :true-value="1"
-              :false-value="0"
-              v-model="model.isActive"
-              :label="$t('Active')"
-              :rules="checkboxRule"
             />
           </div>
         </div>
@@ -219,17 +192,22 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed, watch, PropType } from 'vue'
-import { modelConverter, enumToString, enumToQSelectOptions } from '../modules/appUtils'
-import Port from '../models/port'
+import {
+  modelConverter,
+  enumToString,
+  enumToQSelectOptions,
+  sessionTypeToQSelectOptions
+} from '../modules/appUtils'
+import Session from '../models/session'
 import { useValidationRules } from '../hooks/useValidationRules'
 import { i18n } from '../i18n'
 import { EInvestPortType, EPaymentTerm } from '../types/myEnums'
-import { QSelectOption } from '../types/myTypes'
+import ListComp from './utils/ListComp.vue'
 import SaveCancelBtn from '../components/utils/SaveCancelBtn.vue'
-
+import { QPopupProxy } from 'quasar'
 export default defineComponent({
   name: 'PortDialogComp',
-  components: { SaveCancelBtn },
+  components: { ListComp, SaveCancelBtn },
 
   props: {
     info: {
@@ -239,14 +217,6 @@ export default defineComponent({
     portType: {
       type: [Number, String] as PropType<string | number | EInvestPortType>,
       default: EInvestPortType.CashAndDeposits
-    },
-    custOption: {
-      type: Array as PropType<QSelectOption[]>,
-      default: () => []
-    },
-    brokerOption: {
-      type: Array as PropType<QSelectOption[]>,
-      default: () => []
     },
     enbBtnSave: {
       type: Boolean,
@@ -262,12 +232,13 @@ export default defineComponent({
     const rules = useValidationRules(t)
 
     // Keep form state synchronized when selection changes
-    const model = ref<Port>(modelConverter<Port>(props.info) ?? new Port())
-
+    const model = ref<Session>(modelConverter<Session>(props.info) ?? new Session())
+    const popupCreditRef = ref<QPopupProxy | null>(null)
+    const popupDebitRef = ref<QPopupProxy | null>(null)
     watch(
       () => props.info,
       newVal => {
-        model.value = modelConverter<Port>(newVal) ?? new Port()
+        model.value = modelConverter<Session>(newVal) ?? new Session()
       },
       { deep: true }
     )
@@ -282,7 +253,7 @@ export default defineComponent({
     }
 
     const portInfo = computed(() => enumToString(EInvestPortType, Number(props.portType)))
-
+    const sessionTypeOptions = computed(() => sessionTypeToQSelectOptions(props.portType))
     return {
       model,
       portInfo,
@@ -290,10 +261,13 @@ export default defineComponent({
       portTypeOption: enumToQSelectOptions(EInvestPortType),
       strRule: rules.string(),
       emailRule: rules.email(),
-      creditRule: rules.floatRange(0, 1000000),
+      amountRule: rules.floatRange(0, 1000000),
       selectorRule: rules.enumSelect(),
       checkboxRule: rules.integer(),
       myForm,
+      sessionTypeOptions,
+      popupCreditRef,
+      popupDebitRef,
       clearValidation,
       getValidate
     }
@@ -307,5 +281,8 @@ export default defineComponent({
   max-width: 90vw;
   max-height: 85vh;
   overflow-y: auto;
+}
+::v-deep(.q-select .q-field__native) {
+  color: var(--q-color-appText); /* or your custom color */
 }
 </style>

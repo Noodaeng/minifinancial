@@ -25,7 +25,8 @@ export default {
   Phone: 'เบอร์โทร',
   Line_Id: 'ไลน์ ไอดี',
   Credit_limit: 'วงเงินสูงสุด',
-  Create_on: 'วันทีลงทะเบียน',
+  Create_On: 'วันทีลงทะเบียน',
+  Create_By: 'ลงทะเบียนโดย',
   Customer_category: 'กลุ่มลูกค้า',
   Remark: 'หมายเหตุ',
   SuperPrime: 'ลูกค้าชั้นพิเศษ',
@@ -71,5 +72,9 @@ export default {
   RentalIncome: 'รับค่าเช่า', // รับค่าเช่า
   MutualFundInvestment: 'ลงทุนกองทุนรวม', // ลงทุนกองทุนรวม
   DisposalGain: 'กำไรจากการจำหน่าย', // กำไร/ขาดทุนจากการจำหน่าย
-  DisposalLoss: 'ขาดทุนจากการจำหน่าย' // ขาดทุนจากการจำหน่าย
+  DisposalLoss: 'ขาดทุนจากการจำหน่าย', // ขาดทุนจากการจำหน่าย
+  //++++++Session++++++++++
+  Port_Id: 'ระหัส พอร์ต',
+  Credit_Port_Id: 'ระหัส เครดิต พอร์ต',
+  Debit_Port_Id: 'ระหัส เดบิต พอร์ต'
 }
