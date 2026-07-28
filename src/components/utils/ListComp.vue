@@ -2,11 +2,12 @@
   <div class="full-height column no-wrap q-pa-sm">
     <!-- Top Search Input -->
     <div class="row q-mb-sm">
-      <div class="col-12">
+      <div class="col-12 bg-body text-appText">
         <q-input
           filled
           dense
           class="bg-body text-appText full-width"
+          input-class="text-appText"
           v-model="filter"
           :label="$t('Search')"
           debounce="300"

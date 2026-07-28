@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh lpR lFf">
+  <q-layout view="lHh lpR lFf" class="main-layout-root">
     <!-- Header -->
     <q-header elevated class="bg-appLayout text-appText">
       <q-toolbar
@@ -19,13 +19,13 @@
             :disable="!isAuth"
           />
           <q-toolbar-title class="text-weight-bold text-subtitle2 text-sm-h6 no-wrap q-ml-xs">
-            💰 <span class="gt-xs">{{ $t('Mini_Financial') }}</span
-            ><span class="lt-sm">Mini Fin</span> 💰
+            💰 <span class="gt-xs">{{ $t('Mini_Financial') }}</span>
+            <span class="lt-sm">Mini Fin</span> 💰
           </q-toolbar-title>
         </div>
 
-        <!-- Right Section: Actions & Language Selector (Always Visible) -->
-        <div class="row items-center no-wrap q-gutter-xs q-gutter-sm-sm">
+        <!-- Right Section: Actions & Language Selector (Scoped wrapper added) -->
+        <div class="row items-center no-wrap q-gutter-xs q-gutter-sm-sm header-controls">
           <!-- Fullscreen Utility Toggle -->
           <q-btn
             flat
@@ -37,7 +37,7 @@
             class="gt-xs"
           />
 
-          <!-- Switchers (Kept compact and visible across all form factors) -->
+          <!-- Switchers -->
           <div class="row items-center no-wrap">
             <ThemeSwitcher />
             <LanguageSwitcher />
@@ -97,7 +97,7 @@
 
     <!-- Main Dynamic Application Container Target Space -->
     <q-page-container>
-      <router-view class="fit" />
+      <router-view class="fit bg-body text-appText" />
     </q-page-container>
 
     <!-- Footer Area Base Component Layout -->
@@ -170,7 +170,6 @@ export default defineComponent({
       }
     }
 
-    // Keep active monitoring tracking updated full screen state changes via ESC keys
     watch(
       () => AppFullscreen.isActive,
       val => {
@@ -178,14 +177,12 @@ export default defineComponent({
       }
     )
 
-    // Automatically hide navigation drawer if authorization cuts out
     watch(isAuth, authenticated => {
       if (!authenticated) leftDrawerOpen.value = false
     })
 
     onMounted(() => {
       window.addEventListener('beforeunload', handleBeforeUnload)
-      // Open drawer on load if authenticated and screen size is generous
       if (isAuth.value && window.innerWidth > 700) {
         leftDrawerOpen.value = true
       }
@@ -223,21 +220,24 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.q-field__native,
-.q-field__prefix,
-.q-field__suffix,
-.q-field__input {
+/* Restrict field styling to the header controls container only */
+.header-controls :deep(.q-field__native),
+.header-controls :deep(.q-field__prefix),
+.header-controls :deep(.q-field__suffix),
+.header-controls :deep(.q-field__input) {
   color: var(--v-primary-base);
 }
+
+/* Scope layout media queries directly under the main layout class */
 @media (max-width: 600px) {
-  .q-header {
+  .main-layout-root > .q-header {
     min-height: 56px !important;
   }
-  .q-footer {
+  .main-layout-root > .q-footer {
     min-height: 28px !important;
     font-size: 0.75rem;
   }
-  .q-toolbar-title {
+  .main-layout-root .q-toolbar-title {
     font-size: 0.9rem;
   }
 }

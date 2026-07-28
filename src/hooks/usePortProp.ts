@@ -3,7 +3,7 @@ import PortDto from '../models/portDto'
 import Port from '../models/port'
 import DataOption from '../models/dataOption'
 import { useCrudProp } from './useCrudProp'
-import { usePortSession } from './usePortSession'
+
 import { EInvestPortType } from '../types/myEnums'
 import { QSelectOption } from '../types/myTypes'
 import { i18n } from '../i18n'
@@ -15,7 +15,7 @@ export function usePortProp() {
 
   const filter = ref('')
   const portType: Ref<string | number | EInvestPortType> = ref(EInvestPortType.CashAndDeposits)
-  const session = usePortSession()
+
   // 1. Initialize our generic CRUD composable
   const setItem = (ports: PortDto[]) => {
     const filter = ports.filter(p => p.portType == portType.value)
@@ -139,7 +139,6 @@ export function usePortProp() {
   // 5. Spread all generic methods and merge your local overrides
   return {
     ...crud,
-    ...session,
     Init, // Overridden initialization method
     onRowClick, // Overridden row click action handler
     filter,

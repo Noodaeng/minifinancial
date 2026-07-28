@@ -11,6 +11,8 @@ export default {
   Login_failed_Please_check_Username_or_Password: 'Login failed. Please check Username or Password',
   failed: 'Action failed',
   success: 'Action was successful',
+  Id: 'Id',
+  Type: 'Type',
   //+++++++Customer+++++++++++++++++
   Customer: 'Customer',
   Customers: 'Customers',

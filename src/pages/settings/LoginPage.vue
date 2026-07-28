@@ -6,11 +6,12 @@
           <div class="col-12">
             <q-input
               outlined
-              label-color="white"
+              label-color="appLabel"
               :label="$t('User')"
               lazy-rules
               dense
               class="q-ma-sm text-appText"
+              input-class="bg-body text-appText"
               v-model="login.username"
             >
               <template v-slot:prepend>
@@ -22,12 +23,13 @@
           <div class="col-12">
             <q-input
               outlined
-              label-color="white"
+              label-color="appLabel"
               :label="$t('Password')"
               type="password"
               lazy-rules
               dense
               class="q-ma-sm text-appText"
+              input-class="bg-body text-appText"
               v-model="login.password"
             >
               <template v-slot:prepend>
@@ -58,67 +60,65 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, computed } from "vue";
-import { useAuthStore } from "../../stores/authStore";
-import { useRouter } from "vue-router";
-import MyConfig from "../../modules/myConfig";
-import { showNotify } from "../../modules/appUtils";
+import { defineComponent, ref, onMounted, computed } from 'vue'
+import { useAuthStore } from '../../stores/authStore'
+import { useRouter } from 'vue-router'
+import MyConfig from '../../modules/myConfig'
+import { showNotify } from '../../modules/appUtils'
 export default defineComponent({
-  name: "LoginPage",
+  name: 'LoginPage',
 
   setup() {
     const login = ref({
-      username: "",
-      password: ""
-    });
-    const authStore = useAuthStore();
-    const router = useRouter();
-    const submitting = ref(false);
+      username: '',
+      password: ''
+    })
+    const authStore = useAuthStore()
+    const router = useRouter()
+    const submitting = ref(false)
 
     // Computed property to enable/disable the submit button
     const disableSubmit = computed(() => {
-      return !login.value.username || !login.value.password || submitting.value;
-    });
+      return !login.value.username || !login.value.password || submitting.value
+    })
     onMounted(() => {
-      login.value.username = MyConfig.instance.LastLogin;
-    });
+      login.value.username = MyConfig.instance.LastLogin
+    })
 
     const submitForm = async () => {
       try {
-        submitting.value = true;
+        submitting.value = true
 
-        const success = await authStore.doLogin(login.value);
-        console.log("????Is login successful=>", success);
+        const success = await authStore.doLogin(login.value)
+        console.log('????Is login successful=>', success)
         if (success) {
-          const toPath = router.currentRoute.value.query.to as
-            | string
-            | undefined;
+          const toPath = router.currentRoute.value.query.to as string | undefined
 
           if (toPath) {
-            router.push(toPath);
-            console.log("Form submitted push=>", toPath);
+            router.push(toPath)
+            console.log('Form submitted push=>', toPath)
           } else {
-            router.push("/");
-            console.log("Force submitted push=>??", toPath);
+            router.push('/')
+            console.log('Force submitted push=>??', toPath)
           }
         } else {
-          await showNotify("Login_failed_Please_check_Username_or_Password", 4);
+          await showNotify('Login_failed_Please_check_Username_or_Password', 4)
         }
       } catch (err) {
-        console.error("Error during login", err);
+        console.error('Error during login', err)
       } finally {
-        submitting.value = false;
+        submitting.value = false
       }
-    };
+    }
 
     return {
       submitForm,
       login,
       disableSubmit,
       submitting
-    };
+    }
   }
-});
+})
 </script>
 
 <style></style>

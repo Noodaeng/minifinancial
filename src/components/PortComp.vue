@@ -2,13 +2,13 @@
   <div class="q-pa-md">
     <q-form ref="myForm" class="bg-body text-appText">
       <q-card flat class="bg-body text-appText col-12">
-        <div class="row items-center q-mb-md">
+        <div class="row items-center q-mb-md bg-body text-appText">
           <q-icon name="mdi-account-details-outline" size="md" />
           <div class="text-subtitle1 q-ml-sm">{{ portInfo }} : {{ model.portId }}</div>
         </div>
 
         <!-- Using q-col-gutter-md manages padding between controls fluidly -->
-        <div class="row q-col-gutter-md">
+        <div class="row q-col-gutter-md bg-body text-appText">
           <!-- Row 1 Items -->
           <div class="col-12 col-sm-6 col-md-6">
             <q-input
@@ -27,6 +27,7 @@
           <div class="col-12 col-sm-6 col-md-3">
             <q-select
               v-model="model.portType"
+              class="bg-body text-appText"
               label-color="appLabel"
               :label="$t('Port_type')"
               :hint="$t('Port_type')"
@@ -82,12 +83,12 @@
               :rules="strRule"
               lazy-rules
               dense
-              input-class="text-appText"
+              input-class="bg-body text-appText"
             />
           </div>
 
           <!-- Row 3 Items -->
-          <div class="col-12 col-sm-6 col-md-3">
+          <div class="col-12 col-sm-6 col-md-3 bg-body text-appText">
             <q-select
               v-model="model.customerId"
               label-color="appLabel"
@@ -104,10 +105,10 @@
               popup-content-class="bg-body text-appText"
             />
           </div>
-
           <div class="col-12 col-sm-6 col-md-3">
             <q-select
               v-model="model.brokerId"
+              class="bg-body text-appText"
               label-color="appLabel"
               :label="$t('Broker')"
               :hint="$t('Broker')"
@@ -151,6 +152,7 @@
           <div class="col-12 col-sm-4 col-md-3">
             <q-select
               v-model="model.paymentTerm"
+              class="bg-body text-appText"
               label-color="appLabel"
               :label="$t('Payment_term')"
               :hint="$t('Payment_term')"
@@ -290,4 +292,8 @@ export default defineComponent({
   methods: {}
 })
 </script>
-<style></style>
+<style scoped>
+::v-deep(.q-select .q-field__native) {
+  color: var(--q-color-appText); /* or your custom color */
+}
+</style>

@@ -129,6 +129,7 @@
           <div class="col-12 col-sm-6 col-md-3">
             <q-select
               v-model="model.customerType"
+              class="bg-body text-appText"
               label-color="appLabel"
               :label="$t('Customer_category')"
               :hint="$t('Customer_category')"
@@ -240,4 +241,8 @@ export default defineComponent({
   methods: {}
 })
 </script>
-<style></style>
+<style scoped>
+::v-deep(.q-select .q-field__native) {
+  color: var(--q-color-appText); /* or your custom color */
+}
+</style>

@@ -1,6 +1,14 @@
 import NotifyMsg from '../models/notifyMsg'
 import { i18n } from '../i18n'
-import { EAlarmLevel } from '../types/myEnums'
+import {
+  EAlarmLevel,
+  EInvestPortType,
+  LoanTransactionType,
+  SecurityTransactionType,
+  CashTransactionType,
+  EquityTransactionType,
+  OtherTransactionType
+} from '../types/myEnums'
 import { FuncBoolAsync, QSelectOption } from '../types/myTypes'
 import { Notify, QVueGlobals } from 'quasar'
 import MyConfig from './myConfig'
@@ -163,6 +171,25 @@ export const enumToString = (myEnum: Record<string, number | string>, enumKey: n
   }
   return '-'
 }
+
+export const getSessionType = (
+  portType: string | number | EInvestPortType,
+  sessionType: number
+): string => {
+  switch (Number(portType)) {
+    case 1:
+      return enumToString(LoanTransactionType, sessionType)
+    case 2:
+      return enumToString(SecurityTransactionType, sessionType)
+    case 3:
+      return enumToString(EquityTransactionType, sessionType)
+    case 4:
+      return enumToString(OtherTransactionType, sessionType)
+    default:
+      return enumToString(CashTransactionType, sessionType)
+  }
+}
+
 export const confirmDelete = (
   $q: QVueGlobals,
   info: string,

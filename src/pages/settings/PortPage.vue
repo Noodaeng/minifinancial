@@ -41,7 +41,12 @@
           <!-- Responsive row -->
           <div class="row q-col-gutter-md">
             <div class="col-12 col-sm-6">
-              <ListComp :rows="filteredRows" :columns="listColumns" @onRowClick="onRowClickTest">
+              <ListComp
+                :rows="sesFilterRows"
+                :columns="sesListColumns"
+                @onRowClick="useSession.onRowClick"
+                @onFilter="useSession.onFilter"
+              >
                 <template v-slot:append>
                   <div ref="popupAnchor">
                     <q-popup-proxy
@@ -59,23 +64,25 @@
               </ListComp>
             </div>
             <div class="col-12 col-sm-6">
-              <PortDetailComp :details="sessions" />
+              <PortSessionComp :details="sessionDetails" />
             </div>
           </div>
         </q-card>
       </div>
     </div>
+    {{ sessions }}
   </q-page>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, PropType, watch, computed } from 'vue'
 import PortComp from '../../components/PortComp.vue'
-import PortDetailComp from '../../components/PortDetailComp.vue'
+import PortSessionComp from '../../components/PortSessionComp.vue'
 import PortDialogComp from '../../components/PortDialogComp.vue'
 import ListComp from '../../components/utils/ListComp.vue'
 import StateCtrlBtn from '../../components/utils/StateCtrlBtn.vue'
 import { usePortProp } from '../../hooks/usePortProp.js'
+import { usePortSession } from '../../hooks/usePortSession.js'
 import { EInvestPortType } from '../../types/myEnums.js'
 import { QPopupProxy } from 'quasar'
 export default defineComponent({
@@ -84,7 +91,7 @@ export default defineComponent({
     PortComp,
     ListComp,
     StateCtrlBtn,
-    PortDetailComp,
+    PortSessionComp,
     PortDialogComp
   },
   props: {
@@ -102,7 +109,7 @@ export default defineComponent({
   // 2. Accept 'props' here so we can access them dynamically
   setup(props, { emit }) {
     const myChild = ref<InstanceType<typeof PortComp>>()
-
+    const useSession = usePortSession()
     // 3. Convert the value to a Number if your enum expects numbers
 
     // 4. Feed the route param into your hook instead of hardcoding it!
@@ -118,14 +125,23 @@ export default defineComponent({
         await init()
       }
     )
+    watch(
+      () => usePort.item.value.portId,
+      async () => {
+        useSession.portId.value = usePort.item.value.portId
+        if (useSession.portId.value && useSession.portId.value !== '') {
+          await useSession.initSessions()
+        }
+      }
+    )
     const init = async () => {
       usePort.portType.value = props.portType
-
+      useSession.portType.value = props.portType
       usePort.clearValidate.value = () => {
         myChild.value?.clearValidation()
       }
 
-      usePort.sessionClicks.value[0] = () => {
+      useSession.sessionClicks.value[0] = () => {
         console.log('tesssssssssss-------..cccclllliiiccckk')
       }
 
@@ -142,7 +158,7 @@ export default defineComponent({
     }
     const custOption = computed(() => usePort.rawOptionToQSelectOptions('customers'))
     const brokerOption = computed(() => usePort.rawOptionToQSelectOptions('brokers'))
-    const sessions = computed(() => usePort.getPortSessionInfo(props.portType))
+    const sessionDetails = computed(() => useSession.getPortSessionInfo())
     const popupRef = ref<QPopupProxy | null>(null)
     const popupAnchor = ref<HTMLElement | null>(null)
     const onRowClickTest = (row: any) => {
@@ -170,8 +186,11 @@ export default defineComponent({
       canCreate: usePort.canCreate,
       canSave: usePort.canSave,
       state: usePort.state,
-      sessions,
-      myChild
+      sessionDetails,
+      useSession,
+      sessions: useSession.items,
+      sesFilterRows: useSession.filteredRows,
+      sesListColumns: useSession.listColumns
     }
   }
 })

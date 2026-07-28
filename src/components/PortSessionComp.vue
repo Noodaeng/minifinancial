@@ -40,7 +40,7 @@ import { defineComponent, PropType } from 'vue'
 import { i18n } from '../i18n'
 import { PortDetail } from '../types/myTypes'
 export default defineComponent({
-  name: 'PortDetailComp',
+  name: 'PortSessionComp',
   components: {},
   data() {
     return {}

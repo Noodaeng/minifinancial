@@ -1,15 +1,62 @@
-import { ref } from 'vue'
+import { ref, Ref, computed } from 'vue'
 import { PortDetail, Action } from '../types/myTypes'
 import { EInvestPortType } from '../types/myEnums'
+import { useCrudProp } from './useCrudProp'
+import { showError, getSessionType } from '../modules/appUtils'
+import Session from '../models/session'
+import MyConfig from '../modules/myConfig'
 import { i18n } from '../i18n'
+import { useApi } from '../services/api'
 export function usePortSession() {
+  const portId = ref('')
+  const portType: Ref<string | number | EInvestPortType> = ref(EInvestPortType.CashAndDeposits)
+  const crud = useCrudProp<Session, Session>(
+    'sessionId',
+    'sessions',
+    Session,
+    t => [
+      {
+        name: 'sessionId',
+        required: true,
+        label: t('Id'),
+        align: 'left',
+        field: 'sessionId',
+        sortable: true
+      },
+      {
+        name: 'sessionType',
+        required: true,
+        label: t('Type'),
+        align: 'left',
+        field: 'sessionType',
+        format: (val: number) => getSessionType(portType.value, val),
+        sortable: true
+      },
+      {
+        name: 'creditPortId',
+        required: true,
+        label: t('Credit_Port_Id'),
+        align: 'left',
+        field: 'creditPortId',
+        sortable: true
+      },
+      {
+        name: 'debitPortId',
+        required: true,
+        label: t('Debit_Port_Id'),
+        align: 'left',
+        field: 'debitPortId',
+        sortable: true
+      }
+    ],
+    undefined,
+    undefined
+  )
   const { t } = i18n.global
   const sessionClicks = ref<(Action | null | undefined)[]>([null, null, null, null, null, null])
 
-  const getPortSessionInfo = (portType: string | number | EInvestPortType): PortDetail[] => {
-    console.log('typeeeee->', Number(portType))
-
-    switch (Number(portType)) {
+  const getPortSessionInfo = (): PortDetail[] => {
+    switch (Number(portType.value)) {
       case 1:
         return [
           {
@@ -150,7 +197,6 @@ export function usePortSession() {
           }
         ]
       default:
-        console.log('returnnnnnnnnn->', portType)
         return [
           {
             enble: true,
@@ -183,12 +229,78 @@ export function usePortSession() {
         ]
     }
   }
-  return { getPortSessionInfo, sessionClicks }
+  // +++++++ Init +++++++++++++++++++++++
+  const initSessions = async () => {
+    try {
+      crud.stateCtrl(true, false, false, false)
+      crud.items.value = await getPortSessions()
+
+      if (crud.clearValidate.value) {
+        crud.clearValidate.value()
+      }
+
+      if (crud.items.value && crud.items.value.length > 0) {
+        Object.assign(crud.item.value, crud.items.value[0])
+        crud.stateCtrl(false, true, false, false)
+      }
+    } catch (err) {
+      await showError(err)
+    }
+  }
+  const filter = ref('')
+
+  const filteredRows = computed(() => {
+    if (!filter.value) {
+      return crud.items.value
+    }
+
+    const lowerFilter = filter.value.toLowerCase()
+
+    return crud.items.value.filter((session: Session) => {
+      return (
+        String(session.sessionId).toLowerCase().includes(lowerFilter) ||
+        String(session.creditPortId).toLowerCase().includes(lowerFilter) ||
+        String(session.debitPortId).toLowerCase().includes(lowerFilter) ||
+        String(getSessionType(portType.value, session.sessionType))
+          .toLowerCase()
+          .includes(lowerFilter)
+      )
+    })
+  })
+
+  const onFilter = (val: string) => {
+    filter.value = val
+  }
+  //+++++++++api+++++++++++++++++
+  // 🔍 Action 1: Get All Data
+
+  const getPortSessions = async (): Promise<Session[]> => {
+    try {
+      const secretToken = MyConfig.instance.AppConfig.AuthToken
+      const baseUrl = MyConfig.instance.AppConfig.DbUrl // e.g. "https://your-worker.workers.dev"
+      const api = useApi()
+
+      const response = await api.post(`${baseUrl}/api/getSessions`, {
+        token: secretToken,
+        portId: portId.value
+      })
+
+      return response.data?.data || []
+    } catch (err) {
+      await showError(err)
+      return []
+    }
+  }
+
+  return {
+    ...crud,
+    getPortSessionInfo,
+    sessionClicks,
+    portId,
+    filter,
+    filteredRows,
+    portType,
+    onFilter,
+    initSessions
+  }
 }
-// // Other Investments
-// export enum OtherTransactionType {
-//   RealEstatePurchase = 0, // ซื้ออสังหาริมทรัพย์
-//   RentalIncome = 1, // รับค่าเช่า
-//   MutualFundInvestment = 2, // ลงทุนกองทุนรวม
-//   DisposalGain = 3 // กำไร/ขาดทุนจากการจำหน่าย
-// }

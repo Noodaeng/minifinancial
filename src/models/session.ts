@@ -1,4 +1,4 @@
-export class Session {
+export default class Session {
   sessionId = '' // TEXT PRIMARY KEY
   portId = '' // TEXT NOT NULL
   sessionType = 0 // INTEGER NOT NULL
