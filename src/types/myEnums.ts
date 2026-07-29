@@ -97,5 +97,32 @@ export enum OtherTransactionType {
   RentalIncome = 1, // รับค่าเช่า
   MutualFundInvestment = 2, // ลงทุนกองทุนรวม
   DisposalGain = 3, // กำไรจากการจำหน่าย
-  DisposalLoss = 4 // ขาดทุนจากการจำหน่าย
+  DisposalLoss = 4, // ขาดทุนจากการจำหน่าย
+  SavingSharePayment = 5, // ลงทุน แชร์/ออมหมุนเวียน
+  SavingShareIncome = 6, // รับค่า แชร์/ออมหมุนเวียน
+  InsurancePremium = 7, // การซื้อประกัน / จ่ายเบี้ยประกัน
+  InsuranceBenefit = 8 // ผลประโยชน์จากกรมธรรม์ (เงินคืน/คุ้มครอง)
+}
+export enum CashAndDepositsSubType {
+  Cash = 0, // เงินสด
+  SavingsAccount = 1, // บัญชีออมทรัพย์
+  FixedDeposit = 2 // เงินฝากประจำ
+}
+export enum LoansReceivableSubType {
+  PersonalLoan = 0, // เงินกู้บุคคล
+  BusinessLoan = 1 // เงินกู้ธุรกิจ
+}
+export enum SecuritiesSubType {
+  GovernmentBond = 0, // พันธบัตรรัฐบาล
+  CorporateBond = 1 // หุ้นกู้เอกชน
+}
+export enum EquityHoldingsSubType {
+  ListedEquity = 0, // หุ้นสามัญที่จดทะเบียนในตลาดหลักทรัพย์
+  PrivateEquity = 1 // หุ้นส่วน/ทุนในกิจการที่ไม่จดทะเบียน
+}
+export enum OtherInvestmentsSubType {
+  RealEstate = 0, // อสังหาริมทรัพย์เพื่อการลงทุน
+  MutualFund = 1, // กองทุนรวม
+  CommunitySavingShare = 2, // การเล่นแชร์ / ออมหมุนเวียนในชุมชน
+  Insurance = 3 // การซื้อประกัน / กรมธรรม์เพื่อการลงทุนหรือคุ้มครอง
 }

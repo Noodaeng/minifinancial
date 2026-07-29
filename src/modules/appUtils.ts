@@ -7,7 +7,12 @@ import {
   SecurityTransactionType,
   CashTransactionType,
   EquityTransactionType,
-  OtherTransactionType
+  OtherTransactionType,
+  CashAndDepositsSubType,
+  LoansReceivableSubType,
+  SecuritiesSubType,
+  EquityHoldingsSubType,
+  OtherInvestmentsSubType
 } from '../types/myEnums'
 import { FuncBoolAsync, QSelectOption } from '../types/myTypes'
 import { Notify, QVueGlobals } from 'quasar'
@@ -206,7 +211,22 @@ export const sessionTypeToQSelectOptions = (
       return enumToQSelectOptions(CashTransactionType)
   }
 }
-
+export const subTypeToQSelectOptions = (
+  portType: string | number | EInvestPortType
+): QSelectOption[] => {
+  switch (Number(portType)) {
+    case 1:
+      return enumToQSelectOptions(LoansReceivableSubType)
+    case 2:
+      return enumToQSelectOptions(SecuritiesSubType)
+    case 3:
+      return enumToQSelectOptions(EquityHoldingsSubType)
+    case 4:
+      return enumToQSelectOptions(OtherInvestmentsSubType)
+    default:
+      return enumToQSelectOptions(CashAndDepositsSubType)
+  }
+}
 export const confirmDelete = (
   $q: QVueGlobals,
   info: string,

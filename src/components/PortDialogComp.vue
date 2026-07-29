@@ -99,7 +99,7 @@
                     />
                     <!-- Padding container to push ListComp below the button -->
                     <div class="q-pt-xl q-px-md q-pb-md">
-                      <ListComp></ListComp>
+                      <ListComp :rows="creditRows" :columns="creditColumns"></ListComp>
                     </div>
                   </q-popup-proxy>
                 </div> </template
@@ -145,7 +145,7 @@
 
                     <!-- Padding container to push ListComp below the button -->
                     <div class="q-pt-xl q-px-md q-pb-md">
-                      <ListComp></ListComp>
+                      <ListComp :rows="debitRows" :columns="debitColumns"></ListComp>
                     </div>
                   </q-popup-proxy>
                 </div>
@@ -204,7 +204,8 @@ import { i18n } from '../i18n'
 import { EInvestPortType, EPaymentTerm } from '../types/myEnums'
 import ListComp from './utils/ListComp.vue'
 import SaveCancelBtn from '../components/utils/SaveCancelBtn.vue'
-import { QPopupProxy } from 'quasar'
+import { QPopupProxy, QTableColumn } from 'quasar'
+
 export default defineComponent({
   name: 'PortDialogComp',
   components: { ListComp, SaveCancelBtn },
@@ -213,6 +214,22 @@ export default defineComponent({
     info: {
       type: Object,
       default: () => ({})
+    },
+    creditRows: {
+      type: Array as () => Array<any>,
+      default: () => []
+    },
+    creditColumns: {
+      type: Array as () => Array<QTableColumn>,
+      default: () => []
+    },
+    debitRows: {
+      type: Array as () => Array<any>,
+      default: () => []
+    },
+    debitColumns: {
+      type: Array as () => Array<QTableColumn>,
+      default: () => []
     },
     portType: {
       type: [Number, String] as PropType<string | number | EInvestPortType>,

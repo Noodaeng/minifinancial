@@ -3,6 +3,7 @@ export default class Port {
 
   description = ''
   portType = 0
+  portSubType = 0
   createBy = ''
   createOn = ''
 

@@ -42,7 +42,7 @@ export default {
   CashAndDeposits: 'เงินสด / เงินฝาก',
   LoansReceivable: 'สินเชื่อและเงินให้กู้',
   Securities: 'การลงทุนในตราสาร',
-  EquityHoldings: 'การลงทุนในทุน/หุ้น',
+  EquityHoldings: 'การลงทุนในกองทุน/หุ้น',
   OtherInvestments: 'อื่น ๆ',
   Port_Investments: 'พอร์ต ลงทุน',
   Port_description: 'ชื่อพอร์ต',
@@ -73,6 +73,10 @@ export default {
   MutualFundInvestment: 'ลงทุนกองทุนรวม', // ลงทุนกองทุนรวม
   DisposalGain: 'กำไรจากการจำหน่าย', // กำไร/ขาดทุนจากการจำหน่าย
   DisposalLoss: 'ขาดทุนจากการจำหน่าย', // ขาดทุนจากการจำหน่าย
+  SavingSharePayment: 'จ่ายค่าแชร์/ออมหมุนเวียน', // ลงทุน แชร์/ออมหมุนเวียน
+  SavingShareIncome: 'รับค่าแชร์/ออมหมุนเวียน', // รับค่า แชร์/ออมหมุนเวียน
+  InsurancePremium: 'จ่ายเบี้ยประกัน', // การซื้อประกัน / จ่ายเบี้ยประกัน
+  InsuranceBenefit: 'ผลประโยชน์จากกรมธรรม์', // ผลประโยชน์จากกรมธรรม์ (เงินคืน/คุ้มครอง)
   //++++++Session++++++++++
   Port_Id: 'ระหัส พอร์ต',
   Credit_Port_Id: 'ระหัส เครดิต พอร์ต',

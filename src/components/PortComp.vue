@@ -23,7 +23,6 @@
               input-class="text-appText"
             />
           </div>
-
           <div class="col-12 col-sm-6 col-md-3">
             <q-select
               v-model="model.portType"
@@ -33,6 +32,24 @@
               :hint="$t('Port_type')"
               :options="portTypeOption"
               :readonly="true"
+              :rules="selectorRule"
+              lazy-rules
+              dense
+              outlined
+              emit-value
+              map-options
+              options-dense
+              popup-content-class="bg-body text-appText"
+            />
+          </div>
+          <div class="col-12 col-sm-6 col-md-3">
+            <q-select
+              v-model="model.portSubType"
+              class="bg-body text-appText"
+              label-color="appLabel"
+              :label="$t('Port_sub_type')"
+              :hint="$t('Port_sub_type')"
+              :options="subTypeOption"
               :rules="selectorRule"
               lazy-rules
               dense
@@ -73,7 +90,7 @@
           </div>
 
           <!-- Remark can scale wider on desktop screens -->
-          <div class="col-12 col-md-9">
+          <div class="col-12 col-md-6">
             <q-input
               outlined
               v-model="model.remark"
@@ -218,7 +235,12 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, PropType } from 'vue'
-import { modelConverter, enumToString, enumToQSelectOptions } from '../modules/appUtils'
+import {
+  modelConverter,
+  enumToString,
+  enumToQSelectOptions,
+  subTypeToQSelectOptions
+} from '../modules/appUtils'
 import Port from '../models/port'
 import { useValidationRules } from '../hooks/useValidationRules'
 import { i18n } from '../i18n'
@@ -277,6 +299,7 @@ export default defineComponent({
     return {
       model: modelConverter<Port>(props.info) ?? new Port(),
       portInfo: enumToString(EInvestPortType, Number(props.portType)),
+      subTypeOption: subTypeToQSelectOptions(Number(props.portType)),
       paymentOption: enumToQSelectOptions(EPaymentTerm),
       portTypeOption: enumToQSelectOptions(EInvestPortType),
       strRule,

@@ -28,13 +28,13 @@
         <q-card class="bg-body text-appText flat bordered full-height-card q-pa-md fit">
           <!-- Top PortComp -->
           <PortComp
-            ref="myChild"
+            ref="myPortComp"
             :custOption="custOption"
             :brokerOption="brokerOption"
             :portType="portType"
             :info="port"
             :enbBtnSave="canSave"
-            @onClickSave="onSave"
+            @onClickSave="savePort"
             class="q-mb-md"
           />
 
@@ -60,6 +60,8 @@
                       <PortDialogComp
                         :info="useSession.item"
                         :portType="portType"
+                        :creditColumns="listColumns"
+                        :debitColumns="listColumns"
                         :enbBtnSave="sesCanSave"
                       ></PortDialogComp>
                     </q-popup-proxy>
@@ -112,7 +114,7 @@ export default defineComponent({
   },
   // 2. Accept 'props' here so we can access them dynamically
   setup(props, { emit }) {
-    const myChild = ref<InstanceType<typeof PortComp>>()
+    const myPortComp = ref<InstanceType<typeof PortComp>>()
     const useSession = usePortSession()
     // 3. Convert the value to a Number if your enum expects numbers
 
@@ -142,7 +144,7 @@ export default defineComponent({
       usePort.portType.value = props.portType
       useSession.portType.value = props.portType
       usePort.clearValidate.value = () => {
-        myChild.value?.clearValidation()
+        myPortComp.value?.clearValidation()
       }
 
       useSession.sessionClicks.value[0] = () => {
@@ -152,8 +154,8 @@ export default defineComponent({
       await usePort.Init()
     }
 
-    const save = async () => {
-      const valid = await myChild.value?.getValidate()
+    const savePort = async () => {
+      const valid = await myPortComp.value?.getValidate()
       if (!valid) {
         usePort.resetDataState()
         return
@@ -173,6 +175,7 @@ export default defineComponent({
     }
     return {
       splitterModel: ref(35),
+      myPortComp,
       custOption,
       brokerOption,
       listColumns: usePort.listColumns,
@@ -184,7 +187,7 @@ export default defineComponent({
       onFilter: usePort.onFilter,
       onCreate: usePort.onCreatePort,
       onDelete: usePort.onDelete,
-      onSave: save,
+      savePort,
       onSesRowClick,
       popupRef,
       popupAnchor,

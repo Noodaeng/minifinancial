@@ -53,7 +53,17 @@ export function usePortSession() {
     undefined
   )
   const { t } = i18n.global
-  const sessionClicks = ref<(Action | null | undefined)[]>([null, null, null, null, null, null])
+  const sessionClicks = ref<(Action | null | undefined)[]>([
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ])
 
   const getPortSessionInfo = (): PortDetail[] => {
     switch (Number(portType.value)) {
@@ -193,9 +203,38 @@ export function usePortSession() {
             visible: true,
             description: t('DisposalLoss'),
             iconName: 'mdi-cash-minus',
-            actClick: () => sessionClicks.value[3]?.()
+            actClick: () => sessionClicks.value[4]?.()
+          },
+          {
+            enble: true,
+            visible: true,
+            description: t('SavingSharePayment'),
+            iconName: 'mdi-cash-minus',
+            actClick: () => sessionClicks.value[5]?.()
+          },
+          {
+            enble: true,
+            visible: true,
+            description: t('SavingShareIncome'),
+            iconName: 'mdi-cash-plus',
+            actClick: () => sessionClicks.value[6]?.()
+          },
+          {
+            enble: true,
+            visible: true,
+            description: t('InsurancePremium'),
+            iconName: 'mdi-cash-minus',
+            actClick: () => sessionClicks.value[7]?.()
+          },
+          {
+            enble: true,
+            visible: true,
+            description: t('InsuranceBenefit'),
+            iconName: 'mdi-cash-plus',
+            actClick: () => sessionClicks.value[8]?.()
           }
         ]
+
       default:
         return [
           {

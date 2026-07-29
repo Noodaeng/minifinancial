@@ -74,6 +74,10 @@ export default {
   MutualFundInvestment: 'Mutual Fund Investment', // ลงทุนกองทุนรวม
   DisposalGain: 'Disposal Gain ', // กำไร/ขาดทุนจากการจำหน่าย
   DisposalLoss: 'Disposal Loss', // ขาดทุนจากการจำหน่าย
+  SavingSharePayment: 'Saving Share Payment', // ลงทุน แชร์/ออมหมุนเวียน
+  SavingShareIncome: 'Saving Share Income', // รับค่า แชร์/ออมหมุนเวียน
+  InsurancePremium: 'Insurance Premium', // การซื้อประกัน / จ่ายเบี้ยประกัน
+  InsuranceBenefit: 'Insurance Benefit', // ผลประโยชน์จากกรมธรรม์ (เงินคืน/คุ้มครอง)
   //++++++Session++++++++++
   Port_Id: 'Port Id',
   Credit_Port_Id: 'Credit Port Id',
