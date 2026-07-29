@@ -146,9 +146,13 @@ export default defineComponent({
       usePort.clearValidate.value = () => {
         myPortComp.value?.clearValidation()
       }
-
-      useSession.sessionClicks.value[0] = () => {
-        console.log('tesssssssssss-------..cccclllliiiccckk')
+      for (let i = 0; i < useSession.sessionClicks.value.length; i++) {
+        useSession.sessionClicks.value[i] = () => {
+          console.log('tesssssssssss-------..cccclllliiiccckk-', i)
+          useSession.sessionType.value = i
+          useSession.onCreateSession()
+          popupRef.value?.show()
+        }
       }
 
       await usePort.Init()
@@ -164,7 +168,9 @@ export default defineComponent({
     }
     const custOption = computed(() => usePort.rawOptionToQSelectOptions('customers'))
     const brokerOption = computed(() => usePort.rawOptionToQSelectOptions('brokers'))
-    const sessionDetails = computed(() => useSession.getPortSessionInfo())
+    const sessionDetails = computed(() =>
+      useSession.getPortSessionInfo(usePort.item.value?.portSubType ?? 0)
+    )
     const popupRef = ref<QPopupProxy | null>(null)
     const popupAnchor = ref<HTMLElement | null>(null)
     const onSesRowClick = (row: any) => {

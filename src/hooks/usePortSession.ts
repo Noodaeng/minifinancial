@@ -2,7 +2,7 @@ import { ref, Ref, computed } from 'vue'
 import { PortDetail, Action } from '../types/myTypes'
 import { EInvestPortType } from '../types/myEnums'
 import { useCrudProp } from './useCrudProp'
-import { showError, getSessionType } from '../modules/appUtils'
+import { showError, getSessionType, currentDateTimeStr } from '../modules/appUtils'
 import Session from '../models/session'
 import MyConfig from '../modules/myConfig'
 import { i18n } from '../i18n'
@@ -10,6 +10,7 @@ import { useApi } from '../services/api'
 export function usePortSession() {
   const portId = ref('')
   const portType: Ref<string | number | EInvestPortType> = ref(EInvestPortType.CashAndDeposits)
+  const sessionType = ref(0)
   const crud = useCrudProp<Session, Session>(
     'sessionId',
     'sessions',
@@ -65,57 +66,64 @@ export function usePortSession() {
     null
   ])
 
-  const getPortSessionInfo = (): PortDetail[] => {
+  const getPortSessionInfo = (subType: number): PortDetail[] => {
     switch (Number(portType.value)) {
       case 1:
         return [
           {
-            enble: true,
+            enabled: true,
             visible: true,
             description: t('LoanIssued'),
             iconName: 'mdi-cash-minus',
             actClick: () => sessionClicks.value[0]?.()
           },
           {
-            enble: true,
+            enabled: true,
             visible: true,
             description: t('LoanRepayment'),
             iconName: 'mdi-cash-plus',
             actClick: () => sessionClicks.value[1]?.()
           },
           {
-            enble: true,
+            enabled: true,
             visible: true,
             description: t('InterestAccrual'),
             iconName: 'mdi-cash-fast',
             actClick: () => sessionClicks.value[2]?.()
           },
           {
-            enble: true,
+            enabled: true,
             visible: true,
             description: t('BadDebtWriteOff'),
             iconName: 'mdi-cash-remove',
             actClick: () => sessionClicks.value[3]?.()
           },
           {
-            enble: true,
+            enabled: true,
             visible: true,
             description: t('ReFinance'),
             iconName: 'mdi-cash-sync',
             actClick: () => sessionClicks.value[4]?.()
+          },
+          {
+            enabled: true,
+            visible: true,
+            description: t('BrokerPayment'),
+            iconName: 'mdi-cash-minus',
+            actClick: () => sessionClicks.value[5]?.()
           }
         ]
       case 2:
         return [
           {
-            enble: true,
+            enabled: true,
             visible: true,
             description: t('SecurityPurchase'),
             iconName: 'mdi-cash-100',
             actClick: () => sessionClicks.value[0]?.()
           },
           {
-            enble: true,
+            enabled: true,
             visible: true,
             description: t('SecuritySale'),
             iconName: 'mdi-cash-fast',
@@ -123,14 +131,14 @@ export function usePortSession() {
           },
 
           {
-            enble: true,
+            enabled: true,
             visible: true,
             description: t('CouponPayment'),
             iconName: 'mdi-cash-fast',
             actClick: () => sessionClicks.value[2]?.()
           },
           {
-            enble: true,
+            enabled: true,
             visible: true,
             description: t('FairValueAdjustment'),
             iconName: 'mdi-cash-multiple',
@@ -140,28 +148,28 @@ export function usePortSession() {
       case 3:
         return [
           {
-            enble: true,
+            enabled: true,
             visible: true,
             description: t('EquityPurchase'),
             iconName: 'mdi-network-pos',
             actClick: () => sessionClicks.value[0]?.()
           },
           {
-            enble: true,
+            enabled: true,
             visible: true,
             description: t('EquitySale'),
             iconName: 'mdi-cash-fast',
             actClick: () => sessionClicks.value[1]?.()
           },
           {
-            enble: true,
+            enabled: true,
             visible: true,
             description: t('DividendReceived'),
             iconName: 'mdi-cash-plus',
             actClick: () => sessionClicks.value[2]?.()
           },
           {
-            enble: true,
+            enabled: true,
             visible: true,
             description: t('EquityMethodAdjustment'),
             iconName: 'mdi-cash-sync',
@@ -171,63 +179,63 @@ export function usePortSession() {
       case 4:
         return [
           {
-            enble: true,
+            enabled: subType == 0,
             visible: true,
             description: t('RealEstatePurchase'),
             iconName: 'mdi-home-group',
             actClick: () => sessionClicks.value[0]?.()
           },
           {
-            enble: true,
+            enabled: subType == 0,
             visible: true,
             description: t('RentalIncome'),
             iconName: 'mdi-cash-multiple',
             actClick: () => sessionClicks.value[1]?.()
           },
           {
-            enble: true,
+            enabled: subType == 1,
             visible: true,
             description: t('MutualFundInvestment'),
             iconName: 'mdi-cash-multiple',
             actClick: () => sessionClicks.value[2]?.()
           },
           {
-            enble: true,
+            enabled: subType == 1,
             visible: true,
             description: t('DisposalGain'),
             iconName: 'mdi-cash-plus',
             actClick: () => sessionClicks.value[3]?.()
           },
           {
-            enble: true,
+            enabled: subType == 1,
             visible: true,
             description: t('DisposalLoss'),
             iconName: 'mdi-cash-minus',
             actClick: () => sessionClicks.value[4]?.()
           },
           {
-            enble: true,
+            enabled: subType == 2,
             visible: true,
             description: t('SavingSharePayment'),
             iconName: 'mdi-cash-minus',
             actClick: () => sessionClicks.value[5]?.()
           },
           {
-            enble: true,
+            enabled: subType == 2,
             visible: true,
             description: t('SavingShareIncome'),
             iconName: 'mdi-cash-plus',
             actClick: () => sessionClicks.value[6]?.()
           },
           {
-            enble: true,
+            enabled: subType == 3,
             visible: true,
             description: t('InsurancePremium'),
             iconName: 'mdi-cash-minus',
             actClick: () => sessionClicks.value[7]?.()
           },
           {
-            enble: true,
+            enabled: subType == 3,
             visible: true,
             description: t('InsuranceBenefit'),
             iconName: 'mdi-cash-plus',
@@ -238,28 +246,28 @@ export function usePortSession() {
       default:
         return [
           {
-            enble: true,
+            enabled: true,
             visible: true,
             description: t('Deposit'),
             iconName: 'mdi-cash-plus',
             actClick: () => sessionClicks.value[0]?.()
           },
           {
-            enble: true,
+            enabled: true,
             visible: true,
             description: t('Withdrawal'),
             iconName: 'mdi-cash-minus',
             actClick: () => sessionClicks.value[1]?.()
           },
           {
-            enble: true,
+            enabled: true,
             visible: true,
             description: t('InterestIncome'),
             iconName: 'mdi-cash-fast',
             actClick: () => sessionClicks.value[2]?.()
           },
           {
-            enble: true,
+            enabled: true,
             visible: true,
             description: t('Transfer'),
             iconName: 'mdi-cash-refund',
@@ -310,6 +318,14 @@ export function usePortSession() {
   const onFilter = (val: string) => {
     filter.value = val
   }
+  const onCreateSession = () => {
+    crud.onCreate()
+    crud.item.value.sessionId = 'SES-NEW'
+    crud.item.value.portId = portId.value
+    crud.item.value.sessionType = sessionType.value
+    crud.item.value.createBy = crud.currentUser
+    crud.item.value.createOn = currentDateTimeStr
+  }
   //+++++++++api+++++++++++++++++
   // 🔍 Action 1: Get All Data
 
@@ -339,7 +355,9 @@ export function usePortSession() {
     filter,
     filteredRows,
     portType,
+    sessionType,
     onFilter,
-    initSessions
+    initSessions,
+    onCreateSession
   }
 }

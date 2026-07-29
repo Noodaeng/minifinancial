@@ -72,7 +72,8 @@ export enum LoanTransactionType {
   LoanRepayment = 1, // รับชำระคืน
   InterestAccrual = 2, // ดอกเบี้ยค้างรับ
   BadDebtWriteOff = 3, // ตัดหนี้สูญ
-  ReFinance = 4 // รีไฟแนนซ์ / ปรับโครงสร้างหนี้
+  ReFinance = 4, // รีไฟแนนซ์ / ปรับโครงสร้างหนี้
+  BrokerPayment = 5 //จ่ายค่านายหน้า
 }
 
 // Securities

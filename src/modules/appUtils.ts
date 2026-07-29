@@ -227,6 +227,7 @@ export const subTypeToQSelectOptions = (
       return enumToQSelectOptions(CashAndDepositsSubType)
   }
 }
+
 export const confirmDelete = (
   $q: QVueGlobals,
   info: string,

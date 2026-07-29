@@ -16,7 +16,7 @@ export interface QSelectOption {
   label: string
 }
 export interface PortDetail {
-  enble: boolean
+  enabled: boolean
   visible: boolean
   description: string
   iconName: string

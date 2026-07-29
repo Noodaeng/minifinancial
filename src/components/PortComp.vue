@@ -234,7 +234,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, PropType } from 'vue'
+import { defineComponent, ref, PropType, computed } from 'vue'
 import {
   modelConverter,
   enumToString,
@@ -295,13 +295,15 @@ export default defineComponent({
     const creditRule = rules.floatRange(0, 1000000)
     const selectorRule = rules.enumSelect()
     const checkboxRule = rules.integer()
-    //const portInfo = computed(() => enumToString(EInvestPortType, Number(props.portType)))
+    const portTypeOption = computed(() => enumToQSelectOptions(EInvestPortType))
+    const portInfo = computed(() => enumToString(EInvestPortType, Number(props.portType)))
+    const subTypeOption = computed(() => subTypeToQSelectOptions(Number(props.portType)))
     return {
       model: modelConverter<Port>(props.info) ?? new Port(),
-      portInfo: enumToString(EInvestPortType, Number(props.portType)),
-      subTypeOption: subTypeToQSelectOptions(Number(props.portType)),
+      portInfo,
+      subTypeOption,
       paymentOption: enumToQSelectOptions(EPaymentTerm),
-      portTypeOption: enumToQSelectOptions(EInvestPortType),
+      portTypeOption,
       strRule,
       emailRule,
       creditRule,

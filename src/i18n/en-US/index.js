@@ -58,6 +58,7 @@ export default {
   InterestAccrual: 'Interest Accrual', // ดอกเบี้ยค้างรับ
   BadDebtWriteOff: 'Bad Debt Write Off', // ตัดหนี้สูญ
   ReFinance: 'Re-Finance', // รีไฟแนนซ์ / ปรับโครงสร้างหนี้
+  BrokerPayment: 'Broker Payment', //จ่ายค่านายหน้า
   //+++++++++++++
   SecurityPurchase: 'Security Purchase', // ซื้อพันธบัตร/หุ้นกู้
   SecuritySale: 'Security Sale', // ขายพันธบัตร/หุ้นกู้
@@ -78,6 +79,28 @@ export default {
   SavingShareIncome: 'Saving Share Income', // รับค่า แชร์/ออมหมุนเวียน
   InsurancePremium: 'Insurance Premium', // การซื้อประกัน / จ่ายเบี้ยประกัน
   InsuranceBenefit: 'Insurance Benefit', // ผลประโยชน์จากกรมธรรม์ (เงินคืน/คุ้มครอง)
+  //+++++++++++CashAndDepositsSubType
+  Cash: 'Cash', // เงินสด
+  SavingsAccount: 'Savings Account', // บัญชีออมทรัพย์
+  FixedDeposit: 'Fixed Deposit', // เงินฝากประจำ
+
+  //+++++++++LoansReceivableSubType
+  PersonalLoan: 'Personal Loan', // เงินกู้บุคคล
+  BusinessLoan: 'Business Loan', // เงินกู้ธุรกิจ
+
+  //++++++++++SecuritiesSubType
+  GovernmentBond: 'Government Bond', // พันธบัตรรัฐบาล
+  CorporateBond: 'Corporate Bond', // หุ้นกู้เอกชน
+
+  //++++++++++EquityHoldingsSubType
+  ListedEquity: 'Listed Equity', // หุ้นสามัญที่จดทะเบียนในตลาดหลักทรัพย์
+  PrivateEquity: 'Private Equity', // หุ้นส่วน/ทุนในกิจการที่ไม่จดทะเบียน
+
+  //+++++++++++OtherInvestmentsSubType
+  RealEstate: 'Real Estate', // อสังหาริมทรัพย์เพื่อการลงทุน
+  MutualFund: 'Mutual Fund', // กองทุนรวม
+  CommunitySavingShare: 'Community Saving Share', // การเล่นแชร์ / ออมหมุนเวียนในชุมชน
+  Insurance: 'Insurance', // การซื้อประกัน / กรมธรรม์เพื่อการลงทุนหรือคุ้มครอง
   //++++++Session++++++++++
   Port_Id: 'Port Id',
   Credit_Port_Id: 'Credit Port Id',

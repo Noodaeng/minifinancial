@@ -3,7 +3,7 @@
     <!-- Header -->
     <q-card-section class="row items-center q-pb-none">
       <q-icon name="mdi-account-details-outline" size="md" color="primary" />
-      <div class="text-h6 q-ml-sm">{{ portInfo }} : {{ model.sessionId || 'New' }}</div>
+      <div class="text-h6 q-ml-sm">{{ sessionInfo }} : {{ model.sessionId || 'New' }}</div>
       <q-space />
       <!-- v-close-popup works automatically inside q-popup-proxy -->
       <q-btn icon="close" flat round dense v-close-popup />
@@ -194,9 +194,9 @@
 import { defineComponent, ref, computed, watch, PropType } from 'vue'
 import {
   modelConverter,
-  enumToString,
   enumToQSelectOptions,
-  sessionTypeToQSelectOptions
+  sessionTypeToQSelectOptions,
+  getSessionType
 } from '../modules/appUtils'
 import Session from '../models/session'
 import { useValidationRules } from '../hooks/useValidationRules'
@@ -269,11 +269,11 @@ export default defineComponent({
       return valid ?? false
     }
 
-    const portInfo = computed(() => enumToString(EInvestPortType, Number(props.portType)))
     const sessionTypeOptions = computed(() => sessionTypeToQSelectOptions(props.portType))
+    const sessionInfo = computed(() => getSessionType(props.portType, model.value.sessionType))
     return {
+      sessionInfo,
       model,
-      portInfo,
       paymentOption: enumToQSelectOptions(EPaymentTerm),
       portTypeOption: enumToQSelectOptions(EInvestPortType),
       strRule: rules.string(),
