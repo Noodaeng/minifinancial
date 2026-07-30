@@ -61,7 +61,9 @@
                         :info="useSession.item"
                         :portType="portType"
                         :creditColumns="listColumns"
+                        :creditRows="filteredCreditRows"
                         :debitColumns="listColumns"
+                        :debitRows="filteredDebitRows"
                         :enbBtnSave="sesCanSave"
                       ></PortDialogComp>
                     </q-popup-proxy>
@@ -171,6 +173,20 @@ export default defineComponent({
     const sessionDetails = computed(() =>
       useSession.getPortSessionInfo(usePort.item.value?.portSubType ?? 0)
     )
+    const filteredCreditRows = computed(() =>
+      useSession.filteredCreditRows(
+        usePort.items.value,
+        usePort.item.value,
+        useSession.item.value.sessionType
+      )
+    )
+    const filteredDebitRows = computed(() =>
+      useSession.filteredDebitRows(
+        usePort.items.value,
+        usePort.item.value,
+        useSession.item.value.sessionType
+      )
+    )
     const popupRef = ref<QPopupProxy | null>(null)
     const popupAnchor = ref<HTMLElement | null>(null)
     const onSesRowClick = (row: any) => {
@@ -186,6 +202,8 @@ export default defineComponent({
       brokerOption,
       listColumns: usePort.listColumns,
       filteredRows: usePort.filteredRows,
+      filteredCreditRows,
+      filteredDebitRows,
       port: usePort.item,
       ports: usePort.items,
       rawOptions: usePort.rawOptions,

@@ -5,6 +5,7 @@ import { useCrudProp } from './useCrudProp'
 import { showError, getSessionType, currentDateTimeStr } from '../modules/appUtils'
 import Session from '../models/session'
 import MyConfig from '../modules/myConfig'
+import PortDto from '../models/portDto'
 import { i18n } from '../i18n'
 import { useApi } from '../services/api'
 export function usePortSession() {
@@ -314,7 +315,222 @@ export function usePortSession() {
       )
     })
   })
-
+  const filteredCreditRows = (ports: PortDto[], port: PortDto, sesType: number): any[] => {
+    if (!crud.items.value || (crud.items.value as PortDto[]).length <= 0) return []
+    const subType = Number(port.portSubType)
+    switch (Number(portType.value)) {
+      case 1: // สินเชื่อและเงินให้กู้
+        switch (subType) {
+          case 1: // เงินกู้ธุรกิจ
+          default: // เงินกู้บุคคล
+            switch (sesType) {
+              case 1: // รับชำระคืน
+                return [port]
+              case 2: // ดอกเบี้ยค้างรับ
+                return [port]
+              case 3: // ตัดหนี้สูญ
+                return ports.filter(p => p.portType === 0 && p.portSubType === 0)
+              case 4: // รีไฟแนนซ์
+                return ports.filter(p => p.portType === 0 && p.portSubType === 0)
+              case 5: //จ่ายค่านายหน้า
+                return [port]
+              default: // ปล่อยกู้
+                return ports.filter(p => p.portType === 0 && p.portSubType === 0)
+            }
+        }
+      case 2: // การลงทุนในตราสาร
+        switch (subType) {
+          case 1: // หุ้นกู้เอกชน
+            switch (sesType) {
+              case 1: // ขายพันธบัตร
+              case 2: // รับคูปอง
+              case 3: // ปรับมูลค่ายุติธรรม
+              default: // ซื้อพันธบัตร
+            }
+          default: // พันธบัตรรัฐบาล
+            switch (sesType) {
+              case 1: // ขายพันธบัตร
+              case 2: // รับคูปอง
+              case 3: // ปรับมูลค่ายุติธรรม
+              default: // ซื้อพันธบัตร
+            }
+        }
+      case 3: // การลงทุนในหุ้น/หุ้น
+        switch (subType) {
+          case 1: // หุ้นส่วน/ทุนในกิจการที่ไม่จดทะเบียน
+            switch (sesType) {
+              case 1: // ขายหุ้น
+              case 2: // รับเงินปันผล
+              case 3: // ปรับตามวิธีส่วนได้เสีย
+              default: // ซื้อหุ้น
+            }
+          default: // หุ้นสามัญที่จดทะเบียนในตลาดหลักทรัพย์
+            switch (sesType) {
+              case 1: // ขายหุ้น
+              case 2: // รับเงินปันผล
+              case 3: // ปรับตามวิธีส่วนได้เสีย
+              default: // ซื้อหุ้น
+            }
+        }
+      case 4: // อื่น ๆ
+        switch (subType) {
+          case 1: // กองทุนรวม
+            switch (sesType) {
+              case 2: // ลงทุนกองทุนรวม
+              case 3: // กำไรจากการจำหน่าย
+              case 4: // ขาดทุนจากการจำหน่าย
+            }
+          case 2: // การเล่นแชร์
+            switch (sesType) {
+              case 5: // จ่ายค่า แชร์
+              case 6: // รับค่า แชร์
+            }
+          case 3: // การซื้อประกัน
+            switch (sesType) {
+              case 7: // การซื้อประกัน
+              case 8: //ผลประโยชน์จากกรมธรรม์
+            }
+          default: // อสังหาริมทรัพย์เพื่อการลงทุน
+            switch (sesType) {
+              case 0: // ซื้ออสังหาริมทรัพย์
+              case 1: // รับค่าเช่า
+            }
+        }
+      default: // เงินสด / เงินฝาก
+        switch (subType) {
+          case 1: // บัญชีออมทรัพย์
+            switch (sesType) {
+              case 1: // ถอนเงิน
+              case 2: // รับดอกเบี้ย
+              case 3: // โอนเงิน
+              default: // ฝากเงิน
+            }
+          case 2: // เงินฝากประจำ
+            switch (sesType) {
+              case 1: // ถอนเงิน
+              case 2: // รับดอกเบี้ย
+              case 3: // โอนเงิน
+              default: // ฝากเงิน
+            }
+          default: // เงินสด
+            switch (sesType) {
+              case 1: // ถอนเงิน
+              case 2: // รับดอกเบี้ย
+              case 3: // โอนเงิน
+              default: // ฝากเงิน
+            }
+        }
+    }
+    return []
+  }
+  const filteredDebitRows = (ports: PortDto[], port: PortDto, sesType: number): any[] => {
+    if (!crud.items.value || (crud.items.value as PortDto[]).length <= 0) return []
+    const subType = port.portSubType
+    switch (Number(portType.value)) {
+      case 1: // สินเชื่อและเงินให้กู้
+        switch (subType) {
+          case 1: // เงินกู้ธุรกิจ
+          default: // เงินกู้บุคคล
+            switch (sesType) {
+              case 1: // รับชำระคืน
+                return ports.filter(p => p.portType === 0 && p.portSubType === 0)
+              case 2: // ดอกเบี้ยค้างรับ
+                return ports.filter(p => p.portType === 0 && p.portSubType === 0)
+              case 3: // ตัดหนี้สูญ
+                return [port]
+              case 4: // รีไฟแนนซ์
+                return [port]
+              case 5: //จ่ายค่านายหน้า
+                return ports.filter(p => p.portType === 0 && p.portSubType === 0)
+              default: // ปล่อยกู้
+                return [port]
+            }
+        }
+      case 2: // การลงทุนในตราสาร
+        switch (subType) {
+          case 1: // หุ้นกู้เอกชน
+            switch (sesType) {
+              case 1: // ขายพันธบัตร
+              case 2: // รับคูปอง
+              case 3: // ปรับมูลค่ายุติธรรม
+              default: // ซื้อพันธบัตร
+            }
+          default: // พันธบัตรรัฐบาล
+            switch (sesType) {
+              case 1: // ขายพันธบัตร
+              case 2: // รับคูปอง
+              case 3: // ปรับมูลค่ายุติธรรม
+              default: // ซื้อพันธบัตร
+            }
+        }
+      case 3: // การลงทุนในหุ้น/หุ้น
+        switch (subType) {
+          case 1: // หุ้นส่วน/ทุนในกิจการที่ไม่จดทะเบียน
+            switch (sesType) {
+              case 1: // ขายหุ้น
+              case 2: // รับเงินปันผล
+              case 3: // ปรับตามวิธีส่วนได้เสีย
+              default: // ซื้อหุ้น
+            }
+          default: // หุ้นสามัญที่จดทะเบียนในตลาดหลักทรัพย์
+            switch (sesType) {
+              case 1: // ขายหุ้น
+              case 2: // รับเงินปันผล
+              case 3: // ปรับตามวิธีส่วนได้เสีย
+              default: // ซื้อหุ้น
+            }
+        }
+      case 4: // อื่น ๆ
+        switch (subType) {
+          case 1: // กองทุนรวม
+            switch (sesType) {
+              case 2: // ลงทุนกองทุนรวม
+              case 3: // กำไรจากการจำหน่าย
+              case 4: // ขาดทุนจากการจำหน่าย
+            }
+          case 2: // การเล่นแชร์
+            switch (sesType) {
+              case 5: // จ่ายค่า แชร์
+              case 6: // รับค่า แชร์
+            }
+          case 3: // การซื้อประกัน
+            switch (sesType) {
+              case 7: // การซื้อประกัน
+              case 8: //ผลประโยชน์จากกรมธรรม์
+            }
+          default: // อสังหาริมทรัพย์เพื่อการลงทุน
+            switch (sesType) {
+              case 0: // ซื้ออสังหาริมทรัพย์
+              case 1: // รับค่าเช่า
+            }
+        }
+      default: // เงินสด / เงินฝาก
+        switch (subType) {
+          case 1: // บัญชีออมทรัพย์
+            switch (sesType) {
+              case 1: // ถอนเงิน
+              case 2: // รับดอกเบี้ย
+              case 3: // โอนเงิน
+              default: // ฝากเงิน
+            }
+          case 2: // เงินฝากประจำ
+            switch (sesType) {
+              case 1: // ถอนเงิน
+              case 2: // รับดอกเบี้ย
+              case 3: // โอนเงิน
+              default: // ฝากเงิน
+            }
+          default: // เงินสด
+            switch (sesType) {
+              case 1: // ถอนเงิน
+              case 2: // รับดอกเบี้ย
+              case 3: // โอนเงิน
+              default: // ฝากเงิน
+            }
+        }
+    }
+    return []
+  }
   const onFilter = (val: string) => {
     filter.value = val
   }
@@ -358,6 +574,8 @@ export function usePortSession() {
     sessionType,
     onFilter,
     initSessions,
-    onCreateSession
+    onCreateSession,
+    filteredCreditRows,
+    filteredDebitRows
   }
 }

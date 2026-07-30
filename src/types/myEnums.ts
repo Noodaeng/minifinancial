@@ -39,7 +39,7 @@ export enum ECreditCustomerType {
   Subprime = 3 // ลูกค้าชั้นเลว
 }
 export enum AccountCategory {
-  Assets = 0, // สินทรัพย์ +Dr,-Cr
+  Assets = 0, // สินทรัพย์,ลูกหนี้ +Dr,-Cr
   Liabilities = 1, // หนี้สิน +Cr,-Dr
   Equity = 2, // ทุน +Cr,-Dr
   Revenue = 3, // รายได้ +Cr,-Dr
@@ -99,11 +99,12 @@ export enum OtherTransactionType {
   MutualFundInvestment = 2, // ลงทุนกองทุนรวม
   DisposalGain = 3, // กำไรจากการจำหน่าย
   DisposalLoss = 4, // ขาดทุนจากการจำหน่าย
-  SavingSharePayment = 5, // ลงทุน แชร์/ออมหมุนเวียน
+  SavingSharePayment = 5, // จ่ายค่า แชร์/ออมหมุนเวียน
   SavingShareIncome = 6, // รับค่า แชร์/ออมหมุนเวียน
   InsurancePremium = 7, // การซื้อประกัน / จ่ายเบี้ยประกัน
   InsuranceBenefit = 8 // ผลประโยชน์จากกรมธรรม์ (เงินคืน/คุ้มครอง)
 }
+
 export enum CashAndDepositsSubType {
   Cash = 0, // เงินสด
   SavingsAccount = 1, // บัญชีออมทรัพย์
