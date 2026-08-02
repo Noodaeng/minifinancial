@@ -38,7 +38,7 @@ export default {
   //++++++Broker++++++++
   Broker_Accounts: 'บัญชีนายหน้า',
   //++++++Port++++++++++
-  Ports: 'พอร์ต ลงทุน',
+  Asset_Ports: 'พอร์ต ทรัพย์สิน',
   CashAndDeposits: 'เงินสด / เงินฝาก',
   LoansReceivable: 'สินเชื่อและเงินให้กู้',
   Securities: 'การลงทุนในตราสาร',
@@ -47,14 +47,29 @@ export default {
   Port_Investments: 'พอร์ต ลงทุน',
   Port_description: 'ชื่อพอร์ต',
   //++++++++++++
+  Liability_Ports: 'พอร์ต หนี้สิน',
+  Borrowings: 'เงินกู้ยืม',
+  Payables: 'เจ้าหนี้การค้า',
+  //++++++++++++
+  Revenue_Ports: 'พอร์ต รายได้',
+  OperatingRevenue: 'รายได้จากการดำเนินงาน',
+  InterestIncome: 'รายได้ดอกเบี้ย',
+  DividendIncome: 'รายได้เงินปันผล',
+  //+++++++++++++
+  Expense_Ports: 'พอร์ต รายจ่าย',
+  OperatingExpense: 'ค่าใช้จ่ายดำเนินงาน',
+  InterestExpense: 'จ่ายดอกเบี้ย',
+  BadDebtExpense: 'ค่าเผื่อหนี้สงสัยจะสูญ',
+  DisposalLoss: 'ขาดทุนจากการจำหน่าย',
+  //++++++++++++
   Deposit: 'ฝากเงิน',
   Withdrawal: 'ถอนเงิน',
-  InterestIncome: 'รับดอกเบี้ย',
+  //InterestIncome: 'รับดอกเบี้ย',
   Transfer: 'โอนเงิน',
   //++++++++++++
   LoanIssued: 'ปล่อยกู้', // ปล่อยกู้
   LoanRepayment: 'รับชำระคืน', // รับชำระคืน
-  InterestAccrual: 'ดอกเบี้ยค้างรับ', // ดอกเบี้ยค้างรับ
+  LoanInterestAccrual: 'ดอกเบี้ยค้างรับ', // ดอกเบี้ยค้างรับ
   BadDebtWriteOff: 'ตัดหนี้สูญ', // ตัดหนี้สูญ
   ReFinance: 'รีไฟแนนซ์', // รีไฟแนนซ์ / ปรับโครงสร้างหนี้
   BrokerPayment: 'จ่ายค่านายหน้า', //จ่ายค่านายหน้า
@@ -73,7 +88,7 @@ export default {
   RentalIncome: 'รับค่าเช่า', // รับค่าเช่า
   MutualFundInvestment: 'ลงทุนกองทุนรวม', // ลงทุนกองทุนรวม
   DisposalGain: 'กำไรจากการจำหน่าย', // กำไร/ขาดทุนจากการจำหน่าย
-  DisposalLoss: 'ขาดทุนจากการจำหน่าย', // ขาดทุนจากการจำหน่าย
+  // DisposalLoss: 'ขาดทุนจากการจำหน่าย', // ขาดทุนจากการจำหน่าย
   SavingSharePayment: 'จ่ายค่าแชร์', // ลงทุน แชร์/ออมหมุนเวียน
   SavingShareIncome: 'รับค่าแชร์', // รับค่า แชร์/ออมหมุนเวียน
   InsurancePremium: 'จ่ายเบี้ยประกัน', // การซื้อประกัน / จ่ายเบี้ยประกัน

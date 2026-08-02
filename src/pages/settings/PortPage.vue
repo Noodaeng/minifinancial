@@ -45,34 +45,32 @@
                 :rows="sesFilterRows"
                 :columns="sesListColumns"
                 @onRowClick="onSesRowClick"
-                @onFilter="useSession.onFilter"
+                @onFilter="sesOnfilter"
               >
                 <template v-slot:append>
-                  <div ref="popupAnchor">
-                    <q-popup-proxy
-                      class="bg-body text-appText"
-                      ref="popupRef"
-                      anchor="center middle"
-                      self="center middle"
-                      transition-show="scale"
-                      transition-hide="scale"
-                    >
-                      <PortDialogComp
-                        :info="useSession.item"
-                        :portType="portType"
-                        :creditColumns="listColumns"
-                        :creditRows="filteredCreditRows"
-                        :debitColumns="listColumns"
-                        :debitRows="filteredDebitRows"
-                        :enbBtnSave="sesCanSave"
-                      ></PortDialogComp>
-                    </q-popup-proxy>
-                  </div>
+                  <q-dialog
+                    v-model="isDialogOpen"
+                    class="bg-body text-appText"
+                    transition-show="scale"
+                    transition-hide="scale"
+                  >
+                    <PortDialogComp
+                      :info="session"
+                      :portType="portType"
+                      :creditColumns="listColumns"
+                      :creditRows="filteredCreditRows"
+                      :debitColumns="listColumns"
+                      :debitRows="filteredDebitRows"
+                      :enbBtnSave="sesCanSave"
+                      :creditPortIdGuide="lastCreditPort ?? ''"
+                      :debitPortIdGuide="lastDebitPort ?? ''"
+                    ></PortDialogComp>
+                  </q-dialog>
                 </template>
               </ListComp>
             </div>
             <div class="col-12 col-sm-6">
-              <PortSessionComp :details="sessionDetails" />
+              <PortSessionComp :details="sessionDetails" @onSessionClick="handleSessionClick" />
             </div>
           </div>
         </q-card>
@@ -91,8 +89,9 @@ import ListComp from '../../components/utils/ListComp.vue'
 import StateCtrlBtn from '../../components/utils/StateCtrlBtn.vue'
 import { usePortProp } from '../../hooks/usePortProp.js'
 import { usePortSession } from '../../hooks/usePortSession.js'
-import { EInvestPortType } from '../../types/myEnums.js'
+import { EPortType } from '../../types/myEnums.js'
 import { QPopupProxy } from 'quasar'
+import { getGuideRows, getPreviousUsedPortId } from '../../modules/appUtils.js'
 export default defineComponent({
   name: 'PortPage',
   components: {
@@ -105,8 +104,8 @@ export default defineComponent({
   props: {
     // 1. This matches the ':portType' param string from your router file
     portType: {
-      type: [String, Number] as PropType<string | number | EInvestPortType>,
-      default: EInvestPortType.CashAndDeposits
+      type: [String, Number] as PropType<string | number | EPortType>,
+      default: EPortType.CashAndDeposits
     }
   },
   data() {
@@ -118,6 +117,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const myPortComp = ref<InstanceType<typeof PortComp>>()
     const useSession = usePortSession()
+    const isDialogOpen = ref(false)
     // 3. Convert the value to a Number if your enum expects numbers
 
     // 4. Feed the route param into your hook instead of hardcoding it!
@@ -142,24 +142,25 @@ export default defineComponent({
         }
       }
     )
+    // Define a clean click handler function
+    const handleSessionClick = (index: number) => {
+      console.log('------- click session index:', index)
+      useSession.onCreateSession(index)
+      isDialogOpen.value = true
+    }
+
+    // In init(), simply initialize empty slots or assign static references
     const init = async () => {
       usePort.portType.value = props.portType
       useSession.portType.value = props.portType
+
       usePort.clearValidate.value = () => {
         myPortComp.value?.clearValidation()
-      }
-      for (let i = 0; i < useSession.sessionClicks.value.length; i++) {
-        useSession.sessionClicks.value[i] = () => {
-          console.log('tesssssssssss-------..cccclllliiiccckk-', i)
-          useSession.sessionType.value = i
-          useSession.onCreateSession()
-          popupRef.value?.show()
-        }
       }
 
       await usePort.Init()
     }
-
+    //++++++++++++++++
     const savePort = async () => {
       const valid = await myPortComp.value?.getValidate()
       if (!valid) {
@@ -174,25 +175,37 @@ export default defineComponent({
       useSession.getPortSessionInfo(usePort.item.value?.portSubType ?? 0)
     )
     const filteredCreditRows = computed(() =>
-      useSession.filteredCreditRows(
-        usePort.items.value,
-        usePort.item.value,
-        useSession.item.value.sessionType
-      )
+      getGuideRows(usePort.items.value, usePort.item.value, useSession.item.value.sessionType, true)
     )
     const filteredDebitRows = computed(() =>
-      useSession.filteredDebitRows(
+      getGuideRows(
         usePort.items.value,
         usePort.item.value,
-        useSession.item.value.sessionType
+        useSession.item.value.sessionType,
+        false
       )
     )
-    const popupRef = ref<QPopupProxy | null>(null)
-    const popupAnchor = ref<HTMLElement | null>(null)
+    const lastCreditPort = computed(() => {
+      return getPreviousUsedPortId(
+        useSession.items.value,
+        usePort.item.value,
+        useSession.item.value.sessionType,
+        true
+      )
+    })
+    const lastDebitPort = computed(() => {
+      return getPreviousUsedPortId(
+        useSession.items.value,
+        usePort.item.value,
+        useSession.item.value.sessionType,
+        false
+      )
+    })
+
     const onSesRowClick = (row: any) => {
       if (row) {
         useSession.onRowClick(row)
-        popupRef.value?.show()
+        isDialogOpen.value = true
       }
     }
     return {
@@ -213,18 +226,21 @@ export default defineComponent({
       onDelete: usePort.onDelete,
       savePort,
       onSesRowClick,
-      popupRef,
-      popupAnchor,
+      handleSessionClick,
+      isDialogOpen,
       canDelete: usePort.canDelete,
       canCreate: usePort.canCreate,
       canSave: usePort.canSave,
       state: usePort.state,
       sessionDetails,
-      useSession,
+      session: useSession.item,
       sessions: useSession.items,
+      sesOnfilter: useSession.onFilter,
       sesFilterRows: useSession.filteredRows,
       sesListColumns: useSession.listColumns,
-      sesCanSave: useSession.canSave
+      sesCanSave: useSession.canSave,
+      lastCreditPort,
+      lastDebitPort
     }
   }
 })

@@ -244,7 +244,7 @@ import {
 import Port from '../models/port'
 import { useValidationRules } from '../hooks/useValidationRules'
 import { i18n } from '../i18n'
-import { EInvestPortType, EPaymentTerm } from '../types/myEnums'
+import { EPortType, EPaymentTerm } from '../types/myEnums'
 import { QSelectOption } from '../types/myTypes'
 import SaveCancelBtn from '../components/utils/SaveCancelBtn.vue'
 export default defineComponent({
@@ -261,8 +261,8 @@ export default defineComponent({
     },
     portType: {
       // Highlighted change: added String alongside Number
-      type: [Number, String] as PropType<string | number | EInvestPortType>,
-      default: EInvestPortType.CashAndDeposits
+      type: [Number, String] as PropType<string | number | EPortType>,
+      default: EPortType.CashAndDeposits
     },
     custOption: {
       type: Array<QSelectOption>,
@@ -295,8 +295,8 @@ export default defineComponent({
     const creditRule = rules.floatRange(0, 1000000)
     const selectorRule = rules.enumSelect()
     const checkboxRule = rules.integer()
-    const portTypeOption = computed(() => enumToQSelectOptions(EInvestPortType))
-    const portInfo = computed(() => enumToString(EInvestPortType, Number(props.portType)))
+    const portTypeOption = computed(() => enumToQSelectOptions(EPortType))
+    const portInfo = computed(() => enumToString(EPortType, Number(props.portType)))
     const subTypeOption = computed(() => subTypeToQSelectOptions(Number(props.portType)))
     return {
       model: modelConverter<Port>(props.info) ?? new Port(),

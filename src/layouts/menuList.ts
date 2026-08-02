@@ -1,4 +1,4 @@
-import { EInvestPortType } from '../types/myEnums'
+import { EPortType } from '../types/myEnums'
 const linksList = [
   {
     title: 'SystemConfigure',
@@ -57,7 +57,7 @@ const linksList = [
     ]
   },
   {
-    title: 'Ports',
+    title: 'Asset_Ports',
     icon: 'mdi-account-multiple-outline',
     link: '/',
     level: 0,
@@ -68,7 +68,7 @@ const linksList = [
         title: 'CashAndDeposits',
         icon: 'mdi-account-details-outline',
         // 1. Pass a real object here instead of a string literal
-        link: { name: 'CashPort', params: { portType: EInvestPortType.CashAndDeposits } },
+        link: { name: 'CashPort', params: { portType: EPortType.CashAndDeposits } },
         level: 1,
         access: 0,
         compType: 1,
@@ -78,7 +78,7 @@ const linksList = [
         title: 'LoansReceivable',
         icon: 'mdi-account-details-outline',
         // 2. Pass a real object here too
-        link: { name: 'LoanPort', params: { portType: EInvestPortType.LoansReceivable } },
+        link: { name: 'LoanPort', params: { portType: EPortType.LoansReceivable } },
         level: 1,
         access: 0,
         compType: 1,
@@ -87,7 +87,7 @@ const linksList = [
       {
         title: 'Securities',
         icon: 'mdi-account-details-outline',
-        link: { name: 'SecurityPort', params: { portType: EInvestPortType.Securities } },
+        link: { name: 'SecurityPort', params: { portType: EPortType.Securities } },
         level: 1,
         access: 0,
         compType: 1,
@@ -96,7 +96,7 @@ const linksList = [
       {
         title: 'EquityHoldings',
         icon: 'mdi-account-details-outline',
-        link: { name: 'EquityPort', params: { portType: EInvestPortType.EquityHoldings } },
+        link: { name: 'EquityPort', params: { portType: EPortType.EquityHoldings } },
         level: 1,
         access: 0,
         compType: 1,
@@ -105,7 +105,136 @@ const linksList = [
       {
         title: 'OtherInvestments',
         icon: 'mdi-account-details-outline',
-        link: { name: 'OtherPort', params: { portType: EInvestPortType.OtherInvestments } },
+        link: { name: 'OtherPort', params: { portType: EPortType.OtherInvestments } },
+        level: 1,
+        access: 0,
+        compType: 1,
+        children: []
+      }
+    ]
+  },
+  {
+    title: 'Liability_Ports',
+    icon: 'mdi-account-multiple-outline',
+    link: '/',
+    level: 0,
+    access: 0,
+    compType: 1,
+    children: [
+      {
+        title: 'Borrowings',
+        icon: 'mdi-account-details-outline',
+        // 1. Pass a real object here instead of a string literal
+        link: { name: 'BorrowPort', params: { portType: EPortType.Borrowings } },
+        level: 1,
+        access: 0,
+        compType: 1,
+        children: []
+      },
+      {
+        title: 'Payables',
+        icon: 'mdi-account-details-outline',
+        // 2. Pass a real object here too
+        link: { name: 'PayablePort', params: { portType: EPortType.Payables } },
+        level: 1,
+        access: 0,
+        compType: 1,
+        children: []
+      }
+    ]
+  },
+  {
+    title: 'Revenue_Ports',
+    icon: 'mdi-account-multiple-outline',
+    link: '/',
+    level: 0,
+    access: 0,
+    compType: 1,
+    children: [
+      {
+        title: 'OperatingRevenue',
+        icon: 'mdi-account-details-outline',
+        // 1. Pass a real object here instead of a string literal
+        link: {
+          name: 'OperatingRevenuePort',
+          params: { portType: EPortType.OperatingRevenue }
+        },
+        level: 1,
+        access: 0,
+        compType: 1,
+        children: []
+      },
+      {
+        title: 'InterestIncome',
+        icon: 'mdi-account-details-outline',
+        // 2. Pass a real object here too
+        link: { name: 'InterestIncomePort', params: { portType: EPortType.InterestIncome } },
+        level: 1,
+        access: 0,
+        compType: 1,
+        children: []
+      },
+      {
+        title: 'DividendIncome',
+        icon: 'mdi-account-details-outline',
+        // 2. Pass a real object here too
+        link: { name: 'DividendIncomePort', params: { portType: EPortType.DividendIncome } },
+        level: 1,
+        access: 0,
+        compType: 1,
+        children: []
+      }
+    ]
+  },
+  {
+    title: 'Expense_Ports',
+    icon: 'mdi-account-multiple-outline',
+    link: '/',
+    level: 0,
+    access: 0,
+    compType: 1,
+    children: [
+      {
+        title: 'OperatingExpense',
+        icon: 'mdi-account-details-outline',
+        // 1. Pass a real object here instead of a string literal
+        link: {
+          name: 'OperatingExpensePort',
+          params: { portType: EPortType.OperatingExpense }
+        },
+        level: 1,
+        access: 0,
+        compType: 1,
+        children: []
+      },
+      {
+        title: 'InterestExpense',
+        icon: 'mdi-account-details-outline',
+        // 2. Pass a real object here too
+        link: {
+          name: 'InterestExpensePort',
+          params: { portType: EPortType.InterestExpense }
+        },
+        level: 1,
+        access: 0,
+        compType: 1,
+        children: []
+      },
+      {
+        title: 'BadDebtExpense',
+        icon: 'mdi-account-details-outline',
+        // 2. Pass a real object here too
+        link: { name: 'BadDebtExpensePort', params: { portType: EPortType.BadDebtExpense } },
+        level: 1,
+        access: 0,
+        compType: 1,
+        children: []
+      },
+      {
+        title: 'DisposalLoss',
+        icon: 'mdi-account-details-outline',
+        // 2. Pass a real object here too
+        link: { name: 'DisposalLossPort', params: { portType: EPortType.DisposalLoss } },
         level: 1,
         access: 0,
         compType: 1,

@@ -65,7 +65,7 @@
           <div class="col-12 col-sm-3 col-md-3">
             <q-input
               outlined
-              v-model="model.creditPortId"
+              v-model="(modelConverter<Session>(info) ?? new Session()).creditPortId"
               :label="$t('Credit_Port_Id')"
               label-color="appLabel"
               :hint="$t('Credit_Port_Id')"
@@ -73,6 +73,7 @@
               lazy-rules
               dense
               input-class="text-appText"
+              :readonly="true"
               ><template v-slot:append>
                 <q-icon
                   name="mdi-dots-horizontal"
@@ -99,7 +100,12 @@
                     />
                     <!-- Padding container to push ListComp below the button -->
                     <div class="q-pt-xl q-px-md q-pb-md">
-                      <ListComp :rows="creditRows" :columns="creditColumns"></ListComp>
+                      <ListComp
+                        :rows="creditRows"
+                        :columns="creditColumns"
+                        :initGuide="creditPortIdGuide"
+                        @onRowClick="onCreditRowClick"
+                      ></ListComp>
                     </div>
                   </q-popup-proxy>
                 </div> </template
@@ -109,13 +115,14 @@
           <div class="col-12 col-sm-3 col-md-3">
             <q-input
               outlined
-              v-model="model.debitPortId"
+              v-model="(modelConverter<Session>(info) ?? new Session()).debitPortId"
               :label="$t('Debit_Port_Id')"
               label-color="appLabel"
               :hint="$t('Debit_Port_Id')"
               :rules="strRule"
               lazy-rules
               dense
+              :readonly="true"
               input-class="text-appText"
               ><template v-slot:append>
                 <q-icon
@@ -145,7 +152,12 @@
 
                     <!-- Padding container to push ListComp below the button -->
                     <div class="q-pt-xl q-px-md q-pb-md">
-                      <ListComp :rows="debitRows" :columns="debitColumns"></ListComp>
+                      <ListComp
+                        :rows="debitRows"
+                        :columns="debitColumns"
+                        :initGuide="debitPortIdGuide"
+                        @onRowClick="onDebitRowClick"
+                      ></ListComp>
                     </div>
                   </q-popup-proxy>
                 </div>
@@ -201,7 +213,7 @@ import {
 import Session from '../models/session'
 import { useValidationRules } from '../hooks/useValidationRules'
 import { i18n } from '../i18n'
-import { EInvestPortType, EPaymentTerm } from '../types/myEnums'
+import { EPortType, EPaymentTerm } from '../types/myEnums'
 import ListComp from './utils/ListComp.vue'
 import SaveCancelBtn from '../components/utils/SaveCancelBtn.vue'
 import { QPopupProxy, QTableColumn } from 'quasar'
@@ -213,7 +225,7 @@ export default defineComponent({
   props: {
     info: {
       type: Object,
-      default: () => ({})
+      required: true
     },
     creditRows: {
       type: Array as () => Array<any>,
@@ -231,9 +243,17 @@ export default defineComponent({
       type: Array as () => Array<QTableColumn>,
       default: () => []
     },
+    creditPortIdGuide: {
+      type: String,
+      default: ''
+    },
+    debitPortIdGuide: {
+      type: String,
+      default: ''
+    },
     portType: {
-      type: [Number, String] as PropType<string | number | EInvestPortType>,
-      default: EInvestPortType.CashAndDeposits
+      type: [Number, String] as PropType<string | number | EPortType>,
+      default: EPortType.CashAndDeposits
     },
     enbBtnSave: {
       type: Boolean,
@@ -249,16 +269,9 @@ export default defineComponent({
     const rules = useValidationRules(t)
 
     // Keep form state synchronized when selection changes
-    const model = ref<Session>(modelConverter<Session>(props.info) ?? new Session())
+
     const popupCreditRef = ref<QPopupProxy | null>(null)
     const popupDebitRef = ref<QPopupProxy | null>(null)
-    watch(
-      () => props.info,
-      newVal => {
-        model.value = modelConverter<Session>(newVal) ?? new Session()
-      },
-      { deep: true }
-    )
 
     const clearValidation = () => {
       myForm.value?.resetValidation()
@@ -270,12 +283,33 @@ export default defineComponent({
     }
 
     const sessionTypeOptions = computed(() => sessionTypeToQSelectOptions(props.portType))
-    const sessionInfo = computed(() => getSessionType(props.portType, model.value.sessionType))
+    const sessionInfo = computed(() =>
+      getSessionType(props.portType, modelConverter<Session>(props.info)?.sessionType ?? 0)
+    )
+
+    const onCreditRowClick = (row: any) => {
+      const m = modelConverter<Session>(props.info)
+      if (m && row?.portId) {
+        m.creditPortId = row.portId
+        popupCreditRef.value?.hide()
+        console.log('onCreditRowClick --------->', m.creditPortId)
+      }
+    }
+
+    const onDebitRowClick = (row: any) => {
+      const m = modelConverter<Session>(props.info)
+      if (m && row?.portId) {
+        m.debitPortId = row.portId
+        popupDebitRef.value?.hide()
+        console.log('onDebitRowClick --------->', m.debitPortId)
+      }
+    }
     return {
       sessionInfo,
-      model,
+      Session,
+      model: modelConverter<Session>(props.info) ?? new Session(),
       paymentOption: enumToQSelectOptions(EPaymentTerm),
-      portTypeOption: enumToQSelectOptions(EInvestPortType),
+      portTypeOption: enumToQSelectOptions(EPortType),
       strRule: rules.string(),
       emailRule: rules.email(),
       amountRule: rules.floatRange(0, 1000000),
@@ -285,8 +319,11 @@ export default defineComponent({
       sessionTypeOptions,
       popupCreditRef,
       popupDebitRef,
+      modelConverter,
       clearValidation,
-      getValidate
+      getValidate,
+      onCreditRowClick,
+      onDebitRowClick
     }
   }
 })

@@ -88,6 +88,114 @@ const routes: RouteRecordRaw[] = [
         component: () => import('../pages/settings/PortPage.vue')
       }
     ]
+  },
+  {
+    path: '/borrowPort',
+    component: () => import('../layouts/MainLayout.vue'),
+    children: [
+      {
+        path: ':portType',
+        name: 'BorrowPort',
+        props: true,
+        component: () => import('../pages/settings/PortPage.vue')
+      }
+    ]
+  },
+  {
+    path: '/payablePort',
+    component: () => import('../layouts/MainLayout.vue'),
+    children: [
+      {
+        path: ':portType',
+        name: 'PayablePort',
+        props: true,
+        component: () => import('../pages/settings/PortPage.vue')
+      }
+    ]
+  },
+  {
+    path: '/operatingRevenuePort',
+    component: () => import('../layouts/MainLayout.vue'),
+    children: [
+      {
+        path: ':portType',
+        name: 'OperatingRevenuePort',
+        props: true,
+        component: () => import('../pages/settings/PortPage.vue')
+      }
+    ]
+  },
+  {
+    path: '/interestIncomePort',
+    component: () => import('../layouts/MainLayout.vue'),
+    children: [
+      {
+        path: ':portType',
+        name: 'InterestIncomePort',
+        props: true,
+        component: () => import('../pages/settings/PortPage.vue')
+      }
+    ]
+  },
+  {
+    path: '/dividendIncomePort',
+    component: () => import('../layouts/MainLayout.vue'),
+    children: [
+      {
+        path: ':portType',
+        name: 'DividendIncomePort',
+        props: true,
+        component: () => import('../pages/settings/PortPage.vue')
+      }
+    ]
+  },
+  {
+    path: '/operatingExpensePort',
+    component: () => import('../layouts/MainLayout.vue'),
+    children: [
+      {
+        path: ':portType',
+        name: 'OperatingExpensePort',
+        props: true,
+        component: () => import('../pages/settings/PortPage.vue')
+      }
+    ]
+  },
+  {
+    path: '/interestExpensePort',
+    component: () => import('../layouts/MainLayout.vue'),
+    children: [
+      {
+        path: ':portType',
+        name: 'InterestExpensePort',
+        props: true,
+        component: () => import('../pages/settings/PortPage.vue')
+      }
+    ]
+  },
+  {
+    path: '/badDebtExpensePort',
+    component: () => import('../layouts/MainLayout.vue'),
+    children: [
+      {
+        path: ':portType',
+        name: 'BadDebtExpensePort',
+        props: true,
+        component: () => import('../pages/settings/PortPage.vue')
+      }
+    ]
+  },
+  {
+    path: '/disposalLossPort',
+    component: () => import('../layouts/MainLayout.vue'),
+    children: [
+      {
+        path: ':portType',
+        name: 'DisposalLossPort',
+        props: true,
+        component: () => import('../pages/settings/PortPage.vue')
+      }
+    ]
   }
 ]
 

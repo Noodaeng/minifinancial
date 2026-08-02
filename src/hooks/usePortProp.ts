@@ -4,7 +4,7 @@ import Port from '../models/port'
 import DataOption from '../models/dataOption'
 import { useCrudProp } from './useCrudProp'
 
-import { EInvestPortType } from '../types/myEnums'
+import { EPortType } from '../types/myEnums'
 import { QSelectOption } from '../types/myTypes'
 import { i18n } from '../i18n'
 import { showError, currentDateTimeStr } from '../modules/appUtils'
@@ -14,7 +14,7 @@ export function usePortProp() {
   const { t } = i18n.global
 
   const filter = ref('')
-  const portType: Ref<string | number | EInvestPortType> = ref(EInvestPortType.CashAndDeposits)
+  const portType: Ref<string | number | EPortType> = ref(EPortType.CashAndDeposits)
 
   // 1. Initialize our generic CRUD composable
   const setItem = (ports: PortDto[]) => {

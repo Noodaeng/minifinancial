@@ -10,6 +10,9 @@ export type MyRecord = Record<number, string>
 export type MyWorkAbilityVal = Record<number, number>
 export type OptionalData =
   'customerOptions' | 'portOptions' | 'brokerOptions' | 'allOptions' | 'custBrokerOptions'
+
+export type FormatMode = 'date' | 'datetime' | 'time'
+
 //+++++++++++++Interface++++++++++++++++
 export interface QSelectOption {
   value: string | number
@@ -20,5 +23,4 @@ export interface PortDetail {
   visible: boolean
   description: string
   iconName: string
-  actClick: Action
 }

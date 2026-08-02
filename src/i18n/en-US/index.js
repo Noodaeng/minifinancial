@@ -39,7 +39,7 @@ export default {
   //++++++Broker++++++++
   Broker_Accounts: 'Broker Accounts',
   //+++++++++Port investment+++++++++++
-  Ports: 'Ports',
+  Asset_Ports: 'Asset Ports',
   CashAndDeposits: 'Cash And Deposits',
   LoansReceivable: 'Loans Receivable',
   Securities: 'Securities',
@@ -48,14 +48,29 @@ export default {
   Port_Investments: 'Port investments',
   Port_description: 'Port description',
   //++++++++++++
+  Liability_Ports: 'Liability Ports',
+  Borrowings: 'Borrowings',
+  Payables: 'Payables',
+  //++++++++++++
+  Revenue_Ports: 'Revenue Ports',
+  OperatingRevenue: 'Operating Revenue',
+  InterestIncome: 'Interest Income',
+  DividendIncome: 'Dividend Income',
+  //+++++++++++++
+  Expense_Ports: 'Expense Ports',
+  OperatingExpense: 'Operating Expense',
+  InterestExpense: 'Interest Expense',
+  BadDebtExpense: 'BadDebt Expense',
+  DisposalLoss: 'Disposal Loss',
+  //++++++++++++
   Deposit: 'Deposit', // ฝากเงิน
   Withdrawal: 'Withdrawal', // ถอนเงิน
-  InterestIncome: 'Interest Income', // รับดอกเบี้ย
+  //InterestIncome: 'Interest Income', // รับดอกเบี้ย
   Transfer: 'Transfer', // โอนเงิน
   //++++++++++++
   LoanIssued: 'Loan Issued', // ปล่อยกู้
   LoanRepayment: 'Loan Repayment', // รับชำระคืน
-  InterestAccrual: 'Interest Accrual', // ดอกเบี้ยค้างรับ
+  LoanInterestAccrual: 'Loan Interest Accrual', // ดอกเบี้ยค้างรับ
   BadDebtWriteOff: 'Bad Debt Write Off', // ตัดหนี้สูญ
   ReFinance: 'Re-Finance', // รีไฟแนนซ์ / ปรับโครงสร้างหนี้
   BrokerPayment: 'Broker Payment', //จ่ายค่านายหน้า
@@ -74,7 +89,7 @@ export default {
   RentalIncome: 'Rental Income', // รับค่าเช่า
   MutualFundInvestment: 'Mutual Fund Investment', // ลงทุนกองทุนรวม
   DisposalGain: 'Disposal Gain ', // กำไร/ขาดทุนจากการจำหน่าย
-  DisposalLoss: 'Disposal Loss', // ขาดทุนจากการจำหน่าย
+  //DisposalLoss: 'Disposal Loss', // ขาดทุนจากการจำหน่าย
   SavingSharePayment: 'Saving Share Payment', // ลงทุน แชร์/ออมหมุนเวียน
   SavingShareIncome: 'Saving Share Income', // รับค่า แชร์/ออมหมุนเวียน
   InsurancePremium: 'Insurance Premium', // การซื้อประกัน / จ่ายเบี้ยประกัน

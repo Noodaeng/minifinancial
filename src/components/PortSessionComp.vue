@@ -17,7 +17,10 @@
             v-show="session.enabled"
             class="col-12 col-sm-6 col-md-6"
           >
-            <q-card @click="session.actClick" class="bg-body text-appText cursor-pointer q-pa-sm">
+            <q-card
+              @click="() => onSessionClick(details.indexOf(session))"
+              class="bg-body text-appText cursor-pointer q-pa-sm"
+            >
               <!-- Inline Icon + Title -->
               <div class="row items-center">
                 <q-icon size="sm" :name="session.iconName" class="q-mr-xs" />
@@ -34,7 +37,6 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-
 import { i18n } from '../i18n'
 import { PortDetail } from '../types/myTypes'
 export default defineComponent({
@@ -53,17 +55,18 @@ export default defineComponent({
           enabled: true,
           visible: true,
           description: 'Default Port',
-          iconName: 'icon-default',
-          actClick: () => console.log('Default click')
+          iconName: 'icon-default'
         }
       ]
     }
   },
 
-  setup() {
+  setup(props, { emit }) {
     const { t } = i18n.global
-
-    return {}
+    const onSessionClick = (index: number) => {
+      emit('onSessionClick', index)
+    }
+    return { onSessionClick }
   },
   methods: {}
 })

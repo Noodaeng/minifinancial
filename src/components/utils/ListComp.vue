@@ -11,7 +11,7 @@
           v-model="filter"
           :label="$t('Search')"
           debounce="300"
-          @update:model-value="val => $emit('onFilter', val)"
+          @update:model-value="val => onFiltering(val)"
         >
           <template v-slot:prepend>
             <q-icon name="mdi-magnify" />
@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, onMounted } from 'vue'
 import type { QTableColumn } from 'quasar'
 
 export default defineComponent({
@@ -56,14 +56,24 @@ export default defineComponent({
     columns: {
       type: Array as () => Array<QTableColumn>,
       default: () => []
+    },
+    initGuide: {
+      type: String,
+      default: ''
     }
   },
   emits: ['onFilter', 'onRowClick'],
-  setup() {
-    const filter = ref('')
-
+  setup(props, { emit }) {
+    const filter = ref(props.initGuide)
+    const onFiltering = (val: string | number | null) => {
+      emit('onFilter', val)
+    }
+    onMounted(() => {
+      onFiltering(filter.value)
+    })
     return {
       filter,
+      onFiltering,
       pagination: ref({
         rowsPerPage: 0
       })
