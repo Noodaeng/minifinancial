@@ -22,6 +22,7 @@
               label-color="appLabel"
               :hint="$t('Port_Id')"
               :rules="strRule"
+              readonly
               lazy-rules
               dense
               input-class="text-appText"
@@ -55,7 +56,7 @@
               label-color="appLabel"
               :hint="$t('Amount')"
               :rules="amountRule"
-              readonly
+              :readonly="false"
               dense
               input-class="text-appText"
             />
@@ -65,7 +66,7 @@
           <div class="col-12 col-sm-3 col-md-3">
             <q-input
               outlined
-              v-model="(modelConverter<Session>(info) ?? new Session()).creditPortId"
+              v-model="model.creditPortId"
               :label="$t('Credit_Port_Id')"
               label-color="appLabel"
               :hint="$t('Credit_Port_Id')"
@@ -115,7 +116,7 @@
           <div class="col-12 col-sm-3 col-md-3">
             <q-input
               outlined
-              v-model="(modelConverter<Session>(info) ?? new Session()).debitPortId"
+              v-model="model.debitPortId"
               :label="$t('Debit_Port_Id')"
               label-color="appLabel"
               :hint="$t('Debit_Port_Id')"
@@ -270,6 +271,8 @@ export default defineComponent({
 
     // Keep form state synchronized when selection changes
 
+    const model = computed(() => modelConverter<Session>(props.info) ?? new Session())
+
     const popupCreditRef = ref<QPopupProxy | null>(null)
     const popupDebitRef = ref<QPopupProxy | null>(null)
 
@@ -288,26 +291,24 @@ export default defineComponent({
     )
 
     const onCreditRowClick = (row: any) => {
-      const m = modelConverter<Session>(props.info)
-      if (m && row?.portId) {
-        m.creditPortId = row.portId
+      if (model.value && row?.portId) {
+        model.value.creditPortId = row.portId
         popupCreditRef.value?.hide()
-        console.log('onCreditRowClick --------->', m.creditPortId)
+        console.log('onCreditRowClick --------->', model.value.creditPortId)
       }
     }
 
     const onDebitRowClick = (row: any) => {
-      const m = modelConverter<Session>(props.info)
-      if (m && row?.portId) {
-        m.debitPortId = row.portId
+      if (model.value && row?.portId) {
+        model.value.debitPortId = row.portId
         popupDebitRef.value?.hide()
-        console.log('onDebitRowClick --------->', m.debitPortId)
+        console.log('onDebitRowClick --------->', model.value.debitPortId)
       }
     }
     return {
       sessionInfo,
       Session,
-      model: modelConverter<Session>(props.info) ?? new Session(),
+      model,
       paymentOption: enumToQSelectOptions(EPaymentTerm),
       portTypeOption: enumToQSelectOptions(EPortType),
       strRule: rules.string(),
