@@ -33,7 +33,7 @@ import {
   DisposalLossTransactionType
 } from '../types/myEnums'
 import { FuncBoolAsync, QSelectOption, FormatMode } from '../types/myTypes'
-import { Notify, QVueGlobals } from 'quasar'
+import { Notify, QVueGlobals, date } from 'quasar'
 import MyConfig from './myConfig'
 import Port from '../models/port'
 import Session from '../models/session'
@@ -293,35 +293,44 @@ export const confirmDelete = (
   })
 }
 
+// export const formatBangkokDateTime = (
+//   date: Date | string | number,
+//   mode: FormatMode = 'datetime'
+// ): string => {
+//   const d = new Date(date)
+//   if (isNaN(d.getTime())) return '' // กัน Error กรณี Date ไม่ถูกต้อง
+
+//   // กำหนด options พื้นฐาน
+//   const options: Intl.DateTimeFormatOptions = {
+//     timeZone: 'Asia/Bangkok',
+//     hour12: false
+//   }
+
+//   // ปรับ Options ตาม Mode ที่เลือก
+//   if (mode === 'date' || mode === 'datetime') {
+//     options.year = 'numeric'
+//     options.month = '2-digit'
+//     options.day = '2-digit'
+//   }
+
+//   if (mode === 'time' || mode === 'datetime') {
+//     options.hour = '2-digit'
+//     options.minute = '2-digit'
+//     options.second = '2-digit'
+//   }
+
+//   return new Intl.DateTimeFormat('en-GB', options).format(d)
+// }
 export const formatBangkokDateTime = (
-  date: Date | string | number,
+  inputdate: Date | string | number,
   mode: FormatMode = 'datetime'
 ): string => {
-  const d = new Date(date)
+  const d = new Date(inputdate)
   if (isNaN(d.getTime())) return '' // กัน Error กรณี Date ไม่ถูกต้อง
 
-  // กำหนด options พื้นฐาน
-  const options: Intl.DateTimeFormatOptions = {
-    timeZone: 'Asia/Bangkok',
-    hour12: false
-  }
-
-  // ปรับ Options ตาม Mode ที่เลือก
-  if (mode === 'date' || mode === 'datetime') {
-    options.year = 'numeric'
-    options.month = '2-digit'
-    options.day = '2-digit'
-  }
-
-  if (mode === 'time' || mode === 'datetime') {
-    options.hour = '2-digit'
-    options.minute = '2-digit'
-    options.second = '2-digit'
-  }
-
-  return new Intl.DateTimeFormat('en-GB', options).format(d)
+  console.log('!!!!!!!!formatBangkokDateTime---->', d, mode)
+  return date.formatDate(d, 'DD/MM/YYYY')
 }
-
 export const currentDateTimeStr = formatBangkokDateTime(new Date(), 'date')
 
 //Session helpers

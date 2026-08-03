@@ -181,12 +181,37 @@
             <q-input
               outlined
               v-model="model.createOn"
+              mask="date"
               :label="$t('Create_On')"
               label-color="appLabel"
               :hint="$t('Create_On')"
+              :readonly="true"
               dense
               input-class="text-appText"
-            />
+            >
+              <template v-slot:append>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-date
+                      v-model="rawDate"
+                      class="bg-body text-appText"
+                      @update:model-value="
+                        val => {
+                          rawDate = val
+                          model.createOn = date.formatDate(val, 'DD/MM/YYYY')
+                        }
+                      "
+                    >
+                      <div class="row items-center justify-end">
+                        <q-btn v-close-popup label="Close" flat />
+                      </div>
+                    </q-date>
+                    <p>Stored date: {{ model.createOn }}</p>
+                    <p>Internal date: {{ rawDate }}</p>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
           </div>
         </div>
       </q-form>
@@ -209,7 +234,8 @@ import {
   modelConverter,
   enumToQSelectOptions,
   sessionTypeToQSelectOptions,
-  getSessionType
+  getSessionType,
+  formatBangkokDateTime
 } from '../modules/appUtils'
 import Session from '../models/session'
 import { useValidationRules } from '../hooks/useValidationRules'
@@ -217,7 +243,7 @@ import { i18n } from '../i18n'
 import { EPortType, EPaymentTerm } from '../types/myEnums'
 import ListComp from './utils/ListComp.vue'
 import SaveCancelBtn from '../components/utils/SaveCancelBtn.vue'
-import { QPopupProxy, QTableColumn } from 'quasar'
+import { QPopupProxy, QTableColumn, date } from 'quasar'
 
 export default defineComponent({
   name: 'PortDialogComp',
@@ -273,6 +299,12 @@ export default defineComponent({
 
     const model = computed(() => modelConverter<Session>(props.info) ?? new Session())
 
+    const rawDate = ref(
+      model.value?.createOn
+        ? date.formatDate(new Date(model.value.createOn), 'YYYY/MM/DD')
+        : date.formatDate(new Date(), 'YYYY/MM/DD')
+    )
+
     const popupCreditRef = ref<QPopupProxy | null>(null)
     const popupDebitRef = ref<QPopupProxy | null>(null)
 
@@ -324,7 +356,10 @@ export default defineComponent({
       clearValidation,
       getValidate,
       onCreditRowClick,
-      onDebitRowClick
+      onDebitRowClick,
+      formatBangkokDateTime,
+      date,
+      rawDate
     }
   }
 })
@@ -339,5 +374,19 @@ export default defineComponent({
 }
 ::v-deep(.q-select .q-field__native) {
   color: var(--q-color-appText); /* or your custom color */
+}
+/* Scoped or global */
+::v-deep(.q-date__header) {
+  background-color: var(--q-body); /* your custom background */
+  color: var(--q-appText); /* your custom text color */
+}
+
+/* If you want to style the year/date text separately */
+::v-deep(.q-date__header-title) {
+  color: var(--q-appText); /* text color for "2026" */
+}
+
+::v-deep(.q-date__header-subtitle) {
+  color: var(--q-appText); /* text color for "Mon, Aug 17" */
 }
 </style>
