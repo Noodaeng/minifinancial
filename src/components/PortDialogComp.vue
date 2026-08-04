@@ -181,33 +181,22 @@
             <q-input
               outlined
               v-model="model.createOn"
-              mask="date"
+              mask="##/##/####"
               :label="$t('Create_On')"
               label-color="appLabel"
               :hint="$t('Create_On')"
-              :readonly="true"
               dense
+              readonly
               input-class="text-appText"
             >
               <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
                   <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                    <q-date
-                      v-model="rawDate"
-                      class="bg-body text-appText"
-                      @update:model-value="
-                        val => {
-                          rawDate = val
-                          model.createOn = date.formatDate(val, 'DD/MM/YYYY')
-                        }
-                      "
-                    >
+                    <q-date v-model="model.createOn" mask="DD/MM/YYYY" class="bg-body text-appText">
                       <div class="row items-center justify-end">
                         <q-btn v-close-popup label="Close" flat />
                       </div>
                     </q-date>
-                    <p>Stored date: {{ model.createOn }}</p>
-                    <p>Internal date: {{ rawDate }}</p>
                   </q-popup-proxy>
                 </q-icon>
               </template>
@@ -295,15 +284,11 @@ export default defineComponent({
     const { t } = i18n.global
     const rules = useValidationRules(t)
 
-    // Keep form state synchronized when selection changes
-
     const model = computed(() => modelConverter<Session>(props.info) ?? new Session())
 
-    const rawDate = ref(
-      model.value?.createOn
-        ? date.formatDate(new Date(model.value.createOn), 'YYYY/MM/DD')
-        : date.formatDate(new Date(), 'YYYY/MM/DD')
-    )
+    if (!model.value.createOn) {
+      model.value.createOn = date.formatDate(Date.now(), 'DD/MM/YYYY')
+    }
 
     const popupCreditRef = ref<QPopupProxy | null>(null)
     const popupDebitRef = ref<QPopupProxy | null>(null)
@@ -318,6 +303,7 @@ export default defineComponent({
     }
 
     const sessionTypeOptions = computed(() => sessionTypeToQSelectOptions(props.portType))
+
     const sessionInfo = computed(() =>
       getSessionType(props.portType, modelConverter<Session>(props.info)?.sessionType ?? 0)
     )
@@ -326,7 +312,6 @@ export default defineComponent({
       if (model.value && row?.portId) {
         model.value.creditPortId = row.portId
         popupCreditRef.value?.hide()
-        console.log('onCreditRowClick --------->', model.value.creditPortId)
       }
     }
 
@@ -334,9 +319,9 @@ export default defineComponent({
       if (model.value && row?.portId) {
         model.value.debitPortId = row.portId
         popupDebitRef.value?.hide()
-        console.log('onDebitRowClick --------->', model.value.debitPortId)
       }
     }
+
     return {
       sessionInfo,
       Session,
@@ -358,8 +343,7 @@ export default defineComponent({
       onCreditRowClick,
       onDebitRowClick,
       formatBangkokDateTime,
-      date,
-      rawDate
+      date
     }
   }
 })
