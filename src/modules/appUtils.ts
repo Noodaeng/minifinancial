@@ -32,7 +32,7 @@ import {
   BadDebtExpenseTransactionType,
   DisposalLossTransactionType
 } from '../types/myEnums'
-import { FuncBoolAsync, QSelectOption, FormatMode } from '../types/myTypes'
+import { FuncBoolAsync, QSelectOption } from '../types/myTypes'
 import { Notify, QVueGlobals, date } from 'quasar'
 import MyConfig from './myConfig'
 import Port from '../models/port'
@@ -321,17 +321,13 @@ export const confirmDelete = (
 
 //   return new Intl.DateTimeFormat('en-GB', options).format(d)
 // }
-export const formatBangkokDateTime = (
-  inputdate: Date | string | number,
-  mode: FormatMode = 'datetime'
-): string => {
+export const formatBangkokDateTime = (inputdate: Date | string | number): string => {
   const d = new Date(inputdate)
   if (isNaN(d.getTime())) return '' // กัน Error กรณี Date ไม่ถูกต้อง
 
-  console.log('!!!!!!!!formatBangkokDateTime---->', d, mode)
   return date.formatDate(d, 'DD/MM/YYYY')
 }
-export const currentDateTimeStr = formatBangkokDateTime(new Date(), 'date')
+export const currentDateTimeStr = formatBangkokDateTime(new Date())
 
 //Session helpers
 

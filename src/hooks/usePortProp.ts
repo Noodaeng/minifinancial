@@ -15,14 +15,16 @@ export function usePortProp() {
 
   const filter = ref('')
   const portType: Ref<string | number | EPortType> = ref(EPortType.CashAndDeposits)
-
+  const isPortValid = ref(false)
   // 1. Initialize our generic CRUD composable
   const setItem = (ports: PortDto[]) => {
     const filter = ports.filter(p => p.portType == portType.value)
     if (filter && filter.length > 0) {
       Object.assign(crud.item.value, filter[0])
+      isPortValid.value = true
     } else {
       Object.assign(crud.item.value, new PortDto())
+      isPortValid.value = false
     }
   }
   const crud = useCrudProp<PortDto, Port>(
@@ -107,6 +109,7 @@ export function usePortProp() {
   // Intercept onRowClick to make sure the single active editing item gets its customerName too
   const onRowClick = (row: any) => {
     crud.onRowClick(row)
+    isPortValid.value = row && row.portId
   }
 
   const onCreatePort = () => {
@@ -143,6 +146,7 @@ export function usePortProp() {
     onRowClick, // Overridden row click action handler
     filter,
     filteredRows,
+    isPortValid,
     onFilter,
     initOtherList,
     rawOptionToQSelectOptions,

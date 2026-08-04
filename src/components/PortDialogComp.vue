@@ -223,8 +223,7 @@ import {
   modelConverter,
   enumToQSelectOptions,
   sessionTypeToQSelectOptions,
-  getSessionType,
-  formatBangkokDateTime
+  getSessionType
 } from '../modules/appUtils'
 import Session from '../models/session'
 import { useValidationRules } from '../hooks/useValidationRules'
@@ -342,7 +341,6 @@ export default defineComponent({
       getValidate,
       onCreditRowClick,
       onDebitRowClick,
-      formatBangkokDateTime,
       date
     }
   }

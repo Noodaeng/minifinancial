@@ -64,19 +64,23 @@
                       :enbBtnSave="sesCanSave"
                       :creditPortIdGuide="lastCreditPort ?? ''"
                       :debitPortIdGuide="lastDebitPort ?? ''"
+                      @onClickSave="saveSession"
                     ></PortDialogComp>
                   </q-dialog>
                 </template>
               </ListComp>
             </div>
             <div class="col-12 col-sm-6">
-              <PortSessionComp :details="sessionDetails" @onSessionClick="handleSessionClick" />
+              <PortSessionComp
+                :details="sessionDetails"
+                :isPortValid="isPortValid"
+                @onSessionClick="handleSessionClick"
+              />
             </div>
           </div>
         </q-card>
       </div>
     </div>
-    {{ sessions }}
   </q-page>
 </template>
 
@@ -231,7 +235,7 @@ export default defineComponent({
       canDelete: usePort.canDelete,
       canCreate: usePort.canCreate,
       canSave: usePort.canSave,
-      state: usePort.state,
+      isPortValid: usePort.isPortValid,
       sessionDetails,
       session: useSession.item,
       sessions: useSession.items,
@@ -239,6 +243,7 @@ export default defineComponent({
       sesFilterRows: useSession.filteredRows,
       sesListColumns: useSession.listColumns,
       sesCanSave: useSession.canSave,
+      saveSession: useSession.onSave,
       lastCreditPort,
       lastDebitPort
     }

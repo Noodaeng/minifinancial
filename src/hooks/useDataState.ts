@@ -56,6 +56,7 @@ export function useDataState() {
         }
         break
       default:
+        break
     }
   }
   const canCreate = computed(() => {

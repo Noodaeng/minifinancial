@@ -14,7 +14,7 @@
             v-for="session in details"
             :key="session.description"
             v-bind="session"
-            v-show="session.enabled"
+            v-show="session.enabled && isPortValid"
             class="col-12 col-sm-6 col-md-6"
           >
             <q-card
@@ -39,6 +39,7 @@
 import { defineComponent, PropType } from 'vue'
 import { i18n } from '../i18n'
 import { PortDetail } from '../types/myTypes'
+
 export default defineComponent({
   name: 'PortSessionComp',
   components: {},
@@ -58,6 +59,10 @@ export default defineComponent({
           iconName: 'icon-default'
         }
       ]
+    },
+    isPortValid: {
+      type: Boolean,
+      default: false
     }
   },
 

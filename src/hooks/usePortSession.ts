@@ -25,12 +25,28 @@ export function usePortSession() {
         sortable: true
       },
       {
+        name: 'createOn',
+        required: true,
+        label: t('Create_On'),
+        align: 'left',
+        field: 'createOn',
+        sortable: true
+      },
+      {
         name: 'sessionType',
         required: true,
         label: t('Type'),
         align: 'left',
         field: 'sessionType',
         format: (val: number) => getSessionType(portType.value, val),
+        sortable: true
+      },
+      {
+        name: 'amount',
+        required: true,
+        label: t('Amount'),
+        align: 'left',
+        field: 'amount',
         sortable: true
       },
       {
@@ -477,6 +493,8 @@ export function usePortSession() {
         String(session.sessionId).toLowerCase().includes(lowerFilter) ||
         String(session.creditPortId).toLowerCase().includes(lowerFilter) ||
         String(session.debitPortId).toLowerCase().includes(lowerFilter) ||
+        String(session.createOn).toLowerCase().includes(lowerFilter) ||
+        String(session.amount).toLowerCase().includes(lowerFilter) ||
         String(getSessionType(portType.value, session.sessionType))
           .toLowerCase()
           .includes(lowerFilter)
@@ -489,7 +507,7 @@ export function usePortSession() {
   }
   const onCreateSession = (sessionType: number) => {
     crud.onCreate()
-    crud.item.value.sessionId = 'SES-NEW'
+    crud.item.value.sessionId = ''
     crud.item.value.portId = portId.value
     crud.item.value.sessionType = sessionType
     crud.item.value.createBy = crud.currentUser
