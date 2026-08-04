@@ -35,6 +35,7 @@ export default {
   Subprime: 'ลูกค้าชั้นเลว',
   Customer_Id: 'ระหัส ลูกค้า',
   Customer_Name: 'ชื่อลูกค้า',
+  Amount: 'จำนวน',
   //++++++Broker++++++++
   Broker_Accounts: 'บัญชีนายหน้า',
   //++++++Port++++++++++

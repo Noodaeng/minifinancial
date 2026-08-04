@@ -36,6 +36,7 @@ export default {
   Subprime: 'Subprime', // ลูกค้าชั้นเลว
   Customer_Id: 'Customer Id',
   Customer_Name: 'Customer Name',
+  Amount: 'Amount',
   //++++++Broker++++++++
   Broker_Accounts: 'Broker Accounts',
   //+++++++++Port investment+++++++++++
