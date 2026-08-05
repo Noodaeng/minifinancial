@@ -7,7 +7,7 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
-        component: () => import('../pages/DashBoard.vue'),
+        component: () => import('../pages/DashBoardPage.vue'),
         meta: {
           requiresAuth: true
         }

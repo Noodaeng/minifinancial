@@ -13,6 +13,9 @@ export default {
   success: 'Action was successful',
   Id: 'Id',
   Type: 'Type',
+  Item_saved_successfully: 'Item saved successfully',
+  User: 'User',
+  Password: 'Password',
   //+++++++Customer+++++++++++++++++
   Customer: 'Customer',
   Customers: 'Customers',
@@ -120,5 +123,6 @@ export default {
   //++++++Session++++++++++
   Port_Id: 'Port Id',
   Credit_Port_Id: 'Credit Port Id',
-  Debit_Port_Id: 'Debit Port Id'
+  Debit_Port_Id: 'Debit Port Id',
+  Session_Type: 'Session Type'
 }

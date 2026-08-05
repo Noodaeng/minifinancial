@@ -1,3 +1,4 @@
+import { AccountCategory } from '../types/myEnums'
 export type ApplicationTheme = 'bcs-default' | 'bcs-dark' | 'bcs-medium'
 export type Breakpoints = 'sm' | 'md' | 'lg' | 'xl'
 export type Action = () => void
@@ -23,4 +24,14 @@ export interface PortDetail {
   visible: boolean
   description: string
   iconName: string
+}
+export interface CategoryMeta {
+  value: AccountCategory
+  name: string
+  labelTh: string
+  description?: string
+  drEffect: '+' | '-'
+  crEffect: '+' | '-'
+  icon: string
+  color: string
 }

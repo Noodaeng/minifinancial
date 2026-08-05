@@ -169,22 +169,12 @@
           <div class="col-12 col-sm-3 col-md-3">
             <q-input
               outlined
-              v-model="model.createBy"
-              :label="$t('Create_By')"
-              label-color="appLabel"
-              :hint="$t('Create_By')"
-              dense
-              input-class="text-appText"
-            />
-          </div>
-          <div class="col-12 col-sm-3 col-md-3">
-            <q-input
-              outlined
               v-model="model.createOn"
               mask="##/##/####"
               :label="$t('Create_On')"
               label-color="appLabel"
               :hint="$t('Create_On')"
+              :rules="strRule"
               dense
               readonly
               input-class="text-appText"
@@ -320,7 +310,6 @@ export default defineComponent({
         popupDebitRef.value?.hide()
       }
     }
-
     return {
       sessionInfo,
       Session,
@@ -328,10 +317,8 @@ export default defineComponent({
       paymentOption: enumToQSelectOptions(EPaymentTerm),
       portTypeOption: enumToQSelectOptions(EPortType),
       strRule: rules.string(),
-      emailRule: rules.email(),
       amountRule: rules.floatRange(0, 1000000),
       selectorRule: rules.enumSelect(),
-      checkboxRule: rules.integer(),
       myForm,
       sessionTypeOptions,
       popupCreditRef,

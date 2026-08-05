@@ -1,11 +1,10 @@
 import { createI18n } from 'vue-i18n'
 import messages from './messages'
 
-export  const i18n = createI18n({
-  locale: 'en-US',
-  fallbackLocale: 'en-US',
+export const i18n = createI18n({
+  locale: 'th-TH',
+  fallbackLocale: 'th-TH',
   legacy: false,
   globalInjection: true,
-  messages,
+  messages
 })
-

@@ -50,7 +50,7 @@ export default class MyConfig {
   //last language
   get LastLanguage() {
     const lastLanguage = localStorage.getItem('lastLanguage')
-    return lastLanguage ? lastLanguage : 'en-US'
+    return lastLanguage ? lastLanguage : 'th-TH'
   }
   set LastLanguage(value: string) {
     if (value) {

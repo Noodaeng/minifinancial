@@ -55,6 +55,7 @@
                     transition-hide="scale"
                   >
                     <PortDialogComp
+                      ref="myDiaComp"
                       :info="session"
                       :portType="portType"
                       :creditColumns="listColumns"
@@ -94,7 +95,7 @@ import StateCtrlBtn from '../../components/utils/StateCtrlBtn.vue'
 import { usePortProp } from '../../hooks/usePortProp.js'
 import { usePortSession } from '../../hooks/usePortSession.js'
 import { EPortType } from '../../types/myEnums.js'
-import { QPopupProxy } from 'quasar'
+
 import { getGuideRows, getPreviousUsedPortId } from '../../modules/appUtils.js'
 export default defineComponent({
   name: 'PortPage',
@@ -120,6 +121,7 @@ export default defineComponent({
   // 2. Accept 'props' here so we can access them dynamically
   setup(props, { emit }) {
     const myPortComp = ref<InstanceType<typeof PortComp>>()
+    const myDiaComp = ref<InstanceType<typeof PortDialogComp>>()
     const useSession = usePortSession()
     const isDialogOpen = ref(false)
     // 3. Convert the value to a Number if your enum expects numbers
@@ -173,6 +175,15 @@ export default defineComponent({
       }
       usePort.onSave()
     }
+    const saveSession = async () => {
+      const valid = await myDiaComp.value?.getValidate()
+      if (!valid) {
+        useSession.resetDataState()
+        return
+      }
+      useSession.onSave()
+      isDialogOpen.value = false
+    }
     const custOption = computed(() => usePort.rawOptionToQSelectOptions('customers'))
     const brokerOption = computed(() => usePort.rawOptionToQSelectOptions('brokers'))
     const sessionDetails = computed(() =>
@@ -215,6 +226,7 @@ export default defineComponent({
     return {
       splitterModel: ref(35),
       myPortComp,
+      myDiaComp,
       custOption,
       brokerOption,
       listColumns: usePort.listColumns,
@@ -243,7 +255,7 @@ export default defineComponent({
       sesFilterRows: useSession.filteredRows,
       sesListColumns: useSession.listColumns,
       sesCanSave: useSession.canSave,
-      saveSession: useSession.onSave,
+      saveSession,
       lastCreditPort,
       lastDebitPort
     }

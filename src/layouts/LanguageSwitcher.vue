@@ -28,9 +28,9 @@ export default defineComponent({
     //const { changeLocaleSafe } = useI18nLoader()
     const { locale } = useI18n({ useScope: 'global' })
     const langs: Ref<{ value: string; label: string }[]> = ref([
-      { value: 'en-US', label: 'English' },
       { value: 'th-TH', label: 'ภาษาไทย' },
-      { value: 'zh-CN', label: '中國人' },
+      { value: 'en-US', label: 'English' },
+      { value: 'zh-CN', label: '中國人' }
     ])
 
     const updateLanguage = async (val: string) => {
@@ -41,8 +41,8 @@ export default defineComponent({
     return {
       locale,
       updateLanguage,
-      langs,
+      langs
     }
-  },
+  }
 })
 </script>

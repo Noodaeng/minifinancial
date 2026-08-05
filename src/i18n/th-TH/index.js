@@ -12,6 +12,9 @@ export default {
   Account: 'บัญชีผู้ใช้งาน',
   Id: 'ระหัส',
   Type: 'ชนิด',
+  Item_saved_successfully: 'บันทึกข้อมูลสำเร็จ',
+  User: 'ผู้ใช้',
+  Password: 'รหัสผ่าน',
   //+++++++Customer+++++++++++++++++
   Customer: 'ลูกค้า',
   Customers: 'ลูกค้า',
@@ -119,5 +122,6 @@ export default {
   //++++++Session++++++++++
   Port_Id: 'ระหัส พอร์ต',
   Credit_Port_Id: 'ระหัส เครดิต พอร์ต',
-  Debit_Port_Id: 'ระหัส เดบิต พอร์ต'
+  Debit_Port_Id: 'ระหัส เดบิต พอร์ต',
+  Session_Type: 'ประเภทเซสชัน'
 }
