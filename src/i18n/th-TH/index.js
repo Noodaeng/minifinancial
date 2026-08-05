@@ -15,6 +15,11 @@ export default {
   Item_saved_successfully: 'บันทึกข้อมูลสำเร็จ',
   User: 'ผู้ใช้',
   Password: 'รหัสผ่าน',
+  Assets: 'สินทรัพย์',
+  Liabilities: 'หนี้สิน',
+  Equity: 'ทุน',
+  Revenue: 'รายได้',
+  Expenses: 'ค่าใช้จ่าย',
   //+++++++Customer+++++++++++++++++
   Customer: 'ลูกค้า',
   Customers: 'ลูกค้า',

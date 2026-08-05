@@ -1,11 +1,10 @@
 <template>
   <div class="row q-col-gutter-md">
     <div v-for="item in categoryList" :key="item.value" class="col-12 col-sm-6 col-md-4 col-lg">
-      <q-card flat bordered class="account-card">
+      <q-card flat bordered class="bg-body text-appText account-card">
         <q-card-section class="q-pb-xs">
           <div class="row items-center justify-between no-wrap">
             <div>
-              <div class="text-caption text-grey-7">{{ item.name }}</div>
               <div class="text-h6 text-weight-bold">{{ item.labelTh }}</div>
             </div>
             <q-avatar :color="item.color" text-color="white" :icon="item.icon" size="42px" />

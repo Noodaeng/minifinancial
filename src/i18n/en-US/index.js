@@ -16,6 +16,12 @@ export default {
   Item_saved_successfully: 'Item saved successfully',
   User: 'User',
   Password: 'Password',
+  Assets: 'Assets',
+  Liabilities: 'Liabilities',
+  Equity: 'Equity',
+  Revenue: 'Revenue',
+  Expenses: 'Expenses',
+
   //+++++++Customer+++++++++++++++++
   Customer: 'Customer',
   Customers: 'Customers',
