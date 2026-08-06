@@ -29,7 +29,13 @@
       <div class="col-12 col-md-8">
         <div class="column justify-between full-height">
           <q-card class="bg-body text-appText flat bordered q-mb-md">
-            <BrokerComp ref="myChild" :info="broker" :enbBtnSave="canSave" @onClickSave="onSave" />
+            <BrokerComp
+              ref="myChild"
+              :info="broker"
+              :enbBtnSave="canSave"
+              @onClickSave="onSave"
+              :childIcon="childIcon"
+            />
           </q-card>
         </div>
       </div>
@@ -51,6 +57,12 @@ export default defineComponent({
     BrokerComp,
     ListComp,
     StateCtrlBtn
+  },
+  props: {
+    childIcon: {
+      type: String,
+      default: 'mdi-widgets-outline'
+    }
   },
   setup() {
     const myChild = ref<InstanceType<typeof BrokerComp>>()

@@ -22,12 +22,26 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/customers',
     component: () => import('../layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('../pages/settings/CustomerPage.vue') }]
+    children: [
+      {
+        path: ':childIcon',
+        name: 'Customer',
+        props: true,
+        component: () => import('../pages/settings/CustomerPage.vue')
+      }
+    ]
   },
   {
     path: '/brokers',
     component: () => import('../layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('../pages/settings/BrokerPage.vue') }]
+    children: [
+      {
+        path: ':childIcon',
+        name: 'Broker',
+        props: true,
+        component: () => import('../pages/settings/BrokerPage.vue')
+      }
+    ]
   },
   {
     path: '/cashPort',

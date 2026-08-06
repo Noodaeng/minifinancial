@@ -4,7 +4,7 @@
       <q-card flat class="bg-body text-appText col-12">
         <!-- Form Context Header -->
         <div class="row items-center q-mb-md">
-          <q-icon name="mdi-account-details-outline" size="md" />
+          <q-icon :name="childIcon" size="md" />
           <div class="text-subtitle1 q-ml-sm">
             {{ $t('Broker_Accounts') }}: {{ model?.brokerId }}
           </div>
@@ -200,6 +200,10 @@ export default defineComponent({
     enbBtnSave: {
       type: Boolean,
       default: false
+    },
+    childIcon: {
+      type: String,
+      default: 'mdi-widgets-outline'
     }
   },
   setup(props) {

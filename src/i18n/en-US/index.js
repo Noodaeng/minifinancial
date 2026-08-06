@@ -21,7 +21,9 @@ export default {
   Equity: 'Equity',
   Revenue: 'Revenue',
   Expenses: 'Expenses',
-
+  System_Management: 'System Management',
+  System_Configure: 'System Configure',
+  Preference: 'Preference',
   //+++++++Customer+++++++++++++++++
   Customer: 'Customer',
   Customers: 'Customers',

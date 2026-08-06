@@ -1,8 +1,8 @@
 import { EPortType } from '../types/myEnums'
 const linksList = [
   {
-    title: 'SystemConfigure',
-    icon: 'las la-cog',
+    title: 'System_Configure',
+    icon: 'mdi-cog-outline',
     link: '/',
     level: 0,
     access: 0,
@@ -10,7 +10,7 @@ const linksList = [
     children: [
       {
         title: 'Account',
-        icon: 'manage_accounts',
+        icon: 'mdi-account-cog-outline',
         link: '/account',
         level: 1,
         access: 0,
@@ -19,7 +19,7 @@ const linksList = [
       },
       {
         title: 'Preference',
-        icon: 'room_preferences',
+        icon: 'mdi-tune-variant',
         link: '/preference',
         level: 1,
         access: 0,
@@ -30,7 +30,7 @@ const linksList = [
   },
   {
     title: 'Customers_and_Brokers',
-    icon: 'mdi-account-multiple-outline',
+    icon: 'mdi-account-group-outline',
     link: '/',
     level: 0,
     access: 0,
@@ -38,8 +38,8 @@ const linksList = [
     children: [
       {
         title: 'Customer_Accounts',
-        icon: 'mdi-account-details-outline',
-        link: '/customers',
+        icon: 'mdi-account-box-outline',
+        link: { name: 'Customer', params: { childIcon: 'mdi-account-box-outline' } },
         level: 1,
         access: 0,
         compType: 1,
@@ -47,8 +47,8 @@ const linksList = [
       },
       {
         title: 'Broker_Accounts',
-        icon: 'mdi-account-details-outline',
-        link: '/brokers',
+        icon: 'mdi-briefcase-account-outline',
+        link: { name: 'Broker', params: { childIcon: 'mdi-briefcase-account-outline' } },
         level: 1,
         access: 0,
         compType: 1,
@@ -58,7 +58,7 @@ const linksList = [
   },
   {
     title: 'Asset_Ports',
-    icon: 'mdi-account-multiple-outline',
+    icon: 'mdi-briefcase-outline',
     link: '/',
     level: 0,
     access: 0,
@@ -66,8 +66,7 @@ const linksList = [
     children: [
       {
         title: 'CashAndDeposits',
-        icon: 'mdi-account-details-outline',
-        // 1. Pass a real object here instead of a string literal
+        icon: 'mdi-piggy-bank-outline',
         link: { name: 'CashPort', params: { portType: EPortType.CashAndDeposits } },
         level: 1,
         access: 0,
@@ -76,8 +75,7 @@ const linksList = [
       },
       {
         title: 'LoansReceivable',
-        icon: 'mdi-account-details-outline',
-        // 2. Pass a real object here too
+        icon: 'mdi-hand-coin-outline',
         link: { name: 'LoanPort', params: { portType: EPortType.LoansReceivable } },
         level: 1,
         access: 0,
@@ -86,7 +84,7 @@ const linksList = [
       },
       {
         title: 'Securities',
-        icon: 'mdi-account-details-outline',
+        icon: 'mdi-chart-line',
         link: { name: 'SecurityPort', params: { portType: EPortType.Securities } },
         level: 1,
         access: 0,
@@ -95,7 +93,7 @@ const linksList = [
       },
       {
         title: 'EquityHoldings',
-        icon: 'mdi-account-details-outline',
+        icon: 'mdi-chart-pie',
         link: { name: 'EquityPort', params: { portType: EPortType.EquityHoldings } },
         level: 1,
         access: 0,
@@ -104,7 +102,7 @@ const linksList = [
       },
       {
         title: 'OtherInvestments',
-        icon: 'mdi-account-details-outline',
+        icon: 'mdi-finance',
         link: { name: 'OtherPort', params: { portType: EPortType.OtherInvestments } },
         level: 1,
         access: 0,
@@ -115,7 +113,7 @@ const linksList = [
   },
   {
     title: 'Liability_Ports',
-    icon: 'mdi-account-multiple-outline',
+    icon: 'mdi-scale-balance',
     link: '/',
     level: 0,
     access: 0,
@@ -123,8 +121,7 @@ const linksList = [
     children: [
       {
         title: 'Borrowings',
-        icon: 'mdi-account-details-outline',
-        // 1. Pass a real object here instead of a string literal
+        icon: 'mdi-bank-transfer-in',
         link: { name: 'BorrowPort', params: { portType: EPortType.Borrowings } },
         level: 1,
         access: 0,
@@ -133,8 +130,7 @@ const linksList = [
       },
       {
         title: 'Payables',
-        icon: 'mdi-account-details-outline',
-        // 2. Pass a real object here too
+        icon: 'mdi-file-document-outline',
         link: { name: 'PayablePort', params: { portType: EPortType.Payables } },
         level: 1,
         access: 0,
@@ -145,7 +141,7 @@ const linksList = [
   },
   {
     title: 'Revenue_Ports',
-    icon: 'mdi-account-multiple-outline',
+    icon: 'mdi-trending-up',
     link: '/',
     level: 0,
     access: 0,
@@ -153,8 +149,7 @@ const linksList = [
     children: [
       {
         title: 'OperatingRevenue',
-        icon: 'mdi-account-details-outline',
-        // 1. Pass a real object here instead of a string literal
+        icon: 'mdi-cash-plus',
         link: {
           name: 'OperatingRevenuePort',
           params: { portType: EPortType.OperatingRevenue }
@@ -166,8 +161,7 @@ const linksList = [
       },
       {
         title: 'InterestIncome',
-        icon: 'mdi-account-details-outline',
-        // 2. Pass a real object here too
+        icon: 'mdi-percent-outline',
         link: { name: 'InterestIncomePort', params: { portType: EPortType.InterestIncome } },
         level: 1,
         access: 0,
@@ -176,8 +170,7 @@ const linksList = [
       },
       {
         title: 'DividendIncome',
-        icon: 'mdi-account-details-outline',
-        // 2. Pass a real object here too
+        icon: 'mdi-cash-refund',
         link: { name: 'DividendIncomePort', params: { portType: EPortType.DividendIncome } },
         level: 1,
         access: 0,
@@ -188,7 +181,7 @@ const linksList = [
   },
   {
     title: 'Expense_Ports',
-    icon: 'mdi-account-multiple-outline',
+    icon: 'mdi-trending-down',
     link: '/',
     level: 0,
     access: 0,
@@ -196,8 +189,7 @@ const linksList = [
     children: [
       {
         title: 'OperatingExpense',
-        icon: 'mdi-account-details-outline',
-        // 1. Pass a real object here instead of a string literal
+        icon: 'mdi-cash-minus',
         link: {
           name: 'OperatingExpensePort',
           params: { portType: EPortType.OperatingExpense }
@@ -209,8 +201,7 @@ const linksList = [
       },
       {
         title: 'InterestExpense',
-        icon: 'mdi-account-details-outline',
-        // 2. Pass a real object here too
+        icon: 'mdi-calculator-variant-outline',
         link: {
           name: 'InterestExpensePort',
           params: { portType: EPortType.InterestExpense }
@@ -222,8 +213,7 @@ const linksList = [
       },
       {
         title: 'BadDebtExpense',
-        icon: 'mdi-account-details-outline',
-        // 2. Pass a real object here too
+        icon: 'mdi-alert-circle-outline',
         link: { name: 'BadDebtExpensePort', params: { portType: EPortType.BadDebtExpense } },
         level: 1,
         access: 0,
@@ -232,8 +222,7 @@ const linksList = [
       },
       {
         title: 'DisposalLoss',
-        icon: 'mdi-account-details-outline',
-        // 2. Pass a real object here too
+        icon: 'mdi-archive-remove-outline',
         link: { name: 'DisposalLossPort', params: { portType: EPortType.DisposalLoss } },
         level: 1,
         access: 0,

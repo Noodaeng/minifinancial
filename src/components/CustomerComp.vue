@@ -4,7 +4,7 @@
       <q-card flat class="bg-body text-appText col-12">
         <!-- Header Zone -->
         <div class="row items-center q-mb-md">
-          <q-icon name="mdi-account-details-outline" size="md" />
+          <q-icon :name="childIcon" size="md" />
           <div class="text-subtitle1 q-ml-sm">
             {{ $t('Customer_Accounts') }}: {{ model?.customerId }}
           </div>
@@ -48,7 +48,6 @@
               :label="$t('Email')"
               label-color="appLabel"
               :hint="$t('Email')"
-              :rules="emailRule"
               lazy-rules
               dense
               input-class="text-appText"
@@ -205,6 +204,10 @@ export default defineComponent({
     enbBtnSave: {
       type: Boolean,
       default: false
+    },
+    childIcon: {
+      type: String,
+      default: 'mdi-widgets-outline'
     }
   },
   setup(props, { emit }) {

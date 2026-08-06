@@ -114,9 +114,7 @@ export default defineComponent({
     }
   },
   data() {
-    return {
-      childIcon: 'mdi-widgets-outline'
-    }
+    return {}
   },
   // 2. Accept 'props' here so we can access them dynamically
   setup(props, { emit }) {

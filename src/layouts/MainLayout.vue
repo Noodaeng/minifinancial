@@ -75,12 +75,15 @@
     <!-- Navigation Drawer Layout Structure -->
     <q-drawer v-model="leftDrawerOpen" class="bg-appLayout text-appText" :breakpoint="700" bordered>
       <q-list>
-        <q-item class="bg-appLayout text-appText q-py-md">
-          <q-item-section avatar>
-            <q-avatar icon="fas fa-cogs" color="primary" text-color="white" size="md"></q-avatar>
+        <q-item class="bg-appLayout text-appText q-py-md q-px-md border-bottom">
+          <q-item-section avatar min-width="40px">
+            <q-icon name="mdi-file-cog-outline" size="26px" class="text-appText" />
           </q-item-section>
-          <q-item-section class="text-weight-bold">
-            {{ $t('Configuration') }}
+
+          <q-item-section>
+            <q-item-label class="text-subtitle1 text-weight-bold letter-spacing-wide">
+              {{ $t('System_Management') }}
+            </q-item-label>
           </q-item-section>
         </q-item>
 

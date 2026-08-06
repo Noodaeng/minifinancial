@@ -34,6 +34,7 @@
               :info="customer"
               :enbBtnSave="canSave"
               @onClickSave="onSave"
+              :childIcon="childIcon"
             />
           </q-card>
         </div>
@@ -55,10 +56,14 @@ export default defineComponent({
     ListComp,
     StateCtrlBtn
   },
-  data() {
-    return {
-      childIcon: 'mdi-widgets-outline'
+  props: {
+    childIcon: {
+      type: String,
+      default: 'mdi-widgets-outline'
     }
+  },
+  data() {
+    return {}
   },
   setup(_, { emit }) {
     const myChild = ref<InstanceType<typeof CustomerComp>>()

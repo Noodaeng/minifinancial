@@ -20,6 +20,9 @@ export default {
   Equity: 'ทุน',
   Revenue: 'รายได้',
   Expenses: 'ค่าใช้จ่าย',
+  System_Management: 'การจัดการระบบ',
+  System_Configure: 'การตั้งค่าระบบ',
+  Preference: 'การกำหนดค่า',
   //+++++++Customer+++++++++++++++++
   Customer: 'ลูกค้า',
   Customers: 'ลูกค้า',
