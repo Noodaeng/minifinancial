@@ -34,6 +34,7 @@
             :portType="portType"
             :info="port"
             :enbBtnSave="canSave"
+            :childIcon="childIcon"
             @onClickSave="savePort"
             class="q-mb-md"
           />
@@ -82,6 +83,7 @@
         </q-card>
       </div>
     </div>
+    {{ childIcon }}
   </q-page>
 </template>
 
@@ -111,6 +113,10 @@ export default defineComponent({
     portType: {
       type: [String, Number] as PropType<string | number | EPortType>,
       default: EPortType.CashAndDeposits
+    },
+    childIcon: {
+      type: String,
+      default: 'mdi-widgets-outline'
     }
   },
   data() {

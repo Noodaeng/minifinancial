@@ -47,27 +47,34 @@ export enum AccountCategory {
 }
 
 export enum EPortType {
-  //Assets
-  CashAndDeposits = 0, // เงินสด / เงินฝาก (Savings & Bank Deposits)
-  LoansReceivable = 1, // สินเชื่อและเงินให้กู้ (Loan Assets)
-  Securities = 2, // การลงทุนในตราสาร เช่น พันธบัตร หุ้นกู้
-  EquityHoldings = 3, // การลงทุนในทุน/หุ้น (Equity Investments)
-  OtherInvestments = 4, // อื่น ๆ เช่น กองทุนรวม, อสังหาริมทรัพย์เพื่อการลงทุน
-  // Liabilities
-  Borrowings = 5, // เงินกู้ยืม / หนี้สิน (Borrowings & Liabilities) → AccountCategory.Liabilities
-  Payables = 6, // เจ้าหนี้การค้า / เจ้าหนี้อื่น ๆ (Accounts Payable) → AccountCategory.Liabilities
+  // Assets (0-4) - สินทรัพย์
+  CashAndDeposits = 0, // เงินสดและเงินฝากธนาคาร
+  LoansReceivable = 1, // ลูกหนี้เงินให้กู้ยืม
+  Securities = 2, // หลักทรัพย์ / ตราสารหนี้
+  EquityHoldings = 3, // เงินลงทุนในตราสารทุน / หุ้นทุน
+  OtherInvestments = 4, // เงินลงทุนอื่น ๆ
 
-  // Revenue
-  OperatingRevenue = 7, // รายได้จากการดำเนินงาน (Operating Revenue) → AccountCategory.Revenue
-  InterestIncome = 8, // รายได้ดอกเบี้ย (Interest Income) → AccountCategory.Revenue
-  DividendIncome = 9, // รายได้เงินปันผล (Dividend Income) → AccountCategory.Revenue
+  // Liabilities (5-6) - หนี้สิน
+  Borrowings = 5, // เงินกู้ยืม
+  Payables = 6, // เจ้าหนี้ / ค่าใช้จ่ายค้างจ่าย
 
-  // Expenses
-  OperatingExpense = 10, // ค่าใช้จ่ายดำเนินงาน (Operating Expense) → AccountCategory.Expenses
-  InterestExpense = 11, // ดอกเบี้ยจ่าย (Interest Expense) → AccountCategory.Expenses
-  BadDebtExpense = 12, // ค่าเผื่อหนี้สงสัยจะสูญ (Bad Debt Expense) → AccountCategory.Expenses
-  DisposalLoss = 13 // ขาดทุนจากการจำหน่าย (Disposal Loss) → AccountCategory.Expenses
+  // Revenue (7-9) - รายได้
+  OperatingRevenue = 7, // รายได้จากการดำเนินงาน
+  InterestIncome = 8, // รายได้ดอกเบี้ย
+  DividendIncome = 9, // รายได้เงินปันผล
+
+  // Expenses (10-13) - ค่าใช้จ่าย
+  OperatingExpense = 10, // ค่าใช้จ่ายในการดำเนินงาน
+  InterestExpense = 11, // ดอกเบี้ยจ่าย
+  BadDebtExpense = 12, // หนี้สูญและหนี้สงสัยจะสูญ
+  DisposalLoss = 13, // ขาดทุนจากการจำหน่ายทรัพย์สิน
+
+  // Equity (14-16) - ส่วนของผู้ถือหุ้น / ทุน
+  PaidInCapital = 14, // ทุนเรือนหุ้น / ทุนชำระแล้ว
+  RetainedEarnings = 15, // กำไรสะสม
+  OtherReserves = 16 // สำรองอื่น ๆ และส่วนเกินมูลค่าหุ้น
 }
+
 export enum CashAndDepositsSubType {
   Cash = 0, // เงินสด
   SavingsAccount = 1, // บัญชีออมทรัพย์
@@ -150,6 +157,25 @@ export enum EBadDebtExpenseSubType {
 export enum EDisposalLossSubType {
   DisposalLoss = 0, // ขาดทุนจากการจำหน่ายทรัพย์สิน
   UnrealizedLoss = 1 // ขาดทุนที่ยังไม่เกิดขึ้นจริง (ปรับมูลค่ายุติธรรม)
+}
+// SubTypes for Equity (14-16)
+// Equity-PaidInCapital = 14,
+
+export enum EPaidInCapitalSubType {
+  CommonStock = 0, // หุ้นสามัญ (Common Stock)
+  PreferredStock = 1 // หุ้นบุริสิทธิ์ (Preferred Stock)
+}
+// Equity-RetainedEarnings = 15,
+
+export enum ERetainedEarningsSubType {
+  Unappropriated = 0, // กำไรสะสมยังไม่ได้จัดสรร (Unappropriated Retained Earnings)
+  Appropriated = 1 // กำไรสะสมจัดสรรแล้ว (Appropriated Retained Earnings)
+}
+// Equity-OtherReserves = 16
+export enum EOtherReservesSubType {
+  SharePremium = 0, // ส่วนเกินมูลค่าหุ้น (Share Premium / Capital Surplus)
+  LegalReserve = 1, // สำรองตามกฎหมาย (Legal Reserve)
+  RevaluationReserve = 2 // ส่วนเกินทุนจากการตีราคา assets (Revaluation Surplus)
 }
 export enum EPaymentTerm {
   Daily = 0,
@@ -257,4 +283,23 @@ export enum BadDebtExpenseTransactionType {
 export enum DisposalLossTransactionType {
   AssetDisposed = 0, // บันทึกขาดทุนจากการขายทรัพย์สิน
   FairValueLossAdjusted = 1 // ปรับมูลค่ายุติธรรม (ขาดทุน)
+}
+// Transaction Types for 14: PaidInCapital (ทุนเรือนหุ้น / ทุนชำระแล้ว)
+export enum PaidInCapitalTransactionType {
+  CapitalContribution = 0, // การเพิ่มทุน / ชำระค่าหุ้น (Capital Inflow)
+  CapitalReduction = 1 // การลดทุน / คืนทุน (Capital Outflow)
+}
+
+// Transaction Types for 15: RetainedEarnings (กำไรสะสม)
+export enum RetainedEarningsTransactionType {
+  DividendPayout = 0, // การจ่ายเงินปันผลให้ผู้ถือหุ้น (Dividend Paid)
+  AppropriationOfEarnings = 1, // การจัดสรรกำไรสะสมเข้าสำรอง (Appropriation to Reserves)
+  UnappropriatedTransfer = 2 // การโอนสำรองกลับเข้ากำไรสะสม (Transfer Back to Retained Earnings)
+}
+
+// Transaction Types for 16: OtherReserves (สำรองอื่น ๆ และส่วนเกินมูลค่าหุ้น)
+export enum OtherReservesTransactionType {
+  SharePremiumReceived = 0, // รับส่วนเกินมูลค่าหุ้น (Share Premium Received)
+  ReserveAllocation = 1, // รับโอนจัดสรรสำรองตามกฎหมาย (Legal Reserve Allocation)
+  RevaluationAdjustment = 2 // ปรับปรุงส่วนเกินทุนจากการตีราคา assets (Revaluation Adjustment)
 }

@@ -50,7 +50,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: ':portType',
         name: 'CashPort',
-        props: true,
+        props: route => ({
+          portType: route.params.portType,
+          childIcon: (route.query.childIcon as string) || 'mdi-widgets-outline' // <-- Pull from query
+        }),
         component: () => import('../pages/settings/PortPage.vue')
       }
     ]
@@ -62,7 +65,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: ':portType',
         name: 'LoanPort',
-        props: true,
+        props: route => ({
+          portType: route.params.portType,
+          childIcon: (route.query.childIcon as string) || 'mdi-widgets-outline' // <-- Pull from query
+        }),
         component: () => import('../pages/settings/PortPage.vue')
       }
     ]
@@ -74,7 +80,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: ':portType',
         name: 'SecurityPort',
-        props: true,
+        props: route => ({
+          portType: route.params.portType,
+          childIcon: (route.query.childIcon as string) || 'mdi-widgets-outline' // <-- Pull from query
+        }),
         component: () => import('../pages/settings/PortPage.vue')
       }
     ]
@@ -86,7 +95,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: ':portType',
         name: 'EquityPort',
-        props: true,
+        props: route => ({
+          portType: route.params.portType,
+          childIcon: (route.query.childIcon as string) || 'mdi-widgets-outline' // <-- Pull from query
+        }),
         component: () => import('../pages/settings/PortPage.vue')
       }
     ]
@@ -98,7 +110,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: ':portType',
         name: 'OtherPort',
-        props: true,
+        props: route => ({
+          portType: route.params.portType,
+          childIcon: (route.query.childIcon as string) || 'mdi-widgets-outline' // <-- Pull from query
+        }),
         component: () => import('../pages/settings/PortPage.vue')
       }
     ]
@@ -110,7 +125,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: ':portType',
         name: 'BorrowPort',
-        props: true,
+        props: route => ({
+          portType: route.params.portType,
+          childIcon: (route.query.childIcon as string) || 'mdi-widgets-outline' // <-- Pull from query
+        }),
         component: () => import('../pages/settings/PortPage.vue')
       }
     ]
@@ -122,7 +140,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: ':portType',
         name: 'PayablePort',
-        props: true,
+        props: route => ({
+          portType: route.params.portType,
+          childIcon: (route.query.childIcon as string) || 'mdi-widgets-outline' // <-- Pull from query
+        }),
         component: () => import('../pages/settings/PortPage.vue')
       }
     ]
@@ -134,7 +155,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: ':portType',
         name: 'OperatingRevenuePort',
-        props: true,
+        props: route => ({
+          portType: route.params.portType,
+          childIcon: (route.query.childIcon as string) || 'mdi-widgets-outline' // <-- Pull from query
+        }),
         component: () => import('../pages/settings/PortPage.vue')
       }
     ]
@@ -146,7 +170,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: ':portType',
         name: 'InterestIncomePort',
-        props: true,
+        props: route => ({
+          portType: route.params.portType,
+          childIcon: (route.query.childIcon as string) || 'mdi-widgets-outline' // <-- Pull from query
+        }),
         component: () => import('../pages/settings/PortPage.vue')
       }
     ]
@@ -158,7 +185,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: ':portType',
         name: 'DividendIncomePort',
-        props: true,
+        props: route => ({
+          portType: route.params.portType,
+          childIcon: (route.query.childIcon as string) || 'mdi-widgets-outline' // <-- Pull from query
+        }),
         component: () => import('../pages/settings/PortPage.vue')
       }
     ]
@@ -170,7 +200,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: ':portType',
         name: 'OperatingExpensePort',
-        props: true,
+        props: route => ({
+          portType: route.params.portType,
+          childIcon: (route.query.childIcon as string) || 'mdi-widgets-outline' // <-- Pull from query
+        }),
         component: () => import('../pages/settings/PortPage.vue')
       }
     ]
@@ -182,7 +215,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: ':portType',
         name: 'InterestExpensePort',
-        props: true,
+        props: route => ({
+          portType: route.params.portType,
+          childIcon: (route.query.childIcon as string) || 'mdi-widgets-outline' // <-- Pull from query
+        }),
         component: () => import('../pages/settings/PortPage.vue')
       }
     ]
@@ -194,7 +230,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: ':portType',
         name: 'BadDebtExpensePort',
-        props: true,
+        props: route => ({
+          portType: route.params.portType,
+          childIcon: (route.query.childIcon as string) || 'mdi-widgets-outline' // <-- Pull from query
+        }),
         component: () => import('../pages/settings/PortPage.vue')
       }
     ]
@@ -206,7 +245,55 @@ const routes: RouteRecordRaw[] = [
       {
         path: ':portType',
         name: 'DisposalLossPort',
-        props: true,
+        props: route => ({
+          portType: route.params.portType,
+          childIcon: (route.query.childIcon as string) || 'mdi-widgets-outline' // <-- Pull from query
+        }),
+        component: () => import('../pages/settings/PortPage.vue')
+      }
+    ]
+  },
+  {
+    path: '/paidInCapitalPort',
+    component: () => import('../layouts/MainLayout.vue'),
+    children: [
+      {
+        path: ':portType',
+        name: 'PaidInCapitalPort',
+        props: route => ({
+          portType: route.params.portType,
+          childIcon: (route.query.childIcon as string) || 'mdi-widgets-outline' // <-- Pull from query
+        }),
+        component: () => import('../pages/settings/PortPage.vue')
+      }
+    ]
+  },
+  {
+    path: '/retainedEarningsPort',
+    component: () => import('../layouts/MainLayout.vue'),
+    children: [
+      {
+        path: ':portType',
+        name: 'RetainedEarningsPort',
+        props: route => ({
+          portType: route.params.portType,
+          childIcon: (route.query.childIcon as string) || 'mdi-widgets-outline' // <-- Pull from query
+        }),
+        component: () => import('../pages/settings/PortPage.vue')
+      }
+    ]
+  },
+  {
+    path: '/otherReservesPort',
+    component: () => import('../layouts/MainLayout.vue'),
+    children: [
+      {
+        path: ':portType',
+        name: 'OtherReservesPort',
+        props: route => ({
+          portType: route.params.portType,
+          childIcon: (route.query.childIcon as string) || 'mdi-widgets-outline' // <-- Pull from query
+        }),
         component: () => import('../pages/settings/PortPage.vue')
       }
     ]

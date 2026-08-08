@@ -2,6 +2,7 @@ export default class Port {
   portId = ''
 
   description = ''
+  accountCategory = 0
   portType = 0
   portSubType = 0
   createBy = ''

@@ -7,7 +7,7 @@ import { useCrudProp } from './useCrudProp'
 import { EPortType } from '../types/myEnums'
 import { QSelectOption } from '../types/myTypes'
 import { i18n } from '../i18n'
-import { showError, currentDateTimeStr } from '../modules/appUtils'
+import { showError, currentDateTimeStr, getAccountCategoryByPortType } from '../modules/appUtils'
 
 export function usePortProp() {
   const rawOptions = ref<DataOption[]>([])
@@ -115,6 +115,7 @@ export function usePortProp() {
   const onCreatePort = () => {
     crud.onCreate()
     crud.item.value.portType = Number(portType.value)
+    crud.item.value.accountCategory = getAccountCategoryByPortType(Number(portType.value))
     crud.item.value.customerId = '0'
     crud.item.value.brokerId = '0'
     crud.item.value.createBy = crud.currentUser

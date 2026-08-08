@@ -67,7 +67,11 @@ const linksList = [
       {
         title: 'CashAndDeposits',
         icon: 'mdi-piggy-bank-outline',
-        link: { name: 'CashPort', params: { portType: EPortType.CashAndDeposits } },
+        link: {
+          name: 'CashPort',
+          params: { portType: EPortType.CashAndDeposits },
+          query: { childIcon: 'mdi-piggy-bank-outline' }
+        },
         level: 1,
         access: 0,
         compType: 1,
@@ -76,7 +80,11 @@ const linksList = [
       {
         title: 'LoansReceivable',
         icon: 'mdi-hand-coin-outline',
-        link: { name: 'LoanPort', params: { portType: EPortType.LoansReceivable } },
+        link: {
+          name: 'LoanPort',
+          params: { portType: EPortType.LoansReceivable },
+          query: { childIcon: 'mdi-hand-coin-outline' }
+        },
         level: 1,
         access: 0,
         compType: 1,
@@ -85,7 +93,11 @@ const linksList = [
       {
         title: 'Securities',
         icon: 'mdi-chart-line',
-        link: { name: 'SecurityPort', params: { portType: EPortType.Securities } },
+        link: {
+          name: 'SecurityPort',
+          params: { portType: EPortType.Securities },
+          query: { childIcon: 'mdi-chart-line' }
+        },
         level: 1,
         access: 0,
         compType: 1,
@@ -94,7 +106,11 @@ const linksList = [
       {
         title: 'EquityHoldings',
         icon: 'mdi-chart-pie',
-        link: { name: 'EquityPort', params: { portType: EPortType.EquityHoldings } },
+        link: {
+          name: 'EquityPort',
+          params: { portType: EPortType.EquityHoldings },
+          query: { childIcon: 'mdi-chart-pie' }
+        },
         level: 1,
         access: 0,
         compType: 1,
@@ -103,7 +119,11 @@ const linksList = [
       {
         title: 'OtherInvestments',
         icon: 'mdi-finance',
-        link: { name: 'OtherPort', params: { portType: EPortType.OtherInvestments } },
+        link: {
+          name: 'OtherPort',
+          params: { portType: EPortType.OtherInvestments },
+          query: { childIcon: 'mdi-finance' }
+        },
         level: 1,
         access: 0,
         compType: 1,
@@ -122,7 +142,11 @@ const linksList = [
       {
         title: 'Borrowings',
         icon: 'mdi-bank-transfer-in',
-        link: { name: 'BorrowPort', params: { portType: EPortType.Borrowings } },
+        link: {
+          name: 'BorrowPort',
+          params: { portType: EPortType.Borrowings },
+          query: { childIcon: 'mdi-bank-transfer-in' }
+        },
         level: 1,
         access: 0,
         compType: 1,
@@ -131,7 +155,11 @@ const linksList = [
       {
         title: 'Payables',
         icon: 'mdi-file-document-outline',
-        link: { name: 'PayablePort', params: { portType: EPortType.Payables } },
+        link: {
+          name: 'PayablePort',
+          params: { portType: EPortType.Payables },
+          query: { childIcon: 'mdi-file-document-outline' }
+        },
         level: 1,
         access: 0,
         compType: 1,
@@ -152,7 +180,8 @@ const linksList = [
         icon: 'mdi-cash-plus',
         link: {
           name: 'OperatingRevenuePort',
-          params: { portType: EPortType.OperatingRevenue }
+          params: { portType: EPortType.OperatingRevenue },
+          query: { childIcon: 'mdi-cash-plus' }
         },
         level: 1,
         access: 0,
@@ -162,7 +191,11 @@ const linksList = [
       {
         title: 'InterestIncome',
         icon: 'mdi-percent-outline',
-        link: { name: 'InterestIncomePort', params: { portType: EPortType.InterestIncome } },
+        link: {
+          name: 'InterestIncomePort',
+          params: { portType: EPortType.InterestIncome },
+          query: { childIcon: 'mdi-percent-outline' }
+        },
         level: 1,
         access: 0,
         compType: 1,
@@ -171,7 +204,11 @@ const linksList = [
       {
         title: 'DividendIncome',
         icon: 'mdi-cash-refund',
-        link: { name: 'DividendIncomePort', params: { portType: EPortType.DividendIncome } },
+        link: {
+          name: 'DividendIncomePort',
+          params: { portType: EPortType.DividendIncome },
+          query: { childIcon: 'mdi-cash-refund' }
+        },
         level: 1,
         access: 0,
         compType: 1,
@@ -192,7 +229,8 @@ const linksList = [
         icon: 'mdi-cash-minus',
         link: {
           name: 'OperatingExpensePort',
-          params: { portType: EPortType.OperatingExpense }
+          params: { portType: EPortType.OperatingExpense },
+          query: { childIcon: 'mdi-cash-minus' }
         },
         level: 1,
         access: 0,
@@ -204,7 +242,8 @@ const linksList = [
         icon: 'mdi-calculator-variant-outline',
         link: {
           name: 'InterestExpensePort',
-          params: { portType: EPortType.InterestExpense }
+          params: { portType: EPortType.InterestExpense },
+          query: { childIcon: 'mdi-calculator-variant-outline' }
         },
         level: 1,
         access: 0,
@@ -214,7 +253,11 @@ const linksList = [
       {
         title: 'BadDebtExpense',
         icon: 'mdi-alert-circle-outline',
-        link: { name: 'BadDebtExpensePort', params: { portType: EPortType.BadDebtExpense } },
+        link: {
+          name: 'BadDebtExpensePort',
+          params: { portType: EPortType.BadDebtExpense },
+          query: { childIcon: 'mdi-alert-circle-outline' }
+        },
         level: 1,
         access: 0,
         compType: 1,
@@ -223,7 +266,60 @@ const linksList = [
       {
         title: 'DisposalLoss',
         icon: 'mdi-archive-remove-outline',
-        link: { name: 'DisposalLossPort', params: { portType: EPortType.DisposalLoss } },
+        link: {
+          name: 'DisposalLossPort',
+          params: { portType: EPortType.DisposalLoss },
+          query: { childIcon: 'mdi-archive-remove-outline' }
+        },
+        level: 1,
+        access: 0,
+        compType: 1,
+        children: []
+      }
+    ]
+  },
+  {
+    title: 'Equity_Ports',
+    icon: 'mdi-chart-donut', // Represents portfolio distribution & total equity
+    link: '/',
+    level: 0,
+    access: 0,
+    compType: 1,
+    children: [
+      {
+        title: 'PaidInCapital',
+        icon: 'mdi-account-group-outline', // Represents capital contributed by shareholders/owners
+        link: {
+          name: 'PaidInCapitalPort',
+          params: { portType: EPortType.PaidInCapital },
+          query: { childIcon: 'mdi-account-group-outline' }
+        },
+        level: 1,
+        access: 0,
+        compType: 1,
+        children: []
+      },
+      {
+        title: 'RetainedEarnings',
+        icon: 'mdi-piggy-bank-outline', // Represents accumulated earnings saved over time
+        link: {
+          name: 'RetainedEarningsPort',
+          params: { portType: EPortType.RetainedEarnings },
+          query: { childIcon: 'mdi-piggy-bank-outline' }
+        },
+        level: 1,
+        access: 0,
+        compType: 1,
+        children: []
+      },
+      {
+        title: 'OtherReserves',
+        icon: 'mdi-safe', // Represents reserved assets kept for safety/legal purposes
+        link: {
+          name: 'OtherReservesPort',
+          params: { portType: EPortType.OtherReserves },
+          query: { childIcon: 'mdi-safe' }
+        },
         level: 1,
         access: 0,
         compType: 1,
@@ -233,11 +329,3 @@ const linksList = [
   }
 ]
 export default linksList
-
-// export enum EInvestPortType {
-//   CashAndDeposits = 0,   // เงินสด / เงินฝาก (Savings & Bank Deposits)
-//   LoansReceivable = 1,   // สินเชื่อและเงินให้กู้ (Loan Assets)
-//   Securities = 2,        // การลงทุนในตราสาร เช่น พันธบัตร หุ้นกู้
-//   EquityHoldings = 3,    // การลงทุนในทุน/หุ้น (Equity Investments)
-//   OtherInvestments = 4   // อื่น ๆ เช่น กองทุนรวม, อสังหาริมทรัพย์เพื่อการลงทุน
-// }

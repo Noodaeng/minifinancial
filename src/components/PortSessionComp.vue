@@ -3,7 +3,7 @@
     <q-form ref="myForm" class="bg-body text-appText">
       <q-card flat class="bg-body text-appText col-12">
         <div class="row items-center q-mb-md">
-          <q-icon name="mdi-account-details-outline" size="md" />
+          <q-icon name="mdi-swap-horizontal" size="md" />
           <div class="text-subtitle1 q-ml-sm"></div>
         </div>
 

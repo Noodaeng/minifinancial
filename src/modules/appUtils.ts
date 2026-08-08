@@ -2,6 +2,7 @@ import NotifyMsg from '../models/notifyMsg'
 import { i18n } from '../i18n'
 import {
   EAlarmLevel,
+  AccountCategory,
   EPortType,
   CashAndDepositsSubType,
   LoansReceivableSubType,
@@ -17,6 +18,9 @@ import {
   EInterestExpenseSubType,
   EBadDebtExpenseSubType,
   EDisposalLossSubType,
+  EPaidInCapitalSubType,
+  ERetainedEarningsSubType,
+  EOtherReservesSubType,
   CashTransactionType,
   LoanTransactionType,
   SecurityTransactionType,
@@ -30,7 +34,10 @@ import {
   OperatingExpenseTransactionType,
   InterestExpenseTransactionType,
   BadDebtExpenseTransactionType,
-  DisposalLossTransactionType
+  DisposalLossTransactionType,
+  PaidInCapitalTransactionType,
+  RetainedEarningsTransactionType,
+  OtherReservesTransactionType
 } from '../types/myEnums'
 import { FuncBoolAsync, QSelectOption } from '../types/myTypes'
 import { Notify, QVueGlobals, date } from 'quasar'
@@ -195,20 +202,48 @@ export const enumToString = (myEnum: Record<string, number | string>, enumKey: n
   }
   return '-'
 }
-
 export const getSessionType = (
   portType: string | number | EPortType,
   sessionType: number
 ): string => {
-  switch (Number(portType)) {
-    case 1:
+  switch (Number(portType) as EPortType) {
+    case EPortType.CashAndDeposits:
+      return enumToString(CashTransactionType, sessionType)
+    case EPortType.LoansReceivable:
       return enumToString(LoanTransactionType, sessionType)
-    case 2:
+    case EPortType.Securities:
       return enumToString(SecurityTransactionType, sessionType)
-    case 3:
+    case EPortType.EquityHoldings:
       return enumToString(EquityTransactionType, sessionType)
-    case 4:
+    case EPortType.OtherInvestments:
       return enumToString(OtherTransactionType, sessionType)
+    case EPortType.Borrowings:
+      return enumToString(BorrowingsTransactionType, sessionType)
+    case EPortType.Payables:
+      return enumToString(PayablesTransactionType, sessionType)
+    case EPortType.OperatingRevenue:
+      return enumToString(OperatingRevenueTransactionType, sessionType)
+    case EPortType.InterestIncome:
+      return enumToString(InterestIncomeTransactionType, sessionType)
+    case EPortType.DividendIncome:
+      return enumToString(DividendIncomeTransactionType, sessionType)
+    case EPortType.OperatingExpense:
+      return enumToString(OperatingExpenseTransactionType, sessionType)
+    case EPortType.InterestExpense:
+      return enumToString(InterestExpenseTransactionType, sessionType)
+    case EPortType.BadDebtExpense:
+      return enumToString(BadDebtExpenseTransactionType, sessionType)
+    case EPortType.DisposalLoss:
+      return enumToString(DisposalLossTransactionType, sessionType)
+
+    // Separate Equity Types
+    case EPortType.PaidInCapital:
+      return enumToString(PaidInCapitalTransactionType, sessionType)
+    case EPortType.RetainedEarnings:
+      return enumToString(RetainedEarningsTransactionType, sessionType)
+    case EPortType.OtherReserves:
+      return enumToString(OtherReservesTransactionType, sessionType)
+
     default:
       return enumToString(CashTransactionType, sessionType)
   }
@@ -217,29 +252,93 @@ export const getSessionType = (
 export const sessionTypeToQSelectOptions = (
   portType: string | number | EPortType
 ): QSelectOption[] => {
-  switch (Number(portType)) {
-    case 1:
+  switch (Number(portType) as EPortType) {
+    case EPortType.CashAndDeposits:
+      return enumToQSelectOptions(CashTransactionType)
+    case EPortType.LoansReceivable:
       return enumToQSelectOptions(LoanTransactionType)
-    case 2:
+    case EPortType.Securities:
       return enumToQSelectOptions(SecurityTransactionType)
-    case 3:
+    case EPortType.EquityHoldings:
       return enumToQSelectOptions(EquityTransactionType)
-    case 4:
+    case EPortType.OtherInvestments:
       return enumToQSelectOptions(OtherTransactionType)
+    case EPortType.Borrowings:
+      return enumToQSelectOptions(BorrowingsTransactionType)
+    case EPortType.Payables:
+      return enumToQSelectOptions(PayablesTransactionType)
+    case EPortType.OperatingRevenue:
+      return enumToQSelectOptions(OperatingRevenueTransactionType)
+    case EPortType.InterestIncome:
+      return enumToQSelectOptions(InterestIncomeTransactionType)
+    case EPortType.DividendIncome:
+      return enumToQSelectOptions(DividendIncomeTransactionType)
+    case EPortType.OperatingExpense:
+      return enumToQSelectOptions(OperatingExpenseTransactionType)
+    case EPortType.InterestExpense:
+      return enumToQSelectOptions(InterestExpenseTransactionType)
+    case EPortType.BadDebtExpense:
+      return enumToQSelectOptions(BadDebtExpenseTransactionType)
+    case EPortType.DisposalLoss:
+      return enumToQSelectOptions(DisposalLossTransactionType)
+
+    // Separate Equity Types
+    case EPortType.PaidInCapital:
+      return enumToQSelectOptions(PaidInCapitalTransactionType)
+    case EPortType.RetainedEarnings:
+      return enumToQSelectOptions(RetainedEarningsTransactionType)
+    case EPortType.OtherReserves:
+      return enumToQSelectOptions(OtherReservesTransactionType)
+
     default:
       return enumToQSelectOptions(CashTransactionType)
   }
 }
+
 export const subTypeToQSelectOptions = (portType: string | number | EPortType): QSelectOption[] => {
-  switch (Number(portType)) {
-    case 1:
+  switch (Number(portType) as EPortType) {
+    // Assets
+    case EPortType.CashAndDeposits:
+      return enumToQSelectOptions(CashAndDepositsSubType)
+    case EPortType.LoansReceivable:
       return enumToQSelectOptions(LoansReceivableSubType)
-    case 2:
+    case EPortType.Securities:
       return enumToQSelectOptions(SecuritiesSubType)
-    case 3:
+    case EPortType.EquityHoldings:
       return enumToQSelectOptions(EquityHoldingsSubType)
-    case 4:
+    case EPortType.OtherInvestments:
       return enumToQSelectOptions(OtherInvestmentsSubType)
+
+    // Liabilities
+    case EPortType.Borrowings:
+      return enumToQSelectOptions(EBorrowingSubType)
+    case EPortType.Payables:
+      return enumToQSelectOptions(EPayableSubType)
+
+    // Equity (Return empty array or single default option if sub-types do not exist)
+    case EPortType.PaidInCapital:
+    case EPortType.RetainedEarnings:
+    case EPortType.OtherReserves:
+      return []
+
+    // Revenue
+    case EPortType.OperatingRevenue:
+      return enumToQSelectOptions(EOperatingRevenueSubType)
+    case EPortType.InterestIncome:
+      return enumToQSelectOptions(EInterestIncomeSubType)
+    case EPortType.DividendIncome:
+      return enumToQSelectOptions(EDividendIncomeSubType)
+
+    // Expenses
+    case EPortType.OperatingExpense:
+      return enumToQSelectOptions(EOperatingExpenseSubType)
+    case EPortType.InterestExpense:
+      return enumToQSelectOptions(EInterestExpenseSubType)
+    case EPortType.BadDebtExpense:
+      return enumToQSelectOptions(EBadDebtExpenseSubType)
+    case EPortType.DisposalLoss:
+      return enumToQSelectOptions(EDisposalLossSubType)
+
     default:
       return enumToQSelectOptions(CashAndDepositsSubType)
   }
@@ -293,34 +392,6 @@ export const confirmDelete = (
   })
 }
 
-// export const formatBangkokDateTime = (
-//   date: Date | string | number,
-//   mode: FormatMode = 'datetime'
-// ): string => {
-//   const d = new Date(date)
-//   if (isNaN(d.getTime())) return '' // กัน Error กรณี Date ไม่ถูกต้อง
-
-//   // กำหนด options พื้นฐาน
-//   const options: Intl.DateTimeFormatOptions = {
-//     timeZone: 'Asia/Bangkok',
-//     hour12: false
-//   }
-
-//   // ปรับ Options ตาม Mode ที่เลือก
-//   if (mode === 'date' || mode === 'datetime') {
-//     options.year = 'numeric'
-//     options.month = '2-digit'
-//     options.day = '2-digit'
-//   }
-
-//   if (mode === 'time' || mode === 'datetime') {
-//     options.hour = '2-digit'
-//     options.minute = '2-digit'
-//     options.second = '2-digit'
-//   }
-
-//   return new Intl.DateTimeFormat('en-GB', options).format(d)
-// }
 export const formatBangkokDateTime = (inputdate: Date | string | number): string => {
   const d = new Date(inputdate)
   if (isNaN(d.getTime())) return '' // กัน Error กรณี Date ไม่ถูกต้อง
@@ -345,7 +416,7 @@ export const getGuideRows = (
   sesType: number,
   isCredit: boolean
 ): Port[] => {
-  if (!ports || ports.length === 0 || !currentPort) return []
+  if (!ports?.length || !currentPort) return []
 
   const pType = Number(currentPort.portType) as EPortType
   const sType = Number(sesType)
@@ -353,13 +424,12 @@ export const getGuideRows = (
   let debitTarget: TargetMatch | null = null
   let creditTarget: TargetMatch | null = null
 
-  // Helper shorthand for Cash & Savings Account Ports target
+  // Standard Cash & Deposit Helper Accounts
   const CASH_SAVINGS: TargetMatch = {
     portType: EPortType.CashAndDeposits,
     subTypes: [CashAndDepositsSubType.Cash, CashAndDepositsSubType.SavingsAccount]
   }
 
-  // Helper shorthand for Cash / Savings / Fixed Deposit Ports target
   const CASH_ALL: TargetMatch = {
     portType: EPortType.CashAndDeposits,
     subTypes: [
@@ -369,18 +439,31 @@ export const getGuideRows = (
     ]
   }
 
-  // Map rules based on currentPort's PortType and Session/Transaction Type
+  const LOAN_ALL: TargetMatch = {
+    portType: EPortType.LoansReceivable,
+    subTypes: [LoansReceivableSubType.PersonalLoan, LoansReceivableSubType.BusinessLoan]
+  }
+
+  const PAYABLE_ALL: TargetMatch = {
+    portType: EPortType.Payables,
+    subTypes: [
+      EPayableSubType.AccountsPayable,
+      EPayableSubType.AccruedExpense,
+      EPayableSubType.OtherPayable
+    ]
+  }
+
   switch (pType) {
-    // -----------------------------------------------------------------
-    // 0: Cash & Deposits (เงินสดและเงินฝาก)
-    // -----------------------------------------------------------------
+    // ----------------------------------------------------
+    // ASSETS (0 - 4)
+    // ----------------------------------------------------
     case EPortType.CashAndDeposits:
       switch (sType) {
-        case CashTransactionType.Deposit: // ฝากเงิน
+        case CashTransactionType.Deposit:
           debitTarget = CASH_ALL
           creditTarget = CASH_SAVINGS
           break
-        case CashTransactionType.Withdrawal: // ถอนเงิน
+        case CashTransactionType.Withdrawal:
           debitTarget = {
             portType: EPortType.CashAndDeposits,
             subTypes: [CashAndDepositsSubType.Cash]
@@ -390,11 +473,11 @@ export const getGuideRows = (
             subTypes: [CashAndDepositsSubType.SavingsAccount, CashAndDepositsSubType.FixedDeposit]
           }
           break
-        case CashTransactionType.Transfer: // โอนเงิน
+        case CashTransactionType.Transfer:
           debitTarget = CASH_ALL
           creditTarget = CASH_ALL
           break
-        case CashTransactionType.InterestIncome: // รายได้ดอกเบี้ย
+        case CashTransactionType.InterestIncome:
           debitTarget = {
             portType: EPortType.CashAndDeposits,
             subTypes: [CashAndDepositsSubType.SavingsAccount, CashAndDepositsSubType.FixedDeposit]
@@ -407,56 +490,35 @@ export const getGuideRows = (
       }
       break
 
-    // -----------------------------------------------------------------
-    // 1: Loans Receivable (ลูกหนี้เงินให้กู้ยืม)
-    // -----------------------------------------------------------------
     case EPortType.LoansReceivable:
       switch (sType) {
-        case LoanTransactionType.LoanIssued: // การปล่อยกู้
-          debitTarget = {
-            portType: EPortType.LoansReceivable,
-            subTypes: [LoansReceivableSubType.PersonalLoan, LoansReceivableSubType.BusinessLoan]
-          }
+        case LoanTransactionType.LoanIssued:
+          debitTarget = LOAN_ALL
           creditTarget = CASH_SAVINGS
           break
-        case LoanTransactionType.LoanRepayment: // การชำระคืนเงินกู้
+        case LoanTransactionType.LoanRepayment:
           debitTarget = CASH_SAVINGS
-          creditTarget = {
-            portType: EPortType.LoansReceivable,
-            subTypes: [LoansReceivableSubType.PersonalLoan, LoansReceivableSubType.BusinessLoan]
-          }
+          creditTarget = LOAN_ALL
           break
-        case LoanTransactionType.LoanInterestAccrual: // ดอกเบี้ยค้างรับ
-          debitTarget = {
-            portType: EPortType.LoansReceivable,
-            subTypes: [LoansReceivableSubType.PersonalLoan, LoansReceivableSubType.BusinessLoan]
-          }
+        case LoanTransactionType.LoanInterestAccrual:
+          debitTarget = LOAN_ALL
           creditTarget = {
             portType: EPortType.InterestIncome,
             subTypes: [EInterestIncomeSubType.LoanInterest]
           }
           break
-        case LoanTransactionType.BadDebtWriteOff: // ตัดจำหน่ายหนี้สูญ
+        case LoanTransactionType.BadDebtWriteOff:
           debitTarget = {
             portType: EPortType.BadDebtExpense,
             subTypes: [EBadDebtExpenseSubType.BadDebtWriteOff]
           }
-          creditTarget = {
-            portType: EPortType.LoansReceivable,
-            subTypes: [LoansReceivableSubType.PersonalLoan, LoansReceivableSubType.BusinessLoan]
-          }
+          creditTarget = LOAN_ALL
           break
-        case LoanTransactionType.LoanReFinance: // รีไฟแนนซ์
-          debitTarget = {
-            portType: EPortType.LoansReceivable,
-            subTypes: [LoansReceivableSubType.PersonalLoan, LoansReceivableSubType.BusinessLoan]
-          }
-          creditTarget = {
-            portType: EPortType.LoansReceivable,
-            subTypes: [LoansReceivableSubType.PersonalLoan, LoansReceivableSubType.BusinessLoan]
-          }
+        case LoanTransactionType.LoanReFinance:
+          debitTarget = LOAN_ALL
+          creditTarget = LOAN_ALL
           break
-        case LoanTransactionType.BrokerPayment: // ชำระค่าธรรมเนียมโบรกเกอร์
+        case LoanTransactionType.BrokerPayment:
           debitTarget = {
             portType: EPortType.OperatingExpense,
             subTypes: [EOperatingExpenseSubType.BrokerageFee]
@@ -466,28 +528,30 @@ export const getGuideRows = (
       }
       break
 
-    // -----------------------------------------------------------------
-    // 2: Securities (ตราสารหนี้)
-    // -----------------------------------------------------------------
     case EPortType.Securities:
       switch (sType) {
-        case SecurityTransactionType.SecurityPurchase: // ซื้อตราสารหนี้
+        case SecurityTransactionType.SecurityPurchase:
           debitTarget = {
             portType: EPortType.Securities,
             subTypes: [SecuritiesSubType.GovernmentBond, SecuritiesSubType.CorporateBond]
           }
           creditTarget = CASH_SAVINGS
           break
-        case SecurityTransactionType.SecuritySale: // ขายตราสารหนี้
-        case SecurityTransactionType.CouponPayment: // รับคูปอง
+        case SecurityTransactionType.SecuritySale:
           debitTarget = CASH_SAVINGS
           creditTarget = {
             portType: EPortType.Securities,
             subTypes: [SecuritiesSubType.GovernmentBond, SecuritiesSubType.CorporateBond]
           }
           break
-        case SecurityTransactionType.FairValueAdjustment: // ปรับมูลค่ายุติธรรม
-          // Handled via Unrealized Gain (Credit) or Unrealized Loss (Debit)
+        case SecurityTransactionType.CouponPayment:
+          debitTarget = CASH_SAVINGS
+          creditTarget = {
+            portType: EPortType.InterestIncome,
+            subTypes: [EInterestIncomeSubType.BondCoupon]
+          }
+          break
+        case SecurityTransactionType.FairValueAdjustment:
           debitTarget = {
             portType: EPortType.Securities,
             subTypes: [SecuritiesSubType.GovernmentBond, SecuritiesSubType.CorporateBond]
@@ -500,30 +564,36 @@ export const getGuideRows = (
       }
       break
 
-    // -----------------------------------------------------------------
-    // 3: Equity Holdings (เงินลงทุนในตราสารทุน)
-    // -----------------------------------------------------------------
     case EPortType.EquityHoldings:
       switch (sType) {
-        case EquityTransactionType.EquityPurchase: // ซื้อหุ้นทุน
+        case EquityTransactionType.EquityPurchase:
           debitTarget = {
             portType: EPortType.EquityHoldings,
             subTypes: [EquityHoldingsSubType.ListedEquity, EquityHoldingsSubType.PrivateEquity]
           }
           creditTarget = CASH_SAVINGS
           break
-        case EquityTransactionType.EquitySale: // ขายหุ้นทุน
-        case EquityTransactionType.DividendCollected: // รับเงินปันผล
+        case EquityTransactionType.EquitySale:
           debitTarget = CASH_SAVINGS
           creditTarget = {
             portType: EPortType.EquityHoldings,
             subTypes: [EquityHoldingsSubType.ListedEquity, EquityHoldingsSubType.PrivateEquity]
           }
           break
-        case EquityTransactionType.EquityMethodAdjustment: // วิธีส่วนได้เสีย
+        case EquityTransactionType.DividendCollected:
+          debitTarget = CASH_SAVINGS
+          creditTarget = {
+            portType: EPortType.DividendIncome,
+            subTypes: [
+              EDividendIncomeSubType.ListedDividend,
+              EDividendIncomeSubType.PrivateDividend
+            ]
+          }
+          break
+        case EquityTransactionType.EquityMethodAdjustment:
           debitTarget = {
             portType: EPortType.EquityHoldings,
-            subTypes: [EquityHoldingsSubType.ListedEquity, EquityHoldingsSubType.PrivateEquity]
+            subTypes: [EquityHoldingsSubType.PrivateEquity]
           }
           creditTarget = {
             portType: EPortType.DividendIncome,
@@ -533,40 +603,37 @@ export const getGuideRows = (
       }
       break
 
-    // -----------------------------------------------------------------
-    // 4: Other Investments (เงินลงทุนอื่น)
-    // -----------------------------------------------------------------
     case EPortType.OtherInvestments:
       switch (sType) {
-        case OtherTransactionType.RealEstatePurchase: // ซื้ออสังหาริมทรัพย์
+        case OtherTransactionType.RealEstatePurchase:
           debitTarget = {
             portType: EPortType.OtherInvestments,
             subTypes: [OtherInvestmentsSubType.RealEstate]
           }
           creditTarget = CASH_SAVINGS
           break
-        case OtherTransactionType.RentalIncome: // รายได้ค่าเช่า
+        case OtherTransactionType.RentalIncome:
           debitTarget = CASH_SAVINGS
           creditTarget = {
-            portType: EPortType.OtherInvestments,
-            subTypes: [OtherInvestmentsSubType.RealEstate]
+            portType: EPortType.OperatingRevenue,
+            subTypes: [EOperatingRevenueSubType.RentalIncome]
           }
           break
-        case OtherTransactionType.MutualFundInvestment: // ลงทุนในกองทุนรวม
+        case OtherTransactionType.MutualFundInvestment:
           debitTarget = {
             portType: EPortType.OtherInvestments,
             subTypes: [OtherInvestmentsSubType.MutualFund]
           }
           creditTarget = CASH_SAVINGS
           break
-        case OtherTransactionType.DisposalGain: // กำไรจากการจำหน่ายทรัพย์สิน
+        case OtherTransactionType.DisposalGain:
           debitTarget = CASH_SAVINGS
           creditTarget = {
             portType: EPortType.OtherInvestments,
             subTypes: [OtherInvestmentsSubType.RealEstate, OtherInvestmentsSubType.MutualFund]
           }
           break
-        case OtherTransactionType.DisposalLoss: // ขาดทุนจากการจำหน่ายทรัพย์สิน
+        case OtherTransactionType.DisposalLoss:
           debitTarget = {
             portType: EPortType.DisposalLoss,
             subTypes: [EDisposalLossSubType.DisposalLoss]
@@ -576,28 +643,28 @@ export const getGuideRows = (
             subTypes: [OtherInvestmentsSubType.RealEstate, OtherInvestmentsSubType.MutualFund]
           }
           break
-        case OtherTransactionType.SavingSharePayment: // ชำระค่าหุ้นออมทรัพย์
+        case OtherTransactionType.SavingSharePayment:
           debitTarget = {
             portType: EPortType.OtherInvestments,
             subTypes: [OtherInvestmentsSubType.CommunitySavingShare]
           }
           creditTarget = CASH_SAVINGS
           break
-        case OtherTransactionType.SavingShareIncome: // รายได้หุ้นออมทรัพย์
+        case OtherTransactionType.SavingShareIncome:
           debitTarget = CASH_SAVINGS
           creditTarget = {
             portType: EPortType.OtherInvestments,
             subTypes: [OtherInvestmentsSubType.CommunitySavingShare]
           }
           break
-        case OtherTransactionType.InsurancePremium: // ชำระเบี้ยประกันภัย
+        case OtherTransactionType.InsurancePremium:
           debitTarget = {
-            portType: EPortType.OtherInvestments,
-            subTypes: [OtherInvestmentsSubType.Insurance]
+            portType: EPortType.OperatingExpense,
+            subTypes: [EOperatingExpenseSubType.InsurancePremium]
           }
           creditTarget = CASH_SAVINGS
           break
-        case OtherTransactionType.InsuranceBenefit: // รับผลประโยชน์ประกันภัย
+        case OtherTransactionType.InsuranceBenefit:
           debitTarget = CASH_SAVINGS
           creditTarget = {
             portType: EPortType.OtherInvestments,
@@ -607,12 +674,12 @@ export const getGuideRows = (
       }
       break
 
-    // -----------------------------------------------------------------
-    // 5: Borrowings (เงินกู้ยืม / หนี้สิน)
-    // -----------------------------------------------------------------
+    // ----------------------------------------------------
+    // LIABILITIES (5 - 6)
+    // ----------------------------------------------------
     case EPortType.Borrowings:
       switch (sType) {
-        case BorrowingsTransactionType.Drawdown: // เบิก/รับเงินกู้ยืม
+        case BorrowingsTransactionType.Drawdown:
           debitTarget = CASH_SAVINGS
           creditTarget = {
             portType: EPortType.Borrowings,
@@ -623,7 +690,7 @@ export const getGuideRows = (
             ]
           }
           break
-        case BorrowingsTransactionType.Repayment: // ชำระคืนเงินกู้
+        case BorrowingsTransactionType.Repayment:
           debitTarget = {
             portType: EPortType.Borrowings,
             subTypes: [
@@ -634,35 +701,40 @@ export const getGuideRows = (
           }
           creditTarget = CASH_SAVINGS
           break
-        case BorrowingsTransactionType.BorrowingInterestAccrual: // ตั้งดอกเบี้ยค้างจ่าย
+        case BorrowingsTransactionType.BorrowingInterestAccrual:
           debitTarget = {
             portType: EPortType.InterestExpense,
-            subTypes: [EInterestExpenseSubType.BorrowingInterest]
+            subTypes: [
+              EInterestExpenseSubType.BankLoanInterest,
+              EInterestExpenseSubType.BorrowingInterest
+            ]
           }
-          creditTarget = {
-            portType: EPortType.Payables,
-            subTypes: [EPayableSubType.AccruedExpense]
-          }
+          creditTarget = PAYABLE_ALL
           break
-        case BorrowingsTransactionType.BorrowingRefinance: // รีไฟแนนซ์หนี้
+        case BorrowingsTransactionType.BorrowingRefinance:
           debitTarget = {
             portType: EPortType.Borrowings,
-            subTypes: [EBorrowingSubType.ShortTermLoan]
+            subTypes: [
+              EBorrowingSubType.ShortTermLoan,
+              EBorrowingSubType.LongTermLoan,
+              EBorrowingSubType.Mortgage
+            ]
           }
           creditTarget = {
             portType: EPortType.Borrowings,
-            subTypes: [EBorrowingSubType.LongTermLoan]
+            subTypes: [
+              EBorrowingSubType.ShortTermLoan,
+              EBorrowingSubType.LongTermLoan,
+              EBorrowingSubType.Mortgage
+            ]
           }
           break
       }
       break
 
-    // -----------------------------------------------------------------
-    // 6: Payables (เจ้าหนี้การค้า / เจ้าหนี้อื่น ๆ)
-    // -----------------------------------------------------------------
     case EPortType.Payables:
       switch (sType) {
-        case PayablesTransactionType.InvoiceReceived: // รับใบแจ้งหนี้
+        case PayablesTransactionType.InvoiceReceived:
           debitTarget = {
             portType: EPortType.OperatingExpense,
             subTypes: [
@@ -670,23 +742,14 @@ export const getGuideRows = (
               EOperatingExpenseSubType.BrokerageFee
             ]
           }
-          creditTarget = {
-            portType: EPortType.Payables,
-            subTypes: [EPayableSubType.AccountsPayable]
-          }
+          creditTarget = PAYABLE_ALL
           break
-        case PayablesTransactionType.PaymentMade: // ชำระเงินให้เจ้าหนี้
-          debitTarget = {
-            portType: EPortType.Payables,
-            subTypes: [EPayableSubType.AccountsPayable, EPayableSubType.AccruedExpense]
-          }
+        case PayablesTransactionType.PaymentMade:
+          debitTarget = PAYABLE_ALL
           creditTarget = CASH_SAVINGS
           break
-        case PayablesTransactionType.CreditNoteReceived: // รับใบลดหนี้
-          debitTarget = {
-            portType: EPortType.Payables,
-            subTypes: [EPayableSubType.AccountsPayable]
-          }
+        case PayablesTransactionType.CreditNoteReceived:
+          debitTarget = PAYABLE_ALL
           creditTarget = {
             portType: EPortType.OperatingExpense,
             subTypes: [EOperatingExpenseSubType.Administrative]
@@ -695,16 +758,24 @@ export const getGuideRows = (
       }
       break
 
-    // -----------------------------------------------------------------
-    // 7: Operating Revenue (รายได้จากการดำเนินงาน)
-    // -----------------------------------------------------------------
+    // ----------------------------------------------------
+    // REVENUE (7 - 9)
+    // ----------------------------------------------------
     case EPortType.OperatingRevenue:
       switch (sType) {
-        case OperatingRevenueTransactionType.ServiceInvoiced: // ออกใบแจ้งหนี้
-          debitTarget = {
-            portType: EPortType.LoansReceivable,
-            subTypes: [LoansReceivableSubType.BusinessLoan]
+        case OperatingRevenueTransactionType.ServiceInvoiced:
+          debitTarget = PAYABLE_ALL
+          creditTarget = {
+            portType: EPortType.OperatingRevenue,
+            subTypes: [
+              EOperatingRevenueSubType.SalesRevenue,
+              EOperatingRevenueSubType.ServiceRevenue,
+              EOperatingRevenueSubType.RentalIncome
+            ]
           }
+          break
+        case OperatingRevenueTransactionType.RevenueRecognition:
+          debitTarget = PAYABLE_ALL
           creditTarget = {
             portType: EPortType.OperatingRevenue,
             subTypes: [
@@ -713,26 +784,24 @@ export const getGuideRows = (
             ]
           }
           break
-        case OperatingRevenueTransactionType.RevenueRecognition: // รับรู้รายได้
+        case OperatingRevenueTransactionType.CashReceived:
           debitTarget = CASH_SAVINGS
           creditTarget = {
             portType: EPortType.OperatingRevenue,
             subTypes: [
-              EOperatingRevenueSubType.RentalIncome,
-              EOperatingRevenueSubType.ServiceRevenue
+              EOperatingRevenueSubType.SalesRevenue,
+              EOperatingRevenueSubType.ServiceRevenue,
+              EOperatingRevenueSubType.RentalIncome
             ]
           }
           break
       }
       break
 
-    // -----------------------------------------------------------------
-    // 8: Interest Income (รายได้ดอกเบี้ย)
-    // -----------------------------------------------------------------
     case EPortType.InterestIncome:
       switch (sType) {
-        case InterestIncomeTransactionType.InterestReceived: // รับดอกเบี้ย
-          debitTarget = CASH_ALL
+        case InterestIncomeTransactionType.InterestReceived:
+          debitTarget = CASH_SAVINGS
           creditTarget = {
             portType: EPortType.InterestIncome,
             subTypes: [
@@ -742,25 +811,30 @@ export const getGuideRows = (
             ]
           }
           break
-        case InterestIncomeTransactionType.InterestIncomeAccrued: // รับรู้ดอกเบี้ยค้างรับ
-          debitTarget = {
-            portType: EPortType.LoansReceivable,
-            subTypes: [LoansReceivableSubType.PersonalLoan, LoansReceivableSubType.BusinessLoan]
-          }
+        case InterestIncomeTransactionType.InterestIncomeAccrued:
+          debitTarget = LOAN_ALL
           creditTarget = {
             portType: EPortType.InterestIncome,
-            subTypes: [EInterestIncomeSubType.LoanInterest]
+            subTypes: [EInterestIncomeSubType.LoanInterest, EInterestIncomeSubType.BondCoupon]
           }
           break
       }
       break
 
-    // -----------------------------------------------------------------
-    // 9: Dividend Income (รายได้เงินปันผล)
-    // -----------------------------------------------------------------
     case EPortType.DividendIncome:
       switch (sType) {
-        case DividendIncomeTransactionType.DividendReceived: // รับเงินปันผล
+        case DividendIncomeTransactionType.DividendReceived:
+          debitTarget = CASH_SAVINGS
+          creditTarget = {
+            portType: EPortType.DividendIncome,
+            subTypes: [
+              EDividendIncomeSubType.ListedDividend,
+              EDividendIncomeSubType.PrivateDividend,
+              EDividendIncomeSubType.FundDividend
+            ]
+          }
+          break
+        case DividendIncomeTransactionType.DividendDeclared:
           debitTarget = CASH_SAVINGS
           creditTarget = {
             portType: EPortType.DividendIncome,
@@ -774,12 +848,12 @@ export const getGuideRows = (
       }
       break
 
-    // -----------------------------------------------------------------
-    // 10: Operating Expense (ค่าใช้จ่ายดำเนินงาน)
-    // -----------------------------------------------------------------
+    // ----------------------------------------------------
+    // EXPENSES (10 - 13)
+    // ----------------------------------------------------
     case EPortType.OperatingExpense:
       switch (sType) {
-        case OperatingExpenseTransactionType.ExpenseIncurred: // บันทึกค่าใช้จ่าย
+        case OperatingExpenseTransactionType.ExpenseIncurred:
           debitTarget = {
             portType: EPortType.OperatingExpense,
             subTypes: [
@@ -787,12 +861,9 @@ export const getGuideRows = (
               EOperatingExpenseSubType.InsurancePremium
             ]
           }
-          creditTarget = {
-            portType: EPortType.Payables,
-            subTypes: [EPayableSubType.AccountsPayable, EPayableSubType.AccruedExpense]
-          }
+          creditTarget = PAYABLE_ALL
           break
-        case OperatingExpenseTransactionType.ExpensePaid: // ชำระค่าใช้จ่าย
+        case OperatingExpenseTransactionType.ExpensePaid:
           debitTarget = {
             portType: EPortType.OperatingExpense,
             subTypes: [
@@ -802,7 +873,7 @@ export const getGuideRows = (
           }
           creditTarget = CASH_SAVINGS
           break
-        case OperatingExpenseTransactionType.BrokerFeePaid: // จ่ายค่าธรรมเนียมโบรกเกอร์
+        case OperatingExpenseTransactionType.BrokerFeePaid:
           debitTarget = {
             portType: EPortType.OperatingExpense,
             subTypes: [EOperatingExpenseSubType.BrokerageFee]
@@ -812,12 +883,9 @@ export const getGuideRows = (
       }
       break
 
-    // -----------------------------------------------------------------
-    // 11: Interest Expense (ดอกเบี้ยจ่าย)
-    // -----------------------------------------------------------------
     case EPortType.InterestExpense:
       switch (sType) {
-        case InterestExpenseTransactionType.InterestExpenseAccrued: // ตั้งดอกเบี้ยจ่ายค้างชำระ
+        case InterestExpenseTransactionType.InterestExpenseAccrued:
           debitTarget = {
             portType: EPortType.InterestExpense,
             subTypes: [
@@ -825,12 +893,9 @@ export const getGuideRows = (
               EInterestExpenseSubType.BorrowingInterest
             ]
           }
-          creditTarget = {
-            portType: EPortType.Payables,
-            subTypes: [EPayableSubType.AccruedExpense]
-          }
+          creditTarget = PAYABLE_ALL
           break
-        case InterestExpenseTransactionType.InterestPaid: // จ่ายดอกเบี้ย
+        case InterestExpenseTransactionType.InterestPaid:
           debitTarget = {
             portType: EPortType.InterestExpense,
             subTypes: [
@@ -843,80 +908,157 @@ export const getGuideRows = (
       }
       break
 
-    // -----------------------------------------------------------------
-    // 12: Bad Debt Expense (ค่าเผื่อหนี้สงสัยจะสูญ / หหนี้สูญ)
-    // -----------------------------------------------------------------
     case EPortType.BadDebtExpense:
       switch (sType) {
-        case BadDebtExpenseTransactionType.ProvisionRecognized: // รับรู้ค่าเผื่อหนี้สงสัยจะสูญ
+        case BadDebtExpenseTransactionType.ProvisionRecognized:
           debitTarget = {
             portType: EPortType.BadDebtExpense,
             subTypes: [EBadDebtExpenseSubType.AllowanceForBadDebt]
           }
-          creditTarget = {
-            portType: EPortType.LoansReceivable,
-            subTypes: [LoansReceivableSubType.PersonalLoan, LoansReceivableSubType.BusinessLoan]
-          }
+          creditTarget = LOAN_ALL
           break
-        case BadDebtExpenseTransactionType.BadDebtWrittenOff: // ตัดจำหน่ายหนี้สูญ
+        case BadDebtExpenseTransactionType.BadDebtWrittenOff:
           debitTarget = {
             portType: EPortType.BadDebtExpense,
             subTypes: [EBadDebtExpenseSubType.BadDebtWriteOff]
           }
-          creditTarget = {
-            portType: EPortType.LoansReceivable,
-            subTypes: [LoansReceivableSubType.PersonalLoan, LoansReceivableSubType.BusinessLoan]
-          }
+          creditTarget = LOAN_ALL
           break
       }
       break
 
-    // -----------------------------------------------------------------
-    // 13: Disposal Loss (ขาดทุนจากการจำหน่าย)
-    // -----------------------------------------------------------------
     case EPortType.DisposalLoss:
       switch (sType) {
-        case DisposalLossTransactionType.AssetDisposed: // จำหน่ายทรัพย์สินขาดทุน
+        case DisposalLossTransactionType.AssetDisposed:
           debitTarget = {
             portType: EPortType.DisposalLoss,
             subTypes: [EDisposalLossSubType.DisposalLoss]
           }
           creditTarget = {
             portType: EPortType.OtherInvestments,
-            subTypes: [OtherInvestmentsSubType.RealEstate, OtherInvestmentsSubType.MutualFund]
+            subTypes: [OtherInvestmentsSubType.RealEstate]
           }
           break
-        case DisposalLossTransactionType.FairValueLossAdjusted: // ปรับมูลค่ายุติธรรม (ขาดทุน)
+        case DisposalLossTransactionType.FairValueLossAdjusted:
           debitTarget = {
             portType: EPortType.DisposalLoss,
             subTypes: [EDisposalLossSubType.UnrealizedLoss]
           }
           creditTarget = {
             portType: EPortType.Securities,
-            subTypes: [SecuritiesSubType.GovernmentBond]
+            subTypes: [SecuritiesSubType.GovernmentBond, SecuritiesSubType.CorporateBond]
           }
           break
       }
       break
+
+    // ----------------------------------------------------
+    // EQUITY (14 - 16)
+    // ----------------------------------------------------
+    case EPortType.PaidInCapital:
+      switch (sType) {
+        case PaidInCapitalTransactionType.CapitalContribution:
+          debitTarget = CASH_SAVINGS
+          creditTarget = {
+            portType: EPortType.PaidInCapital,
+            subTypes: [EPaidInCapitalSubType.CommonStock, EPaidInCapitalSubType.PreferredStock]
+          }
+          break
+        case PaidInCapitalTransactionType.CapitalReduction:
+          debitTarget = {
+            portType: EPortType.PaidInCapital,
+            subTypes: [EPaidInCapitalSubType.CommonStock, EPaidInCapitalSubType.PreferredStock]
+          }
+          creditTarget = CASH_SAVINGS
+          break
+      }
+      break
+
+    case EPortType.RetainedEarnings:
+      switch (sType) {
+        case RetainedEarningsTransactionType.DividendPayout:
+          debitTarget = {
+            portType: EPortType.RetainedEarnings,
+            subTypes: [ERetainedEarningsSubType.Unappropriated]
+          }
+          creditTarget = CASH_SAVINGS
+          break
+        case RetainedEarningsTransactionType.AppropriationOfEarnings:
+          debitTarget = {
+            portType: EPortType.RetainedEarnings,
+            subTypes: [ERetainedEarningsSubType.Unappropriated]
+          }
+          creditTarget = {
+            portType: EPortType.RetainedEarnings,
+            subTypes: [ERetainedEarningsSubType.Appropriated]
+          }
+          break
+        case RetainedEarningsTransactionType.UnappropriatedTransfer:
+          debitTarget = {
+            portType: EPortType.RetainedEarnings,
+            subTypes: [ERetainedEarningsSubType.Appropriated]
+          }
+          creditTarget = {
+            portType: EPortType.RetainedEarnings,
+            subTypes: [ERetainedEarningsSubType.Unappropriated]
+          }
+          break
+      }
+      break
+
+    case EPortType.OtherReserves:
+      switch (sType) {
+        case OtherReservesTransactionType.SharePremiumReceived:
+          debitTarget = CASH_SAVINGS
+          creditTarget = {
+            portType: EPortType.OtherReserves,
+            subTypes: [EOtherReservesSubType.SharePremium]
+          }
+          break
+        case OtherReservesTransactionType.ReserveAllocation:
+          debitTarget = {
+            portType: EPortType.RetainedEarnings,
+            subTypes: [ERetainedEarningsSubType.Unappropriated]
+          }
+          creditTarget = {
+            portType: EPortType.OtherReserves,
+            subTypes: [EOtherReservesSubType.LegalReserve]
+          }
+          break
+        case OtherReservesTransactionType.RevaluationAdjustment:
+          debitTarget = {
+            portType: EPortType.OtherInvestments,
+            subTypes: [OtherInvestmentsSubType.RealEstate]
+          }
+          creditTarget = {
+            portType: EPortType.OtherReserves,
+            subTypes: [EOtherReservesSubType.RevaluationReserve]
+          }
+          break
+      }
+      break
+
+    default:
+      return []
   }
 
-  // Select appropriate side configuration
   const activeTarget = isCredit ? creditTarget : debitTarget
   if (!activeTarget) return []
 
-  // If the target port type matches currentPort's type, include currentPort in candidates
-  let candidatePorts = ports
-  if (activeTarget.portType === pType && !ports.some(p => p.portId === currentPort.portId)) {
-    candidatePorts = [currentPort, ...ports]
-  }
+  // Ensure currentPort is in candidate list if it matches target portType
+  const hasCurrentPort = ports.some(p => p.portId === currentPort.portId)
+  const candidatePorts =
+    Number(activeTarget.portType) === pType && !hasCurrentPort ? [currentPort, ...ports] : ports
 
-  // Filter ports matching the targeted PortType and SubTypes
+  // Safe numerical checking against account subtypes
   return candidatePorts.filter(p => {
-    const isSameType = Number(p.portType) === activeTarget.portType
-    if (!isSameType) return false
+    const itemPortType = Number(p.portType)
+    if (itemPortType !== Number(activeTarget.portType)) return false
 
     if (activeTarget.subTypes && activeTarget.subTypes.length > 0) {
-      return activeTarget.subTypes.includes(Number(p.portSubType))
+      if (p.portSubType === undefined || p.portSubType === null) return false
+      const subTypeNum = Number(p.portSubType)
+      return !isNaN(subTypeNum) && activeTarget.subTypes.includes(subTypeNum)
     }
 
     return true
@@ -946,4 +1088,44 @@ export const getPreviousUsedPortId = (
 
   // 3. Return creditPortId or debitPortId based on isCredit flag
   return isCredit ? latestSession.creditPortId : latestSession.debitPortId
+}
+export const getAccountCategoryByPortType = (portType: EPortType | number): AccountCategory => {
+  const pType = Number(portType)
+
+  switch (pType) {
+    // Assets (0 - 4)
+    case EPortType.CashAndDeposits:
+    case EPortType.LoansReceivable:
+    case EPortType.Securities:
+    case EPortType.EquityHoldings:
+    case EPortType.OtherInvestments:
+      return AccountCategory.Assets
+
+    // Liabilities (5 - 6)
+    case EPortType.Borrowings:
+    case EPortType.Payables:
+      return AccountCategory.Liabilities
+
+    // Revenue (7 - 9)
+    case EPortType.OperatingRevenue:
+    case EPortType.InterestIncome:
+    case EPortType.DividendIncome:
+      return AccountCategory.Revenue
+
+    // Expenses (10 - 13)
+    case EPortType.OperatingExpense:
+    case EPortType.InterestExpense:
+    case EPortType.BadDebtExpense:
+    case EPortType.DisposalLoss:
+      return AccountCategory.Expenses
+
+    // Equity (14 - 16)
+    case EPortType.PaidInCapital:
+    case EPortType.RetainedEarnings:
+    case EPortType.OtherReserves:
+      return AccountCategory.Equity
+
+    default:
+      throw new Error(`Invalid EPortType: ${portType}`)
+  }
 }

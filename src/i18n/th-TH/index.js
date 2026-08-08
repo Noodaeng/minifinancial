@@ -74,6 +74,11 @@ export default {
   BadDebtExpense: 'ค่าเผื่อหนี้สงสัยจะสูญ',
   DisposalLoss: 'ขาดทุนจากการจำหน่าย',
   //++++++++++++
+  Equity_Ports: 'พอร์ต ส่วนของผู้ถือหุ้น',
+  PaidInCapital: 'ทุนเรือนหุ้น',
+  RetainedEarnings: 'กำไรสะสม',
+  OtherReserves: 'สำรองอื่น ๆ',
+  //++++++++++++
   Deposit: 'ฝากเงิน',
   Withdrawal: 'ถอนเงิน',
   //InterestIncome: 'รับดอกเบี้ย',

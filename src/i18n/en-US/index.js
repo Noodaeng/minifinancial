@@ -75,6 +75,11 @@ export default {
   BadDebtExpense: 'BadDebt Expense',
   DisposalLoss: 'Disposal Loss',
   //++++++++++++
+  Equity_Ports: 'Equity Ports',
+  PaidInCapital: 'Paid-in Capital',
+  RetainedEarnings: 'Retained Earnings',
+  OtherReserves: 'Other Reserves',
+  //++++++++++++
   Deposit: 'Deposit', // ฝากเงิน
   Withdrawal: 'Withdrawal', // ถอนเงิน
   //InterestIncome: 'Interest Income', // รับดอกเบี้ย
