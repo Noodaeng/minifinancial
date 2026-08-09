@@ -39,7 +39,7 @@ import {
   RetainedEarningsTransactionType,
   OtherReservesTransactionType
 } from '../types/myEnums'
-import { FuncBoolAsync, QSelectOption } from '../types/myTypes'
+import { FuncBoolAsync, QSelectOption, PortSessionDetail } from '../types/myTypes'
 import { Notify, QVueGlobals, date } from 'quasar'
 import MyConfig from './myConfig'
 import Port from '../models/port'
@@ -399,7 +399,14 @@ export const formatBangkokDateTime = (inputdate: Date | string | number): string
   return date.formatDate(d, 'DD/MM/YYYY')
 }
 export const currentDateTimeStr = formatBangkokDateTime(new Date())
-
+export const formatCurrency = (val: number, currencyCode: string = 'THB'): string => {
+  return new Intl.NumberFormat('th-TH', {
+    style: 'currency',
+    currency: currencyCode,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  }).format(val || 0)
+}
 //Session helpers
 
 /**
@@ -1128,4 +1135,602 @@ export const getAccountCategoryByPortType = (portType: EPortType | number): Acco
     default:
       throw new Error(`Invalid EPortType: ${portType}`)
   }
+}
+export const getPortSessionInfo = (
+  portType: string | number | EPortType,
+  subType: number
+): PortSessionDetail[] => {
+  const { t } = i18n.global
+  switch (Number(portType)) {
+    // =============================================================
+    // ASSETS (0 - 4)
+    // =============================================================
+    case EPortType.CashAndDeposits: // 0
+      return [
+        {
+          enabled: true,
+          visible: true,
+          description: t('Deposit'),
+          iconName: 'mdi-cash-plus',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('Withdrawal'),
+          iconName: 'mdi-cash-minus',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('InterestIncome'),
+          iconName: 'mdi-cash-clock',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('Transfer'),
+          iconName: 'mdi-cash-refund',
+          totalAmount: 0,
+          totalCount: 0
+        }
+      ]
+
+    case EPortType.LoansReceivable: // 1
+      return [
+        {
+          enabled: true,
+          visible: true,
+          description: t('LoanIssued'),
+          iconName: 'mdi-cash-minus',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('LoanRepayment'),
+          iconName: 'mdi-cash-plus',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('LoanInterestAccrual'),
+          iconName: 'mdi-cash-fast',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('BadDebtWriteOff'),
+          iconName: 'mdi-cash-remove',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('LoanReFinance'),
+          iconName: 'mdi-cash-sync',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('BrokerPayment'),
+          iconName: 'mdi-cash-minus',
+          totalAmount: 0,
+          totalCount: 0
+        }
+      ]
+
+    case EPortType.Securities: // 2
+      return [
+        {
+          enabled: true,
+          visible: true,
+          description: t('SecurityPurchase'),
+          iconName: 'mdi-cash-100',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('SecuritySale'),
+          iconName: 'mdi-cash-fast',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('CouponPayment'),
+          iconName: 'mdi-cash-fast',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('FairValueAdjustment'),
+          iconName: 'mdi-cash-multiple',
+          totalAmount: 0,
+          totalCount: 0
+        }
+      ]
+
+    case EPortType.EquityHoldings: // 3
+      return [
+        {
+          enabled: true,
+          visible: true,
+          description: t('EquityPurchase'),
+          iconName: 'mdi-network-pos',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('EquitySale'),
+          iconName: 'mdi-cash-fast',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('DividendCollected'),
+          iconName: 'mdi-cash-plus',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('EquityMethodAdjustment'),
+          iconName: 'mdi-cash-sync',
+          totalAmount: 0,
+          totalCount: 0
+        }
+      ]
+
+    case EPortType.OtherInvestments: // 4
+      return [
+        // RealEstate (subType = 0)
+        {
+          enabled: subType === OtherInvestmentsSubType.RealEstate,
+          visible: subType === OtherInvestmentsSubType.RealEstate,
+          description: t('RealEstatePurchase'),
+          iconName: 'mdi-home-group',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: subType === OtherInvestmentsSubType.RealEstate,
+          visible: subType === OtherInvestmentsSubType.RealEstate,
+          description: t('RentalIncome'),
+          iconName: 'mdi-cash-multiple',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        // MutualFund (subType = 1)
+        {
+          enabled: subType === OtherInvestmentsSubType.MutualFund,
+          visible: subType === OtherInvestmentsSubType.MutualFund,
+          description: t('MutualFundInvestment'),
+          iconName: 'mdi-cash-multiple',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: subType === OtherInvestmentsSubType.MutualFund,
+          visible: subType === OtherInvestmentsSubType.MutualFund,
+          description: t('DisposalGain'),
+          iconName: 'mdi-cash-plus',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: subType === OtherInvestmentsSubType.MutualFund,
+          visible: subType === OtherInvestmentsSubType.MutualFund,
+          description: t('DisposalLoss'),
+          iconName: 'mdi-cash-minus',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        // CommunitySavingShare (subType = 2)
+        {
+          enabled: subType === OtherInvestmentsSubType.CommunitySavingShare,
+          visible: subType === OtherInvestmentsSubType.CommunitySavingShare,
+          description: t('SavingSharePayment'),
+          iconName: 'mdi-cash-minus',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: subType === OtherInvestmentsSubType.CommunitySavingShare,
+          visible: subType === OtherInvestmentsSubType.CommunitySavingShare,
+          description: t('SavingShareIncome'),
+          iconName: 'mdi-cash-plus',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        // Insurance (subType = 3)
+        {
+          enabled: subType === OtherInvestmentsSubType.Insurance,
+          visible: subType === OtherInvestmentsSubType.Insurance,
+          description: t('InsurancePremium'),
+          iconName: 'mdi-cash-minus',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: subType === OtherInvestmentsSubType.Insurance,
+          visible: subType === OtherInvestmentsSubType.Insurance,
+          description: t('InsuranceBenefit'),
+          iconName: 'mdi-cash-plus',
+          totalAmount: 0,
+          totalCount: 0
+        }
+      ]
+
+    // =============================================================
+    // LIABILITIES (5 - 6)
+    // =============================================================
+    case EPortType.Borrowings: // 5
+      return [
+        {
+          enabled: true,
+          visible: true,
+          description: t('Drawdown'),
+          iconName: 'mdi-cash-plus',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('Repayment'),
+          iconName: 'mdi-cash-minus',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('BorrowingInterestAccrual'),
+          iconName: 'mdi-cash-clock',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('BorrowingRefinance'),
+          iconName: 'mdi-cash-refresh',
+          totalAmount: 0,
+          totalCount: 0
+        }
+      ]
+
+    case EPortType.Payables: // 6
+      return [
+        {
+          enabled: true,
+          visible: true,
+          description: t('InvoiceReceived'),
+          iconName: 'mdi-file-document-outline',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('PaymentMade'),
+          iconName: 'mdi-cash-minus',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('CreditNoteReceived'),
+          iconName: 'mdi-file-undo-outline',
+          totalAmount: 0,
+          totalCount: 0
+        }
+      ]
+
+    // =============================================================
+    // REVENUE (7 - 9)
+    // =============================================================
+    case EPortType.OperatingRevenue: // 7
+      return [
+        {
+          enabled: true,
+          visible: true,
+          description: t('ServiceInvoiced'),
+          iconName: 'mdi-file-sign',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('RevenueRecognition'),
+          iconName: 'mdi-cash-check',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('CashReceived'),
+          iconName: 'mdi-cash-plus',
+          totalAmount: 0,
+          totalCount: 0
+        }
+      ]
+
+    case EPortType.InterestIncome: // 8
+      return [
+        {
+          enabled: true,
+          visible: true,
+          description: t('InterestReceived'),
+          iconName: 'mdi-cash-plus',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('InterestIncomeAccrued'),
+          iconName: 'mdi-cash-clock',
+          totalAmount: 0,
+          totalCount: 0
+        }
+      ]
+
+    case EPortType.DividendIncome: // 9
+      return [
+        {
+          enabled: true,
+          visible: true,
+          description: t('DividendReceived'),
+          iconName: 'mdi-cash-plus',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('DividendDeclared'),
+          iconName: 'mdi-bullhorn-outline',
+          totalAmount: 0,
+          totalCount: 0
+        }
+      ]
+
+    // =============================================================
+    // EXPENSES (10 - 13)
+    // =============================================================
+    case EPortType.OperatingExpense: // 10
+      return [
+        {
+          enabled: true,
+          visible: true,
+          description: t('ExpenseIncurred'),
+          iconName: 'mdi-receipt-text-outline',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('ExpensePaid'),
+          iconName: 'mdi-cash-minus',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('BrokerFeePaid'),
+          iconName: 'mdi-cash-minus',
+          totalAmount: 0,
+          totalCount: 0
+        }
+      ]
+
+    case EPortType.InterestExpense: // 11
+      return [
+        {
+          enabled: true,
+          visible: true,
+          description: t('InterestExpenseAccrued'),
+          iconName: 'mdi-cash-clock',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('InterestPaid'),
+          iconName: 'mdi-cash-minus',
+          totalAmount: 0,
+          totalCount: 0
+        }
+      ]
+
+    case EPortType.BadDebtExpense: // 12
+      return [
+        {
+          enabled: true,
+          visible: true,
+          description: t('ProvisionRecognized'),
+          iconName: 'mdi-alert-circle-outline',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('BadDebtWrittenOff'),
+          iconName: 'mdi-cash-remove',
+          totalAmount: 0,
+          totalCount: 0
+        }
+      ]
+
+    case EPortType.DisposalLoss: // 13
+      return [
+        {
+          enabled: true,
+          visible: true,
+          description: t('AssetDisposed'),
+          iconName: 'mdi-close-box-outline',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('FairValueLossAdjusted'),
+          iconName: 'mdi-trending-down',
+          totalAmount: 0,
+          totalCount: 0
+        }
+      ]
+
+    // =============================================================
+    // EQUITY (14 - 16)
+    // =============================================================
+    case EPortType.PaidInCapital: // 14
+      return [
+        {
+          enabled: true,
+          visible: true,
+          description: t('CapitalContribution'),
+          iconName: 'mdi-cash-plus',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('CapitalReduction'),
+          iconName: 'mdi-cash-minus',
+          totalAmount: 0,
+          totalCount: 0
+        }
+      ]
+
+    case EPortType.RetainedEarnings: // 15
+      return [
+        {
+          enabled: true,
+          visible: true,
+          description: t('DividendPayout'),
+          iconName: 'mdi-cash-minus',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('AppropriationOfEarnings'),
+          iconName: 'mdi-bank-transfer-in',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('UnappropriatedTransfer'),
+          iconName: 'mdi-bank-transfer-out',
+          totalAmount: 0,
+          totalCount: 0
+        }
+      ]
+
+    case EPortType.OtherReserves: // 16
+      return [
+        {
+          enabled: true,
+          visible: true,
+          description: t('SharePremiumReceived'),
+          iconName: 'mdi-cash-plus',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('ReserveAllocation'),
+          iconName: 'mdi-transfer',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('RevaluationAdjustment'),
+          iconName: 'mdi-tune-vertical',
+          totalAmount: 0,
+          totalCount: 0
+        }
+      ]
+
+    // =============================================================
+    // DEFAULT
+    // =============================================================
+    default:
+      return [
+        {
+          enabled: true,
+          visible: true,
+          description: t('Deposit'),
+          iconName: 'mdi-cash-plus',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('Withdrawal'),
+          iconName: 'mdi-cash-minus',
+          totalAmount: 0,
+          totalCount: 0
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('Transfer'),
+          iconName: 'mdi-cash-refund',
+          totalAmount: 0,
+          totalCount: 0
+        }
+      ]
+  }
+}
+export const getSessionTypeDescription = (
+  portType: EPortType | number,
+  sessionType: number
+): { description: string; iconName: string } => {
+  const infos = getPortSessionInfo(portType, 0)
+  if (!infos || infos.length === 0 || !infos[sessionType]) return { description: '', iconName: '' }
+
+  return { description: infos[sessionType].description, iconName: infos[sessionType].iconName }
 }

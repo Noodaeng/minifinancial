@@ -102,10 +102,11 @@
                     <!-- Padding container to push ListComp below the button -->
                     <div class="q-pt-xl q-px-md q-pb-md">
                       <ListComp
-                        :rows="creditRows"
+                        :rows="filterCreditRows"
                         :columns="creditColumns"
                         :initGuide="creditPortIdGuide"
                         @onRowClick="onCreditRowClick"
+                        @onFilter="onCreditFiltering"
                       ></ListComp>
                     </div>
                   </q-popup-proxy>
@@ -154,10 +155,11 @@
                     <!-- Padding container to push ListComp below the button -->
                     <div class="q-pt-xl q-px-md q-pb-md">
                       <ListComp
-                        :rows="debitRows"
+                        :rows="filterDebitRows"
                         :columns="debitColumns"
                         :initGuide="debitPortIdGuide"
                         @onRowClick="onDebitRowClick"
+                        @onFilter="onDebitFiltering"
                       ></ListComp>
                     </div>
                   </q-popup-proxy>
@@ -268,11 +270,12 @@ export default defineComponent({
 
   emits: ['onClickSave'],
 
-  setup(props) {
+  setup(props, { emit }) {
     const myForm = ref()
     const { t } = i18n.global
     const rules = useValidationRules(t)
-
+    const creditFilter = ref(props.creditPortIdGuide)
+    const debitFilter = ref(props.debitPortIdGuide)
     const model = computed(() => modelConverter<Session>(props.info) ?? new Session())
 
     if (!model.value.createOn) {
@@ -303,6 +306,18 @@ export default defineComponent({
         popupCreditRef.value?.hide()
       }
     }
+    const onCreditFiltering = (val: string | number | null) => {
+      creditFilter.value = val as string
+    }
+
+    const filterCreditRows = computed(() => {
+      if (!props.creditRows || !props.creditRows.length) return []
+      if (!props.creditPortIdGuide) return props.creditRows
+      const filterValue = creditFilter.value.toLowerCase()
+      return props.creditRows.filter(row =>
+        Object.values(row).some(value => String(value).toLowerCase().includes(filterValue))
+      )
+    })
 
     const onDebitRowClick = (row: any) => {
       if (model.value && row?.portId) {
@@ -310,6 +325,17 @@ export default defineComponent({
         popupDebitRef.value?.hide()
       }
     }
+    const onDebitFiltering = (val: string | number | null) => {
+      debitFilter.value = val as string
+    }
+    const filterDebitRows = computed(() => {
+      if (!props.debitRows || !props.debitRows.length) return []
+      if (!props.debitPortIdGuide) return props.debitRows
+      const filterValue = debitFilter.value.toLowerCase()
+      return props.debitRows.filter(row =>
+        Object.values(row).some(value => String(value).toLowerCase().includes(filterValue))
+      )
+    })
     return {
       sessionInfo,
       Session,
@@ -328,6 +354,10 @@ export default defineComponent({
       getValidate,
       onCreditRowClick,
       onDebitRowClick,
+      onCreditFiltering,
+      onDebitFiltering,
+      filterCreditRows,
+      filterDebitRows,
       date
     }
   }

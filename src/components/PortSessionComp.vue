@@ -1,79 +1,151 @@
 <template>
-  <div class="q-pa-md">
-    <q-form ref="myForm" class="bg-body text-appText">
-      <q-card flat class="bg-body text-appText col-12">
-        <div class="row items-center q-mb-md">
-          <q-icon name="mdi-swap-horizontal" size="md" />
-          <div class="text-subtitle1 q-ml-sm"></div>
+  <q-card flat class="bg-body text-appText q-pa-sm fit column no-wrap overflow-hidden">
+    <!-- Header -->
+    <div class="row items-center justify-between q-mb-xs flex-shrink-0">
+      <div class="row items-center">
+        <q-icon name="mdi-swap-horizontal" size="sm" class="q-mr-xs text-grey-7" />
+        <div class="text-caption text-weight-bold text-grey-7">Port Session Details</div>
+      </div>
+      <q-badge v-if="updateDetails && updateDetails.length" outline color="grey-6" size="xs">
+        {{ updateDetails.filter(s => s.enabled && isPortValid).length }} Sessions
+      </q-badge>
+    </div>
+
+    <!-- Responsive Grid without Horizontal Overflow -->
+    <div v-if="updateDetails && updateDetails.length > 0" class="session-grid scroll col q-pa-none">
+      <q-card
+        v-for="(session, index) in updateDetails"
+        :key="session.description"
+        v-show="session.enabled && isPortValid"
+        v-ripple
+        @click="onSessionClick(index)"
+        flat
+        bordered
+        class="session-card q-pa-xs bg-body text-appText fit column justify-between cursor-pointer transition-generic"
+      >
+        <!-- Top Section: Icon + Description + Count -->
+        <div class="row items-center justify-between no-wrap q-gutter-x-xs min-width-0">
+          <div class="row items-center no-wrap col min-width-0">
+            <q-icon
+              size="18px"
+              class="flex-shrink-0 q-mr-xs text-grey-6"
+              :name="session.iconName"
+            />
+            <span
+              class="text-weight-bold text-caption text-appText ellipsis"
+              :title="session.description"
+            >
+              {{ session.description }}
+            </span>
+          </div>
+
+          <span class="text-weight-bold text-caption text-grey-6 flex-shrink-0">
+            :{{ session.totalCount }}
+          </span>
         </div>
 
-        <!-- Using q-col-gutter-md manages padding between controls fluidly -->
+        <q-separator class="q-my-xs opacity-20" />
 
-        <div class="row q-col-gutter-md">
-          <div
-            v-for="session in details"
-            :key="session.description"
-            v-bind="session"
-            v-show="session.enabled && isPortValid"
-            class="col-12 col-sm-6 col-md-6"
-          >
-            <q-card
-              @click="() => onSessionClick(details.indexOf(session))"
-              class="bg-body text-appText cursor-pointer q-pa-sm"
-            >
-              <!-- Inline Icon + Title -->
-              <div class="row items-center">
-                <q-icon size="sm" :name="session.iconName" class="q-mr-xs" />
-                <div class="text-subtitle1">{{ session.description }}</div>
-              </div>
-
-              <div class="text-subtitle2">by John Doe</div>
-            </q-card>
-          </div>
+        <!-- Bottom Section: Amount -->
+        <div class="text-right text-weight-bolder text-subtitle2 text-primary ellipsis min-width-0">
+          {{ formatCurrency(session.totalAmount) }}
         </div>
       </q-card>
-    </q-form>
-  </div>
+    </div>
+
+    <!-- Empty State -->
+    <div v-else class="col row items-center justify-center text-caption text-grey-6 q-pa-md">
+      No session summary available
+    </div>
+  </q-card>
 </template>
+
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, computed } from 'vue'
 import { i18n } from '../i18n'
-import { PortDetail } from '../types/myTypes'
+import { PortSessionDetail, PortTypeSummary } from '../types/myTypes'
+import { formatCurrency } from '../modules/appUtils.js'
 
 export default defineComponent({
   name: 'PortSessionComp',
-  components: {},
-  data() {
-    return {}
-  },
-
   props: {
     details: {
-      type: Array as PropType<PortDetail[]>,
+      type: Array as PropType<PortSessionDetail[]>,
       required: false,
-      default: (): PortDetail[] => [
-        {
-          enabled: true,
-          visible: true,
-          description: 'Default Port',
-          iconName: 'icon-default'
-        }
-      ]
+      default: (): PortSessionDetail[] => []
+    },
+    portSessionSummaries: {
+      type: Array as PropType<PortTypeSummary[]>,
+      required: false,
+      default: (): PortTypeSummary[] => []
     },
     isPortValid: {
       type: Boolean,
       default: false
     }
   },
-
+  emits: ['onSessionClick'],
   setup(props, { emit }) {
     const { t } = i18n.global
+
     const onSessionClick = (index: number) => {
       emit('onSessionClick', index)
     }
-    return { onSessionClick }
-  },
-  methods: {}
+
+    const updateDetails = computed(() => {
+      if (!props.details) return []
+
+      const updatedList = props.details.map(detail => ({ ...detail }))
+      const summaryMap = new Map<number, PortTypeSummary>()
+
+      props.portSessionSummaries.forEach(summary => {
+        summaryMap.set(summary.sessionType, summary)
+      })
+
+      updatedList.forEach((detail, index) => {
+        const summary = summaryMap.get(index)
+        if (summary) {
+          detail.totalAmount = summary.totalAmount
+          detail.totalCount = summary.count
+        }
+      })
+
+      return updatedList
+    })
+
+    return { onSessionClick, formatCurrency, updateDetails, t }
+  }
 })
 </script>
-<style></style>
+
+<style scoped>
+/* CSS Grid enforcing clean column wrapping and preventing content overflow */
+.session-grid {
+  display: grid;
+  /* Increased minimum width from 110px to 140px so cards wrap cleanly into fewer columns */
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-auto-rows: 72px; /* Slightly increased card height */
+  gap: 8px;
+  width: 100%;
+  overflow-x: hidden !important;
+  overflow-y: auto;
+}
+
+.session-card {
+  box-sizing: border-box;
+  height: 72px;
+  max-width: 100%;
+}
+
+.min-width-0 {
+  min-width: 0;
+}
+
+.flex-shrink-0 {
+  flex-shrink: 0;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+</style>

@@ -1,6 +1,6 @@
 <template>
   <div class="row q-col-gutter-md">
-    <div v-for="item in categoryList" :key="item.value" class="col-12 col-sm-6 col-md-4 col-lg">
+    <div v-for="item in categoryMetadata" :key="item.value" class="col-12 col-sm-6 col-md-4 col-lg">
       <q-card flat bordered class="bg-body text-appText account-card">
         <q-card-section class="q-pb-xs">
           <div class="row items-center justify-between no-wrap">
@@ -14,7 +14,8 @@
         <q-separator inset class="q-my-xs" />
 
         <q-card-section class="q-pt-xs">
-          <div class="row q-gutter-x-sm text-caption">
+          <!-- Dr Row -->
+          <div class="row items-center justify-between text-caption q-mb-xs">
             <q-chip
               dense
               size="sm"
@@ -23,6 +24,13 @@
             >
               Dr: {{ item.drEffect }}
             </q-chip>
+            <div class="text-right text-weight-bolder text-subtitle2 text-primary ellipsis">
+              {{ formatCurrency(item.totalDebit) }}
+            </div>
+          </div>
+
+          <!-- Cr Row -->
+          <div class="row items-center justify-between text-caption">
             <q-chip
               dense
               size="sm"
@@ -31,7 +39,11 @@
             >
               Cr: {{ item.crEffect }}
             </q-chip>
+            <div class="text-right text-weight-bolder text-subtitle2 text-primary ellipsis">
+              {{ formatCurrency(item.totalCredit) }}
+            </div>
           </div>
+
           <div v-if="item.description" class="text-caption text-grey-6 q-mt-xs">
             {{ item.description }}
           </div>
@@ -43,33 +55,39 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
-import { AccountCategory } from '../types/myEnums'
 import { CategoryMeta } from '../types/myTypes'
-import { useDashBoard } from '../hooks/useDashBoard'
+import { formatCurrency } from '../modules/appUtils'
 
 export default defineComponent({
   name: 'DashBoardComp',
-  components: {},
-  props: {},
-  setup() {
-    const { categoryMetadata } = useDashBoard()
-
-    const categoryList = computed(() => Object.values(categoryMetadata))
-    return {
-      categoryList
+  props: {
+    categoryList: {
+      type: Object as PropType<Record<number, CategoryMeta>>,
+      default: () => ({})
     }
+  },
+  setup(props) {
+    // Convert object values into a fresh Array so Vue re-evaluates the list on updates
+    const categoryMetadata = computed(() => {
+      return Object.values(props.categoryList || {})
+    })
+
+    return { formatCurrency, categoryMetadata }
   }
 })
 </script>
 
-<style scoped>
-.account-card {
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-.account-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
+<style scoped lang="sass">
+.account-card
+  transition: transform 0.2s ease, box-shadow 0.2s ease
+
+  &:hover
+    transform: translateY(-2px)
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1)
+
+/* Prevents text breaking layout on tiny mobile screens */
+.ellipsis
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
 </style>

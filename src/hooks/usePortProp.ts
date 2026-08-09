@@ -3,19 +3,20 @@ import PortDto from '../models/portDto'
 import Port from '../models/port'
 import DataOption from '../models/dataOption'
 import { useCrudProp } from './useCrudProp'
-
+import { useApi } from '../services/api'
 import { EPortType } from '../types/myEnums'
-import { QSelectOption } from '../types/myTypes'
+import { QSelectOption, PortTypeSummary } from '../types/myTypes'
 import { i18n } from '../i18n'
 import { showError, currentDateTimeStr, getAccountCategoryByPortType } from '../modules/appUtils'
-
+import MyConfig from '../modules/myConfig'
 export function usePortProp() {
   const rawOptions = ref<DataOption[]>([])
   const { t } = i18n.global
-
   const filter = ref('')
   const portType: Ref<string | number | EPortType> = ref(EPortType.CashAndDeposits)
   const isPortValid = ref(false)
+  const portTypeSummaries = ref<PortTypeSummary[]>([])
+  const portSessionSummaries = ref<PortTypeSummary[]>([])
   // 1. Initialize our generic CRUD composable
   const setItem = (ports: PortDto[]) => {
     const filter = ports.filter(p => p.portType == portType.value)
@@ -135,12 +136,48 @@ export function usePortProp() {
 
       // Step B: Load the port records using your core crud workflow mechanics
       await crud.Init()
+      //++++++
+      portTypeSummaries.value = await getSessionTypesByPortType()
     } catch (err) {
       await showError(err)
     }
   }
-
+  const updateSessionSummaries = async () => {
+    portSessionSummaries.value = await getSessionTypesBreakdown()
+  }
   // 5. Spread all generic methods and merge your local overrides
+  //+++++++++++++++++++Api+++++++++++++++++++
+  async function getSessionTypesByPortType(): Promise<PortTypeSummary[]> {
+    try {
+      const secretToken = MyConfig.instance.AppConfig.AuthToken
+      const baseUrl = MyConfig.instance.AppConfig.DbUrl
+      const api = useApi()
+      const response = await api.post(`${baseUrl}/api/sessionRpt/getSessionTypesByPortType`, {
+        token: secretToken,
+        portType: portType.value
+      })
+      return response.data?.data || []
+    } catch (err: any) {
+      await showError(err)
+      return []
+    }
+  }
+  async function getSessionTypesBreakdown(): Promise<PortTypeSummary[]> {
+    try {
+      if (!crud.item.value.portId) return []
+      const secretToken = MyConfig.instance.AppConfig.AuthToken
+      const baseUrl = MyConfig.instance.AppConfig.DbUrl
+      const api = useApi()
+      const response = await api.post(`${baseUrl}/api/sessionRpt/getSessionTypesBreakdown`, {
+        token: secretToken,
+        portId: crud.item.value.portId
+      })
+      return response.data?.data || []
+    } catch (err: any) {
+      await showError(err)
+      return []
+    }
+  }
   return {
     ...crud,
     Init, // Overridden initialization method
@@ -152,7 +189,11 @@ export function usePortProp() {
     initOtherList,
     rawOptionToQSelectOptions,
     onCreatePort,
+    getSessionTypesByPortType,
+    updateSessionSummaries,
     portType,
-    rawOptions
+    portTypeSummaries,
+    rawOptions,
+    portSessionSummaries
   }
 }

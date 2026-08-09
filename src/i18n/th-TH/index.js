@@ -136,5 +136,12 @@ export default {
   Port_Id: 'ระหัส พอร์ต',
   Credit_Port_Id: 'ระหัส เครดิต พอร์ต',
   Debit_Port_Id: 'ระหัส เดบิต พอร์ต',
-  Session_Type: 'ประเภทเซสชัน'
+  Session_Type: 'ประเภทเซสชัน',
+  Total_Amount: 'จำนวนเงินรวม',
+  Total_Count: 'จำนวนรายการรวม',
+  Session_Description: 'รายละเอียดรอบการบันทึก',
+  Session_Detail: 'รายละเอียดรอบการบันทึก',
+  Session_Details: 'รายละเอียดรอบการบันทึกทั้งหมด',
+  Session_Transaction: 'รายการธุรกรรมประจำรอบ',
+  Session_Transactions: 'รายการธุรกรรมทั้งหมดประจำรอบ'
 }

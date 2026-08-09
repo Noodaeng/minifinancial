@@ -137,5 +137,12 @@ export default {
   Port_Id: 'Port Id',
   Credit_Port_Id: 'Credit Port Id',
   Debit_Port_Id: 'Debit Port Id',
-  Session_Type: 'Session Type'
+  Session_Type: 'Session Type',
+  Total_Amount: 'Total Amount',
+  Total_Count: 'Total Count',
+  Session_Description: 'Session Description',
+  Session_Detail: 'Session Detail',
+  Session_Details: 'Session Details',
+  Session_Transaction: 'Session Transaction',
+  Session_Transactions: 'Session Transactions'
 }

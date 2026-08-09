@@ -19,11 +19,13 @@ export interface QSelectOption {
   value: string | number
   label: string
 }
-export interface PortDetail {
+export interface PortSessionDetail {
   enabled: boolean
   visible: boolean
   description: string
   iconName: string
+  totalAmount: number
+  totalCount: number
 }
 export interface CategoryMeta {
   value: AccountCategory
@@ -34,4 +36,17 @@ export interface CategoryMeta {
   crEffect: '+' | '-'
   icon: string
   color: string
+  totalCredit: number
+  totalDebit: number
+}
+export interface PortTypeSummary {
+  sessionType: number
+  totalAmount: number
+  count: number
+}
+export interface AccountCategorySummary {
+  category: number
+  type: 'credit' | 'debit'
+  totalAmount: number
+  count: number
 }

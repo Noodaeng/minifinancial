@@ -1,9 +1,10 @@
 <template>
   <q-page class="bg-body text-appText q-pa-md">
-    <div class="row q-col-gutter-md">
-      <!-- LEFT SIDE -->
-      <div class="col-12 col-md-4">
-        <q-card class="bg-body text-appText flat bordered full-height-card">
+    <div class="row q-col-gutter-md items-stretch">
+      <!-- LEFT SIDE: Controls, Port List, and Session Summary -->
+      <div class="col-12 col-md-4 col-lg-3 column">
+        <q-card class="bg-body text-appText flat bordered full-height-card column no-wrap fit">
+          <!-- Top Controls -->
           <div class="row justify-between items-center q-pa-sm">
             <StateCtrlBtn
               :enbBtnCreate="canCreate"
@@ -14,19 +15,35 @@
             />
           </div>
           <q-separator />
-          <ListComp
-            :rows="filteredRows"
-            :columns="listColumns"
-            @onRowClick="onRowClick"
-            @onFilter="onFilter"
-          />
+
+          <!-- Dynamic Port List (Expands to fill remaining vertical height) -->
+          <div class="col scroll">
+            <ListComp
+              :rows="filteredRows"
+              :columns="listColumns"
+              @onRowClick="onRowClick"
+              @onFilter="onFilter"
+            />
+          </div>
+
+          <q-separator />
+
+          <!-- Pinned Bottom Session Summary -->
+          <div class="q-pa-xs bg-surface">
+            <PortTypeSessionComp
+              :sessionTypeSummaries="sessionTypeSummaries"
+              :portType="portType"
+            />
+          </div>
         </q-card>
       </div>
 
-      <!-- RIGHT SIDE -->
-      <div class="col-12 col-md-8">
-        <q-card class="bg-body text-appText flat bordered full-height-card q-pa-md fit">
-          <!-- Top PortComp -->
+      <!-- RIGHT SIDE: Port Form & Session Details -->
+      <div class="col-12 col-md-8 col-lg-9 column">
+        <q-card
+          class="bg-body text-appText flat bordered full-height-card q-pa-md fit column no-wrap"
+        >
+          <!-- Top Port Component Form -->
           <PortComp
             ref="myPortComp"
             :custOption="custOption"
@@ -39,51 +56,59 @@
             class="q-mb-md"
           />
 
-          <!-- Responsive row -->
-          <div class="row q-col-gutter-md">
-            <div class="col-12 col-sm-6">
-              <ListComp
-                :rows="sesFilterRows"
-                :columns="sesListColumns"
-                @onRowClick="onSesRowClick"
-                @onFilter="sesOnfilter"
-              >
-                <template v-slot:append>
-                  <q-dialog
-                    v-model="isDialogOpen"
-                    class="bg-body text-appText"
-                    transition-show="scale"
-                    transition-hide="scale"
-                  >
-                    <PortDialogComp
-                      ref="myDiaComp"
-                      :info="session"
-                      :portType="portType"
-                      :creditColumns="listColumns"
-                      :creditRows="filteredCreditRows"
-                      :debitColumns="listColumns"
-                      :debitRows="filteredDebitRows"
-                      :enbBtnSave="sesCanSave"
-                      :creditPortIdGuide="lastCreditPort ?? ''"
-                      :debitPortIdGuide="lastDebitPort ?? ''"
-                      @onClickSave="saveSession"
-                    ></PortDialogComp>
-                  </q-dialog>
-                </template>
-              </ListComp>
+          <!-- Responsive Split View for Sessions & Session Details -->
+          <div class="row q-col-gutter-md col">
+            <!-- Left Half: Session List (Given more width for table columns) -->
+            <div class="col-12 col-lg-7 col-xl-8 column">
+              <div class="col scroll">
+                <ListComp
+                  :rows="sesFilterRows"
+                  :columns="sesListColumns"
+                  @onRowClick="onSesRowClick"
+                  @onFilter="sesOnfilter"
+                />
+              </div>
             </div>
-            <div class="col-12 col-sm-6">
-              <PortSessionComp
-                :details="sessionDetails"
-                :isPortValid="isPortValid"
-                @onSessionClick="handleSessionClick"
-              />
+
+            <!-- Right Half: Session Card Details (Given appropriate summary width) -->
+            <div class="col-12 col-lg-5 col-xl-4 column">
+              <div class="col scroll">
+                <PortSessionComp
+                  :details="sessionDetails"
+                  :portSessionSummaries="portSessionSummaries"
+                  :isPortValid="isPortValid"
+                  @onSessionClick="handleSessionClick"
+                />
+              </div>
             </div>
           </div>
         </q-card>
       </div>
     </div>
-    {{ childIcon }}
+
+    <!-- Root Level Dialog for Session Editing/Creation -->
+    <q-dialog
+      v-model="isDialogOpen"
+      class="bg-body text-appText"
+      transition-show="scale"
+      transition-hide="scale"
+    >
+      <PortDialogComp
+        ref="myDiaComp"
+        :info="session"
+        :portType="portType"
+        :creditColumns="listColumns"
+        :creditRows="filteredCreditRows"
+        :debitColumns="listColumns"
+        :debitRows="filteredDebitRows"
+        :enbBtnSave="sesCanSave"
+        :creditPortIdGuide="lastCreditPort ?? ''"
+        :debitPortIdGuide="lastDebitPort ?? ''"
+        @onClickSave="saveSession"
+      />
+    </q-dialog>
+
+    <div v-if="childIcon" class="hidden">{{ childIcon }}</div>
   </q-page>
 </template>
 
@@ -93,12 +118,14 @@ import PortComp from '../../components/PortComp.vue'
 import PortSessionComp from '../../components/PortSessionComp.vue'
 import PortDialogComp from '../../components/PortDialogComp.vue'
 import ListComp from '../../components/utils/ListComp.vue'
+import PortTypeSessionComp from '../../components/PortTypeSessionComp.vue'
 import StateCtrlBtn from '../../components/utils/StateCtrlBtn.vue'
 import { usePortProp } from '../../hooks/usePortProp.js'
 import { usePortSession } from '../../hooks/usePortSession.js'
 import { EPortType } from '../../types/myEnums.js'
+import { PortTypeSummary } from '../../types/myTypes.js'
 
-import { getGuideRows, getPreviousUsedPortId } from '../../modules/appUtils.js'
+import { getGuideRows, getPreviousUsedPortId, getPortSessionInfo } from '../../modules/appUtils.js'
 export default defineComponent({
   name: 'PortPage',
   components: {
@@ -106,10 +133,10 @@ export default defineComponent({
     ListComp,
     StateCtrlBtn,
     PortSessionComp,
-    PortDialogComp
+    PortDialogComp,
+    PortTypeSessionComp
   },
   props: {
-    // 1. This matches the ':portType' param string from your router file
     portType: {
       type: [String, Number] as PropType<string | number | EPortType>,
       default: EPortType.CashAndDeposits
@@ -122,27 +149,26 @@ export default defineComponent({
   data() {
     return {}
   },
-  // 2. Accept 'props' here so we can access them dynamically
   setup(props, { emit }) {
     const myPortComp = ref<InstanceType<typeof PortComp>>()
     const myDiaComp = ref<InstanceType<typeof PortDialogComp>>()
     const useSession = usePortSession()
     const isDialogOpen = ref(false)
-    // 3. Convert the value to a Number if your enum expects numbers
-
-    // 4. Feed the route param into your hook instead of hardcoding it!
     const usePort = usePortProp()
 
     onMounted(async () => {
       await usePort.initOtherList()
       await init()
+      await usePort.updateSessionSummaries()
     })
+
     watch(
       () => props.portType,
       async () => {
         await init()
       }
     )
+
     watch(
       () => usePort.item.value.portId,
       async () => {
@@ -150,16 +176,16 @@ export default defineComponent({
         if (useSession.portId.value && useSession.portId.value !== '') {
           await useSession.initSessions()
         }
+        await usePort.updateSessionSummaries()
       }
     )
-    // Define a clean click handler function
+
     const handleSessionClick = (index: number) => {
       console.log('------- click session index:', index)
       useSession.onCreateSession(index)
       isDialogOpen.value = true
     }
 
-    // In init(), simply initialize empty slots or assign static references
     const init = async () => {
       usePort.portType.value = props.portType
       useSession.portType.value = props.portType
@@ -167,10 +193,11 @@ export default defineComponent({
       usePort.clearValidate.value = () => {
         myPortComp.value?.clearValidation()
       }
-
+      usePort.items.value = []
+      useSession.items.value = []
       await usePort.Init()
     }
-    //++++++++++++++++
+
     const savePort = async () => {
       const valid = await myPortComp.value?.getValidate()
       if (!valid) {
@@ -179,6 +206,7 @@ export default defineComponent({
       }
       usePort.onSave()
     }
+
     const saveSession = async () => {
       const valid = await myDiaComp.value?.getValidate()
       if (!valid) {
@@ -188,10 +216,11 @@ export default defineComponent({
       useSession.onSave()
       isDialogOpen.value = false
     }
+
     const custOption = computed(() => usePort.rawOptionToQSelectOptions('customers'))
     const brokerOption = computed(() => usePort.rawOptionToQSelectOptions('brokers'))
     const sessionDetails = computed(() =>
-      useSession.getPortSessionInfo(usePort.item.value?.portSubType ?? 0)
+      getPortSessionInfo(props.portType, usePort.item.value?.portSubType ?? 0)
     )
     const filteredCreditRows = computed(() =>
       getGuideRows(usePort.items.value, usePort.item.value, useSession.item.value.sessionType, true)
@@ -227,6 +256,7 @@ export default defineComponent({
         isDialogOpen.value = true
       }
     }
+
     return {
       splitterModel: ref(35),
       myPortComp,
@@ -240,6 +270,7 @@ export default defineComponent({
       port: usePort.item,
       ports: usePort.items,
       rawOptions: usePort.rawOptions,
+      sessionTypeSummaries: usePort.portTypeSummaries,
       onRowClick: usePort.onRowClick,
       onFilter: usePort.onFilter,
       onCreate: usePort.onCreatePort,
@@ -261,20 +292,23 @@ export default defineComponent({
       sesCanSave: useSession.canSave,
       saveSession,
       lastCreditPort,
-      lastDebitPort
+      lastDebitPort,
+      portSessionSummaries: usePort.portSessionSummaries
     }
   }
 })
 </script>
+
 <style lang="sass" scoped>
-@media (max-width: 600px)
+.full-height-card
+  min-height: 80vh
+  display: flex
+  flex-direction: column
+
+.scroll
+  overflow-y: auto
+
+@media (max-width: $breakpoint-xs-max)
   .full-height-card
     min-height: auto
-    width: 100%
-    margin-bottom: 1rem
-
-  .q-card
-    font-size: 0.9rem
-    padding: 8px
-    box-sizing: border-box
 </style>
