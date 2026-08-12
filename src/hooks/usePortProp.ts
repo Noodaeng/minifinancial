@@ -121,6 +121,7 @@ export function usePortProp() {
     crud.item.value.brokerId = '0'
     crud.item.value.createBy = crud.currentUser
     crud.item.value.createOn = currentDateTimeStr
+    crud.item.value.status = 1
   }
   // +++++++ Call other Api +++++++++++++++++++++++
 
@@ -145,6 +146,9 @@ export function usePortProp() {
   const updateSessionSummaries = async () => {
     portSessionSummaries.value = await getSessionTypesBreakdown()
   }
+
+  // Inside setup(props, { emit })
+
   // 5. Spread all generic methods and merge your local overrides
   //+++++++++++++++++++Api+++++++++++++++++++
   async function getSessionTypesByPortType(): Promise<PortTypeSummary[]> {

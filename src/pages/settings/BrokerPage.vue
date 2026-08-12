@@ -29,26 +29,31 @@
       <div class="col-12 col-md-8">
         <div class="column justify-between full-height">
           <q-card class="bg-body text-appText flat bordered q-mb-md">
-            <BrokerComp
-              ref="myChild"
-              :info="broker"
-              :enbBtnSave="canSave"
-              @onClickSave="onSave"
-              :childIcon="childIcon"
-            />
+            <q-card-section class="q-pb-none">
+              <BrokerComp
+                ref="myChild"
+                :info="broker"
+                :enbBtnSave="canSave"
+                @onClickSave="onSave"
+                :childIcon="childIcon"
+              />
+            </q-card-section>
+            <q-card-section>
+              <MultiPortTypeSessionComp :sessionTypeSummaries="sessionTypeSummaries" />
+            </q-card-section>
           </q-card>
         </div>
       </div>
     </div>
-    <div class="q-mt-sm text-caption text-grey">{{ state }} - {{ broker }}</div>
   </q-page>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue'
+import { defineComponent, ref, onMounted, watch } from 'vue'
 import BrokerComp from '../../components/BrokerComp.vue'
 import ListComp from '../../components/utils/ListComp.vue'
 import StateCtrlBtn from '../../components/utils/StateCtrlBtn.vue'
+import MultiPortTypeSessionComp from '../../components/MultiPortTypeSessionComp.vue'
 import { useBrokerProp } from '../../hooks/useBrokerProp'
 
 export default defineComponent({
@@ -56,7 +61,8 @@ export default defineComponent({
   components: {
     BrokerComp,
     ListComp,
-    StateCtrlBtn
+    StateCtrlBtn,
+    MultiPortTypeSessionComp
   },
   props: {
     childIcon: {
@@ -73,8 +79,14 @@ export default defineComponent({
         myChild.value?.clearValidation()
       }
       await useBroker.Init()
+      await useBroker.onInitBrokerSession()
     })
-
+    watch(
+      () => useBroker.item.value.brokerId,
+      async () => {
+        await useBroker.onInitBrokerSession()
+      }
+    )
     const save = async () => {
       const valid = await myChild.value?.getValidate()
       if (!valid) {
@@ -98,6 +110,7 @@ export default defineComponent({
       canCreate: useBroker.canCreate,
       canSave: useBroker.canSave,
       state: useBroker.state,
+      sessionTypeSummaries: useBroker.sessionTypeSummaries,
       myChild
     }
   }

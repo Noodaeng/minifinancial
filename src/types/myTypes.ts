@@ -51,3 +51,9 @@ export interface AccountCategorySummary {
   totalAmount: number
   count: number
 }
+export interface MultiPortTypeSummary {
+  portType: number
+  sessionType: number
+  totalAmount: number
+  count: number
+}

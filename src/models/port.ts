@@ -8,7 +8,7 @@ export default class Port {
   createBy = ''
   createOn = ''
 
-  status = ''
+  status = 0
   remark = ''
 
   customerId = ''

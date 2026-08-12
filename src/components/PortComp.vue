@@ -76,16 +76,21 @@
 
           <!-- Row 2 Items -->
           <div class="col-12 col-sm-6 col-md-3">
-            <q-input
-              outlined
+            <q-select
               v-model="model.status"
-              :label="$t('Status')"
+              class="bg-body text-appText"
               label-color="appLabel"
+              :label="$t('Status')"
               :hint="$t('Status')"
-              :rules="strRule"
+              :options="statusOption"
+              :rules="selectorRule"
               lazy-rules
               dense
-              input-class="text-appText"
+              outlined
+              emit-value
+              map-options
+              options-dense
+              popup-content-class="bg-body text-appText"
             />
           </div>
 
@@ -105,7 +110,10 @@
           </div>
 
           <!-- Row 3 Items -->
-          <div class="col-12 col-sm-6 col-md-3 bg-body text-appText">
+          <div
+            v-if="isFieldVisible('customerId')"
+            class="col-12 col-sm-6 col-md-3 bg-body text-appText"
+          >
             <q-select
               v-model="model.customerId"
               label-color="appLabel"
@@ -122,7 +130,7 @@
               popup-content-class="bg-body text-appText"
             />
           </div>
-          <div class="col-12 col-sm-6 col-md-3">
+          <div v-if="isFieldVisible('brokerId')" class="col-12 col-sm-6 col-md-3">
             <q-select
               v-model="model.brokerId"
               class="bg-body text-appText"
@@ -234,7 +242,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, PropType, computed } from 'vue'
+import { defineComponent, ref, PropType, computed, watch } from 'vue'
 import {
   modelConverter,
   enumToString,
@@ -244,9 +252,10 @@ import {
 import Port from '../models/port'
 import { useValidationRules } from '../hooks/useValidationRules'
 import { i18n } from '../i18n'
-import { EPortType, EPaymentTerm } from '../types/myEnums'
+import { EPortType, EPaymentTerm, EPortStatus } from '../types/myEnums'
 import { QSelectOption } from '../types/myTypes'
 import SaveCancelBtn from '../components/utils/SaveCancelBtn.vue'
+import { usePortField } from '../hooks/usePortField'
 export default defineComponent({
   name: 'PortComp',
   components: { SaveCancelBtn },
@@ -285,7 +294,14 @@ export default defineComponent({
     const myForm = ref()
     const { t } = i18n.global
     const rules = useValidationRules(t)
-
+    const useField = usePortField()
+    useField.portType.value = props.portType
+    watch(
+      () => props.portType,
+      async () => {
+        useField.portType.value = props.portType
+      }
+    )
     const clearValidation = () => {
       myForm.value?.resetValidation()
     }
@@ -307,6 +323,7 @@ export default defineComponent({
       portInfo,
       subTypeOption,
       paymentOption: enumToQSelectOptions(EPaymentTerm),
+      statusOption: enumToQSelectOptions(EPortStatus),
       portTypeOption,
       strRule,
       emailRule,
@@ -315,7 +332,8 @@ export default defineComponent({
       myForm,
       checkboxRule,
       clearValidation,
-      getValidate
+      getValidate,
+      isFieldVisible: useField.isFieldVisible
     }
   },
   methods: {}

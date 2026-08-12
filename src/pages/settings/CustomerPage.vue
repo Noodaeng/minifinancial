@@ -29,32 +29,38 @@
       <div class="col-12 col-md-8">
         <div class="column justify-between full-height">
           <q-card class="bg-body text-appText flat bordered q-mb-md">
-            <CustomerComp
-              ref="myChild"
-              :info="customer"
-              :enbBtnSave="canSave"
-              @onClickSave="onSave"
-              :childIcon="childIcon"
-            />
+            <q-card-section class="q-pb-none">
+              <CustomerComp
+                ref="myChild"
+                :info="customer"
+                :enbBtnSave="canSave"
+                @onClickSave="onSave"
+                :childIcon="childIcon"
+              />
+            </q-card-section>
+            <q-card-section>
+              <MultiPortTypeSessionComp :sessionTypeSummaries="sessionTypeSummaries" />
+            </q-card-section>
           </q-card>
         </div>
       </div>
     </div>
-    <div class="q-mt-sm text-caption text-grey">{{ state }} - {{ customer }}</div>
   </q-page>
 </template>
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue'
+import { defineComponent, ref, onMounted, watch } from 'vue'
 import CustomerComp from '../../components/CustomerComp.vue'
 import ListComp from '../../components/utils/ListComp.vue'
 import StateCtrlBtn from '../../components/utils/StateCtrlBtn.vue'
+import MultiPortTypeSessionComp from '../../components/MultiPortTypeSessionComp.vue'
 import { useCustomerProp } from '../../hooks/useCustomerProp'
 export default defineComponent({
   name: 'CustomerPage',
   components: {
     CustomerComp,
     ListComp,
-    StateCtrlBtn
+    StateCtrlBtn,
+    MultiPortTypeSessionComp
   },
   props: {
     childIcon: {
@@ -73,7 +79,14 @@ export default defineComponent({
         myChild.value?.clearValidation()
       }
       await useCustomer.Init()
+      await useCustomer.onInitCusSession()
     })
+    watch(
+      () => useCustomer.item.value.customerId,
+      async () => {
+        await useCustomer.onInitCusSession()
+      }
+    )
     const save = async () => {
       const valid = await myChild.value?.getValidate()
       if (!valid) {
@@ -97,6 +110,7 @@ export default defineComponent({
       canCreate: useCustomer.canCreate,
       canSave: useCustomer.canSave,
       state: useCustomer.state,
+      sessionTypeSummaries: useCustomer.sessionTypeSummaries,
       myChild
     }
   },

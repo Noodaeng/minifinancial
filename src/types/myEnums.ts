@@ -74,7 +74,67 @@ export enum EPortType {
   RetainedEarnings = 15, // กำไรสะสม
   OtherReserves = 16 // สำรองอื่น ๆ และส่วนเกินมูลค่าหุ้น
 }
+export enum EPortStatus {
+  // --- Lifecycle & Processing Statuses ---
 
+  /**
+   * Draft / ร่างรายการ
+   * Newly created record, not yet active, validated, or affecting ledgers.
+   */
+  Draft = 0,
+
+  /**
+   * Active / In Effect / มีผลใช้งาน
+   * Currently active port item (e.g., active loan, active holding, ongoing liability, operational account).
+   */
+  Active = 1,
+
+  /**
+   * Pending Approval / รอการอนุมัติหรือตรวจสอบ
+   * Awaiting authorization, compliance check, or reconciliation before becoming active/settled.
+   */
+  Pending = 2,
+
+  /**
+   * Suspended / Frozen / ระงับชั่วคราว
+   * Temporarily frozen due to dispute, regulatory hold, or administrative review.
+   */
+  Suspended = 3,
+
+  // --- Termination & Completion Statuses ---
+
+  /**
+   * Settled / Closed / ปิดรายการ / ชำระครบถ้วน
+   * Transaction fully realized, loan fully paid back, payable settled, or revenue/expense recognized and closed.
+   */
+  Closed = 4,
+
+  /**
+   * Cancelled / Voided / ยกเลิกรายการ
+   * Entry voided due to creation error or cancelled transaction before realization.
+   */
+  Cancelled = 5,
+
+  /**
+   * Written Off / Disposed / ตัดสูญหรือจำหน่ายออก
+   * Asset written off as bad debt, investment fully written down, or liability discharged via bankruptcy/restructuring.
+   */
+  WrittenOff = 6,
+
+  // --- Exception & Risk Statuses ---
+
+  /**
+   * Defaulted / Non-Performing / ผิดนัดชำระ / NPL
+   * Applicable primarily to Loans/Payables/Securities when payment schedules or contractual obligations fail.
+   */
+  Defaulted = 7,
+
+  /**
+   * Mature / Due for Settlement / ครบกำหนดชำระ
+   * Instruments (like fixed deposits, debt securities, payable due dates) that have reached maturity and await final liquidation.
+   */
+  Matured = 8
+}
 export enum CashAndDepositsSubType {
   Cash = 0, // เงินสด
   SavingsAccount = 1, // บัญชีออมทรัพย์
