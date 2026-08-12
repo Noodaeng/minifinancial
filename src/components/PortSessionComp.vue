@@ -4,10 +4,12 @@
     <div class="row items-center justify-between q-mb-xs flex-shrink-0">
       <div class="row items-center">
         <q-icon name="mdi-swap-horizontal" size="sm" class="q-mr-xs text-grey-7" />
-        <div class="text-caption text-weight-bold text-grey-7">Port Session Details</div>
+        <div class="text-caption text-weight-bold text-grey-7">
+          {{ $t('Session_List') }} : {{ $t('Total') }}
+        </div>
       </div>
-      <q-badge v-if="updateDetails && updateDetails.length" outline color="grey-6" size="xs">
-        {{ updateDetails.filter(s => s.enabled && isPortValid).length }} Sessions
+      <q-badge outline :color="sumValue < 0 ? 'red' : sumValue > 0 ? 'green' : 'grey-6'" size="xs">
+        {{ formatCurrency(sumValue) }}
       </q-badge>
     </div>
 
@@ -61,7 +63,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
+import { defineComponent, PropType, computed, ref } from 'vue'
 import { i18n } from '../i18n'
 import { PortSessionDetail, PortTypeSummary } from '../types/myTypes'
 import { formatCurrency } from '../modules/appUtils.js'
@@ -113,7 +115,19 @@ export default defineComponent({
       return updatedList
     })
 
-    return { onSessionClick, formatCurrency, updateDetails, t }
+    const sumValue = computed(() => {
+      let sumVal = 0
+      updateDetails.value.forEach(detail => {
+        if (detail.effect === '+') {
+          sumVal += detail.totalAmount
+        } else if (detail.effect === '-') {
+          sumVal -= detail.totalAmount
+        }
+      })
+      return sumVal
+    })
+
+    return { onSessionClick, formatCurrency, updateDetails, sumValue, t }
   }
 })
 </script>

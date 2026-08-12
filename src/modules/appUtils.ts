@@ -1153,7 +1153,8 @@ export const getPortSessionInfo = (
           description: t('Deposit'),
           iconName: 'mdi-cash-plus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         },
         {
           enabled: true,
@@ -1161,7 +1162,8 @@ export const getPortSessionInfo = (
           description: t('Withdrawal'),
           iconName: 'mdi-cash-minus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         },
         {
           enabled: true,
@@ -1169,7 +1171,8 @@ export const getPortSessionInfo = (
           description: t('InterestIncome'),
           iconName: 'mdi-cash-clock',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         },
         {
           enabled: true,
@@ -1177,7 +1180,8 @@ export const getPortSessionInfo = (
           description: t('Transfer'),
           iconName: 'mdi-cash-refund',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         }
       ]
 
@@ -1189,7 +1193,8 @@ export const getPortSessionInfo = (
           description: t('LoanIssued'),
           iconName: 'mdi-cash-minus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         },
         {
           enabled: true,
@@ -1197,7 +1202,8 @@ export const getPortSessionInfo = (
           description: t('LoanRepayment'),
           iconName: 'mdi-cash-plus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         },
         {
           enabled: true,
@@ -1205,7 +1211,8 @@ export const getPortSessionInfo = (
           description: t('LoanInterestAccrual'),
           iconName: 'mdi-cash-fast',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         },
         {
           enabled: true,
@@ -1213,7 +1220,8 @@ export const getPortSessionInfo = (
           description: t('BadDebtWriteOff'),
           iconName: 'mdi-cash-remove',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         },
         {
           enabled: true,
@@ -1221,7 +1229,8 @@ export const getPortSessionInfo = (
           description: t('LoanReFinance'),
           iconName: 'mdi-cash-sync',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         },
         {
           enabled: true,
@@ -1229,7 +1238,8 @@ export const getPortSessionInfo = (
           description: t('BrokerPayment'),
           iconName: 'mdi-cash-minus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         }
       ]
 
@@ -1241,7 +1251,8 @@ export const getPortSessionInfo = (
           description: t('SecurityPurchase'),
           iconName: 'mdi-cash-100',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         },
         {
           enabled: true,
@@ -1249,7 +1260,8 @@ export const getPortSessionInfo = (
           description: t('SecuritySale'),
           iconName: 'mdi-cash-fast',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         },
         {
           enabled: true,
@@ -1257,7 +1269,8 @@ export const getPortSessionInfo = (
           description: t('CouponPayment'),
           iconName: 'mdi-cash-fast',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         },
         {
           enabled: true,
@@ -1265,7 +1278,8 @@ export const getPortSessionInfo = (
           description: t('FairValueAdjustment'),
           iconName: 'mdi-cash-multiple',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         }
       ]
 
@@ -1277,7 +1291,8 @@ export const getPortSessionInfo = (
           description: t('EquityPurchase'),
           iconName: 'mdi-network-pos',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         },
         {
           enabled: true,
@@ -1285,7 +1300,8 @@ export const getPortSessionInfo = (
           description: t('EquitySale'),
           iconName: 'mdi-cash-fast',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         },
         {
           enabled: true,
@@ -1293,7 +1309,8 @@ export const getPortSessionInfo = (
           description: t('DividendCollected'),
           iconName: 'mdi-cash-plus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         },
         {
           enabled: true,
@@ -1301,7 +1318,8 @@ export const getPortSessionInfo = (
           description: t('EquityMethodAdjustment'),
           iconName: 'mdi-cash-sync',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         }
       ]
 
@@ -1314,7 +1332,8 @@ export const getPortSessionInfo = (
           description: t('RealEstatePurchase'),
           iconName: 'mdi-home-group',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         },
         {
           enabled: subType === OtherInvestmentsSubType.RealEstate,
@@ -1322,7 +1341,8 @@ export const getPortSessionInfo = (
           description: t('RentalIncome'),
           iconName: 'mdi-cash-multiple',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         },
         // MutualFund (subType = 1)
         {
@@ -1331,7 +1351,8 @@ export const getPortSessionInfo = (
           description: t('MutualFundInvestment'),
           iconName: 'mdi-cash-multiple',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         },
         {
           enabled: subType === OtherInvestmentsSubType.MutualFund,
@@ -1339,7 +1360,8 @@ export const getPortSessionInfo = (
           description: t('DisposalGain'),
           iconName: 'mdi-cash-plus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         },
         {
           enabled: subType === OtherInvestmentsSubType.MutualFund,
@@ -1347,7 +1369,8 @@ export const getPortSessionInfo = (
           description: t('DisposalLoss'),
           iconName: 'mdi-cash-minus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         },
         // CommunitySavingShare (subType = 2)
         {
@@ -1356,7 +1379,8 @@ export const getPortSessionInfo = (
           description: t('SavingSharePayment'),
           iconName: 'mdi-cash-minus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         },
         {
           enabled: subType === OtherInvestmentsSubType.CommunitySavingShare,
@@ -1364,7 +1388,8 @@ export const getPortSessionInfo = (
           description: t('SavingShareIncome'),
           iconName: 'mdi-cash-plus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         },
         // Insurance (subType = 3)
         {
@@ -1373,7 +1398,8 @@ export const getPortSessionInfo = (
           description: t('InsurancePremium'),
           iconName: 'mdi-cash-minus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         },
         {
           enabled: subType === OtherInvestmentsSubType.Insurance,
@@ -1381,7 +1407,8 @@ export const getPortSessionInfo = (
           description: t('InsuranceBenefit'),
           iconName: 'mdi-cash-plus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         }
       ]
 
@@ -1396,7 +1423,8 @@ export const getPortSessionInfo = (
           description: t('Drawdown'),
           iconName: 'mdi-cash-plus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         },
         {
           enabled: true,
@@ -1404,7 +1432,8 @@ export const getPortSessionInfo = (
           description: t('Repayment'),
           iconName: 'mdi-cash-minus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         },
         {
           enabled: true,
@@ -1412,7 +1441,8 @@ export const getPortSessionInfo = (
           description: t('BorrowingInterestAccrual'),
           iconName: 'mdi-cash-clock',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         },
         {
           enabled: true,
@@ -1420,7 +1450,8 @@ export const getPortSessionInfo = (
           description: t('BorrowingRefinance'),
           iconName: 'mdi-cash-refresh',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         }
       ]
 
@@ -1432,7 +1463,8 @@ export const getPortSessionInfo = (
           description: t('InvoiceReceived'),
           iconName: 'mdi-file-document-outline',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '0'
         },
         {
           enabled: true,
@@ -1440,7 +1472,8 @@ export const getPortSessionInfo = (
           description: t('PaymentMade'),
           iconName: 'mdi-cash-minus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         },
         {
           enabled: true,
@@ -1448,7 +1481,8 @@ export const getPortSessionInfo = (
           description: t('CreditNoteReceived'),
           iconName: 'mdi-file-undo-outline',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         }
       ]
 
@@ -1463,7 +1497,8 @@ export const getPortSessionInfo = (
           description: t('ServiceInvoiced'),
           iconName: 'mdi-file-sign',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '0'
         },
         {
           enabled: true,
@@ -1471,7 +1506,8 @@ export const getPortSessionInfo = (
           description: t('RevenueRecognition'),
           iconName: 'mdi-cash-check',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '0'
         },
         {
           enabled: true,
@@ -1479,7 +1515,8 @@ export const getPortSessionInfo = (
           description: t('CashReceived'),
           iconName: 'mdi-cash-plus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         }
       ]
 
@@ -1491,7 +1528,8 @@ export const getPortSessionInfo = (
           description: t('InterestReceived'),
           iconName: 'mdi-cash-plus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         },
         {
           enabled: true,
@@ -1499,7 +1537,8 @@ export const getPortSessionInfo = (
           description: t('InterestIncomeAccrued'),
           iconName: 'mdi-cash-clock',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '0'
         }
       ]
 
@@ -1511,7 +1550,8 @@ export const getPortSessionInfo = (
           description: t('DividendReceived'),
           iconName: 'mdi-cash-plus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         },
         {
           enabled: true,
@@ -1519,7 +1559,8 @@ export const getPortSessionInfo = (
           description: t('DividendDeclared'),
           iconName: 'mdi-bullhorn-outline',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         }
       ]
 
@@ -1534,7 +1575,8 @@ export const getPortSessionInfo = (
           description: t('ExpenseIncurred'),
           iconName: 'mdi-receipt-text-outline',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         },
         {
           enabled: true,
@@ -1542,7 +1584,8 @@ export const getPortSessionInfo = (
           description: t('ExpensePaid'),
           iconName: 'mdi-cash-minus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         },
         {
           enabled: true,
@@ -1550,7 +1593,8 @@ export const getPortSessionInfo = (
           description: t('BrokerFeePaid'),
           iconName: 'mdi-cash-minus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         }
       ]
 
@@ -1562,7 +1606,8 @@ export const getPortSessionInfo = (
           description: t('InterestExpenseAccrued'),
           iconName: 'mdi-cash-clock',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         },
         {
           enabled: true,
@@ -1570,7 +1615,8 @@ export const getPortSessionInfo = (
           description: t('InterestPaid'),
           iconName: 'mdi-cash-minus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         }
       ]
 
@@ -1582,7 +1628,8 @@ export const getPortSessionInfo = (
           description: t('ProvisionRecognized'),
           iconName: 'mdi-alert-circle-outline',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         },
         {
           enabled: true,
@@ -1590,7 +1637,8 @@ export const getPortSessionInfo = (
           description: t('BadDebtWrittenOff'),
           iconName: 'mdi-cash-remove',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         }
       ]
 
@@ -1602,7 +1650,8 @@ export const getPortSessionInfo = (
           description: t('AssetDisposed'),
           iconName: 'mdi-close-box-outline',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         },
         {
           enabled: true,
@@ -1610,7 +1659,8 @@ export const getPortSessionInfo = (
           description: t('FairValueLossAdjusted'),
           iconName: 'mdi-trending-down',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         }
       ]
 
@@ -1625,7 +1675,8 @@ export const getPortSessionInfo = (
           description: t('CapitalContribution'),
           iconName: 'mdi-cash-plus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         },
         {
           enabled: true,
@@ -1633,7 +1684,8 @@ export const getPortSessionInfo = (
           description: t('CapitalReduction'),
           iconName: 'mdi-cash-minus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         }
       ]
 
@@ -1645,7 +1697,8 @@ export const getPortSessionInfo = (
           description: t('DividendPayout'),
           iconName: 'mdi-cash-minus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         },
         {
           enabled: true,
@@ -1653,7 +1706,8 @@ export const getPortSessionInfo = (
           description: t('AppropriationOfEarnings'),
           iconName: 'mdi-bank-transfer-in',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         },
         {
           enabled: true,
@@ -1661,7 +1715,8 @@ export const getPortSessionInfo = (
           description: t('UnappropriatedTransfer'),
           iconName: 'mdi-bank-transfer-out',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         }
       ]
 
@@ -1673,7 +1728,8 @@ export const getPortSessionInfo = (
           description: t('SharePremiumReceived'),
           iconName: 'mdi-cash-plus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         },
         {
           enabled: true,
@@ -1681,7 +1737,8 @@ export const getPortSessionInfo = (
           description: t('ReserveAllocation'),
           iconName: 'mdi-transfer',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         },
         {
           enabled: true,
@@ -1689,7 +1746,8 @@ export const getPortSessionInfo = (
           description: t('RevaluationAdjustment'),
           iconName: 'mdi-tune-vertical',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         }
       ]
 
@@ -1704,7 +1762,8 @@ export const getPortSessionInfo = (
           description: t('Deposit'),
           iconName: 'mdi-cash-plus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '+'
         },
         {
           enabled: true,
@@ -1712,7 +1771,17 @@ export const getPortSessionInfo = (
           description: t('Withdrawal'),
           iconName: 'mdi-cash-minus',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
+        },
+        {
+          enabled: true,
+          visible: true,
+          description: t('InterestIncome'),
+          iconName: 'mdi-cash-clock',
+          totalAmount: 0,
+          totalCount: 0,
+          effect: '+'
         },
         {
           enabled: true,
@@ -1720,7 +1789,8 @@ export const getPortSessionInfo = (
           description: t('Transfer'),
           iconName: 'mdi-cash-refund',
           totalAmount: 0,
-          totalCount: 0
+          totalCount: 0,
+          effect: '-'
         }
       ]
   }
@@ -1733,4 +1803,12 @@ export const getSessionTypeDescription = (
   if (!infos || infos.length === 0 || !infos[sessionType]) return { description: '', iconName: '' }
 
   return { description: infos[sessionType].description, iconName: infos[sessionType].iconName }
+}
+export const getSessionEffect = (
+  portType: string | number | EPortType,
+  sessionType: number
+): string => {
+  const infos = getPortSessionInfo(portType, 0)
+  if (!infos || infos.length === 0 || !infos[sessionType]) return ''
+  return infos[sessionType].effect
 }

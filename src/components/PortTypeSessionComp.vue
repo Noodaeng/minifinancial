@@ -3,14 +3,13 @@
     <q-card flat class="bg-body text-appText q-pa-sm fit column">
       <!-- Header -->
       <div class="row items-center justify-between q-mb-xs">
-        <div class="text-caption text-weight-bold text-grey-7">Port Session Summary</div>
+        <div class="text-caption text-weight-bold text-grey-7">{{ $t('Total') }} :</div>
         <q-badge
-          v-if="sessionTypeSummaries && sessionTypeSummaries.length"
           outline
-          color="grey-6"
+          :color="sumValue < 0 ? 'red' : sumValue > 0 ? 'green' : 'grey-6'"
           size="xs"
         >
-          {{ totalSessionTypes }} Types
+          {{ formatCurrency(sumValue) }}
         </q-badge>
       </div>
 
@@ -68,7 +67,7 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
 import { PortTypeSummary } from '../types/myTypes.js'
-import { formatCurrency, getSessionTypeDescription } from '../modules/appUtils.js'
+import { formatCurrency, getSessionTypeDescription, getSessionEffect } from '../modules/appUtils.js'
 import { EPortType } from '../types/myEnums.js'
 export default defineComponent({
   name: 'PortTypeSessionComp',
@@ -86,11 +85,23 @@ export default defineComponent({
 
   setup(props) {
     const totalSessionTypes = computed(() => props.sessionTypeSummaries?.length || 0)
-
+    const sumValue = computed(() => {
+      let sumVal = 0
+      props.sessionTypeSummaries?.forEach(detail => {
+        const effect = getSessionEffect(props.portType, detail.sessionType)
+        if (effect === '+') {
+          sumVal += detail.totalAmount
+        } else if (effect === '-') {
+          sumVal -= detail.totalAmount
+        }
+      })
+      return sumVal
+    })
     return {
       formatCurrency,
       getSessionTypeDescription,
-      totalSessionTypes
+      totalSessionTypes,
+      sumValue
     }
   }
 })

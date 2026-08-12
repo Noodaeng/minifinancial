@@ -215,6 +215,8 @@ export default defineComponent({
       }
       useSession.onSave()
       isDialogOpen.value = false
+      await usePort.getSessionTypesByPortType()
+      await usePort.updateSessionSummaries()
     }
 
     const custOption = computed(() => usePort.rawOptionToQSelectOptions('customers'))

@@ -47,9 +47,11 @@ export default {
   Customer_Id: 'ระหัส ลูกค้า',
   Customer_Name: 'ชื่อลูกค้า',
   Amount: 'จำนวน',
+  Total: 'รวม',
   //++++++Broker++++++++
   Broker_Accounts: 'บัญชีนายหน้า',
   //++++++Port++++++++++
+  Session_List: 'รายการ ทางการเงิน',
   Asset_Ports: 'พอร์ต ทรัพย์สิน',
   CashAndDeposits: 'เงินสด / เงินฝาก',
   LoansReceivable: 'สินเชื่อและเงินให้กู้',
@@ -88,7 +90,7 @@ export default {
   LoanRepayment: 'รับชำระคืน', // รับชำระคืน
   LoanInterestAccrual: 'ดอกเบี้ยค้างรับ', // ดอกเบี้ยค้างรับ
   BadDebtWriteOff: 'ตัดหนี้สูญ', // ตัดหนี้สูญ
-  ReFinance: 'รีไฟแนนซ์', // รีไฟแนนซ์ / ปรับโครงสร้างหนี้
+  LoanReFinance: 'รีไฟแนนซ์', // รีไฟแนนซ์ / ปรับโครงสร้างหนี้
   BrokerPayment: 'จ่ายค่านายหน้า', //จ่ายค่านายหน้า
   //+++++++++++++
   SecurityPurchase: 'ซื้อพันธบัตร/หุ้นกู้', // ซื้อพันธบัตร/หุ้นกู้

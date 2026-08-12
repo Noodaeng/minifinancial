@@ -26,6 +26,7 @@ export interface PortSessionDetail {
   iconName: string
   totalAmount: number
   totalCount: number
+  effect: '+' | '-' | '0'
 }
 export interface CategoryMeta {
   value: AccountCategory

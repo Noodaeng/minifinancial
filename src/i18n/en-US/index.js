@@ -48,9 +48,11 @@ export default {
   Customer_Id: 'Customer Id',
   Customer_Name: 'Customer Name',
   Amount: 'Amount',
+  Total: 'Total',
   //++++++Broker++++++++
   Broker_Accounts: 'Broker Accounts',
   //+++++++++Port investment+++++++++++
+  Session_List: 'Session List',
   Asset_Ports: 'Asset Ports',
   CashAndDeposits: 'Cash And Deposits',
   LoansReceivable: 'Loans Receivable',
@@ -89,7 +91,7 @@ export default {
   LoanRepayment: 'Loan Repayment', // รับชำระคืน
   LoanInterestAccrual: 'Loan Interest Accrual', // ดอกเบี้ยค้างรับ
   BadDebtWriteOff: 'Bad Debt Write Off', // ตัดหนี้สูญ
-  ReFinance: 'Re-Finance', // รีไฟแนนซ์ / ปรับโครงสร้างหนี้
+  LoanReFinance: 'Re-Finance', // รีไฟแนนซ์ / ปรับโครงสร้างหนี้
   BrokerPayment: 'Broker Payment', //จ่ายค่านายหน้า
   //+++++++++++++
   SecurityPurchase: 'Security Purchase', // ซื้อพันธบัตร/หุ้นกู้
