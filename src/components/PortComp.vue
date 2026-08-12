@@ -111,7 +111,7 @@
 
           <!-- Row 3 Items -->
           <div
-            v-if="isFieldVisible('customerId')"
+            v-if="isFieldVisible('customerId', model.portSubType)"
             class="col-12 col-sm-6 col-md-3 bg-body text-appText"
           >
             <q-select
@@ -130,7 +130,10 @@
               popup-content-class="bg-body text-appText"
             />
           </div>
-          <div v-if="isFieldVisible('brokerId')" class="col-12 col-sm-6 col-md-3">
+          <div
+            v-if="isFieldVisible('brokerId', model.portSubType)"
+            class="col-12 col-sm-6 col-md-3"
+          >
             <q-select
               v-model="model.brokerId"
               class="bg-body text-appText"

@@ -3,12 +3,12 @@ import { EPortType } from '../types/myEnums'
 export function usePortField() {
   const portType: Ref<string | number | EPortType> = ref(EPortType.CashAndDeposits)
   // Define field rules per EPortType (e.g., 1 = EPortType.Loan or similar)
-  const isFieldVisible = (fieldName: string): boolean => {
+  const isFieldVisible = (fieldName: string, portSubType: number): boolean => {
     const currentPortType = Number(portType.value)
 
     switch (fieldName) {
       case 'period':
-        return [1].includes(currentPortType)
+        return [1].includes(currentPortType) && ![100].includes(portSubType)
       case 'paymentRate':
         return [1].includes(currentPortType)
       case 'paymentTerm':
