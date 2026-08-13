@@ -147,7 +147,13 @@ export function usePortProp() {
     portSessionSummaries.value = await getSessionTypesBreakdown()
   }
 
-  // Inside setup(props, { emit })
+  // Compute distinct interest rates
+  const interestGuides = computed(() => {
+    const allInterests = (crud.items.value as PortDto[]).map(p => p.interest)
+
+    // Use Set to remove duplicates and sort numerically
+    return [...new Set(allInterests)].sort((a, b) => a - b)
+  })
 
   // 5. Spread all generic methods and merge your local overrides
   //+++++++++++++++++++Api+++++++++++++++++++
@@ -198,6 +204,7 @@ export function usePortProp() {
     portType,
     portTypeSummaries,
     rawOptions,
-    portSessionSummaries
+    portSessionSummaries,
+    interestGuides
   }
 }

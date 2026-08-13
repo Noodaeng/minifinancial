@@ -237,11 +237,12 @@ export enum EOtherReservesSubType {
   LegalReserve = 1, // สำรองตามกฎหมาย (Legal Reserve)
   RevaluationReserve = 2 // ส่วนเกินทุนจากการตีราคา assets (Revaluation Surplus)
 }
-export enum EPaymentTerm {
+export enum EPaymentPeriod {
   Daily = 0,
   Monthly = 1,
   Yearly = 2
 }
+
 // Cash & Deposits
 export enum CashTransactionType {
   Deposit = 0, // ฝากเงิน

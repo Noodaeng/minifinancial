@@ -57,3 +57,5 @@ export interface MultiPortTypeSummary {
   totalAmount: number
   count: number
 }
+
+export type PeriodUnits = Record<number, string>

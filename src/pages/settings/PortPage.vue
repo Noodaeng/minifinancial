@@ -52,6 +52,7 @@
             :info="port"
             :enbBtnSave="canSave"
             :childIcon="childIcon"
+            :interestGuides="interestGuides"
             @onClickSave="savePort"
             class="q-mb-md"
           />
@@ -123,7 +124,6 @@ import StateCtrlBtn from '../../components/utils/StateCtrlBtn.vue'
 import { usePortProp } from '../../hooks/usePortProp.js'
 import { usePortSession } from '../../hooks/usePortSession.js'
 import { EPortType } from '../../types/myEnums.js'
-import { PortTypeSummary } from '../../types/myTypes.js'
 
 import { getGuideRows, getPreviousUsedPortId, getPortSessionInfo } from '../../modules/appUtils.js'
 export default defineComponent({
@@ -295,7 +295,8 @@ export default defineComponent({
       saveSession,
       lastCreditPort,
       lastDebitPort,
-      portSessionSummaries: usePort.portSessionSummaries
+      portSessionSummaries: usePort.portSessionSummaries,
+      interestGuides: usePort.interestGuides
     }
   }
 })

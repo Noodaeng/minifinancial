@@ -220,7 +220,7 @@ import {
 import Session from '../models/session'
 import { useValidationRules } from '../hooks/useValidationRules'
 import { i18n } from '../i18n'
-import { EPortType, EPaymentTerm } from '../types/myEnums'
+import { EPortType, EPaymentPeriod } from '../types/myEnums'
 import ListComp from './utils/ListComp.vue'
 import SaveCancelBtn from '../components/utils/SaveCancelBtn.vue'
 import { QPopupProxy, QTableColumn, date } from 'quasar'
@@ -340,7 +340,7 @@ export default defineComponent({
       sessionInfo,
       Session,
       model,
-      paymentOption: enumToQSelectOptions(EPaymentTerm),
+      paymentOption: enumToQSelectOptions(EPaymentPeriod),
       portTypeOption: enumToQSelectOptions(EPortType),
       strRule: rules.string(),
       amountRule: rules.floatRange(0, 1000000),

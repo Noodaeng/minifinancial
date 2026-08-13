@@ -39,11 +39,12 @@ import {
   RetainedEarningsTransactionType,
   OtherReservesTransactionType
 } from '../types/myEnums'
-import { FuncBoolAsync, QSelectOption, PortSessionDetail } from '../types/myTypes'
+import { FuncBoolAsync, QSelectOption, PortSessionDetail, PeriodUnits } from '../types/myTypes'
 import { Notify, QVueGlobals, date } from 'quasar'
 import MyConfig from './myConfig'
 import Port from '../models/port'
 import Session from '../models/session'
+const { t } = i18n.global
 export const showError = async (err: any) => {
   if (err) {
     if (err.response) {
@@ -70,7 +71,7 @@ export const isNullOrEmpty = (str: string): boolean => {
 }
 export const showAlarm = async (msgModel: NotifyMsg) => {
   try {
-    const { t } = i18n.global
+    //const { t } = i18n.global
     const description = 'Alarm_' + msgModel.AlarmId + '_Descrip'
     // console.warn('Alarm====>', description);
     const msg =
@@ -183,7 +184,7 @@ export const modelsConverter = <T>(models: object): T[] | undefined => {
 }
 
 export const enumToQSelectOptions = (myEnum: Record<string, string | number>): QSelectOption[] => {
-  const { t } = i18n.global
+  //const { t } = i18n.global
   return Object.keys(myEnum)
     .filter(key => isNaN(Number(key)))
     .map(key => ({
@@ -194,7 +195,7 @@ export const enumToQSelectOptions = (myEnum: Record<string, string | number>): Q
     }))
 }
 export const enumToString = (myEnum: Record<string, number | string>, enumKey: number): string => {
-  const { t } = i18n.global
+  //const { t } = i18n.global
   for (const key in myEnum) {
     if (Number(myEnum[key]) === enumKey) {
       return t(String(key))
@@ -349,7 +350,7 @@ export const confirmDelete = (
   info: string,
   delFunc: FuncBoolAsync
 ): Promise<boolean> => {
-  const { t } = i18n.global
+  //const { t } = i18n.global
 
   return new Promise(resolve => {
     $q.dialog({
@@ -1140,7 +1141,7 @@ export const getPortSessionInfo = (
   portType: string | number | EPortType,
   subType: number
 ): PortSessionDetail[] => {
-  const { t } = i18n.global
+  //const { t } = i18n.global
   switch (Number(portType)) {
     // =============================================================
     // ASSETS (0 - 4)
@@ -1811,4 +1812,15 @@ export const getSessionEffect = (
   const infos = getPortSessionInfo(portType, 0)
   if (!infos || infos.length === 0 || !infos[sessionType]) return ''
   return infos[sessionType].effect
+}
+
+export const periodUnits: PeriodUnits = {
+  0: t('days'),
+  1: t('months'),
+  2: t('years')
+}
+export const periodUnit: PeriodUnits = {
+  0: t('day'),
+  1: t('month'),
+  2: t('year')
 }

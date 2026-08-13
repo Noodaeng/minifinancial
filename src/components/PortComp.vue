@@ -167,13 +167,19 @@
           <div class="col-12 col-sm-6 col-md-3">
             <q-input
               outlined
-              v-model="model.interest"
-              :label="$t('Interest') + ' (%)'"
+              v-model.number="model.interest"
+              type="number"
+              :label="$t('Interest') + ' (% ' + ' / ' + periodUnit[model.paymentTerm] + ')'"
               label-color="appLabel"
-              :hint="$t('Interest')"
+              :hint="$t('Interest') + ' (% ' + ' / ' + periodUnit[model.paymentTerm] + ')'"
+              list="interest-list"
               dense
               input-class="text-appText"
             />
+            <!-- The datalist provides the custom autocomplete source -->
+            <datalist id="interest-list">
+              <option v-for="item in interestGuides" :key="item" :value="item" />
+            </datalist>
           </div>
 
           <!-- Row 4 Items -->
@@ -182,8 +188,8 @@
               v-model="model.paymentTerm"
               class="bg-body text-appText"
               label-color="appLabel"
-              :label="$t('Payment_term')"
-              :hint="$t('Payment_term')"
+              :label="$t('Payment_period')"
+              :hint="$t('Payment_period')"
               :options="paymentOption"
               :rules="selectorRule"
               lazy-rules
@@ -200,9 +206,9 @@
             <q-input
               outlined
               v-model="model.paymentRate"
-              :label="$t('Payment_rate')"
+              :label="$t('Payment_rate') + ' / ' + periodUnit[model.paymentTerm]"
               label-color="appLabel"
-              :hint="$t('Payment_rate')"
+              :hint="$t('Payment_rate') + ' / ' + periodUnit[model.paymentTerm]"
               dense
               input-class="text-appText"
             />
@@ -212,9 +218,9 @@
             <q-input
               outlined
               v-model="model.period"
-              :label="$t('Period')"
+              :label="$t('Period') + ' (' + periodUnits[model.paymentTerm] + ')'"
               label-color="appLabel"
-              :hint="$t('Period')"
+              :hint="$t('Period') + ' (' + periodUnits[model.paymentTerm] + ')'"
               dense
               input-class="text-appText"
               class="full-width q-mb-sm"
@@ -242,6 +248,7 @@
         </div>
       </q-card>
     </q-form>
+    {{ interestGuides }}
   </div>
 </template>
 <script lang="ts">
@@ -250,12 +257,14 @@ import {
   modelConverter,
   enumToString,
   enumToQSelectOptions,
-  subTypeToQSelectOptions
+  subTypeToQSelectOptions,
+  periodUnits,
+  periodUnit
 } from '../modules/appUtils'
 import Port from '../models/port'
 import { useValidationRules } from '../hooks/useValidationRules'
 import { i18n } from '../i18n'
-import { EPortType, EPaymentTerm, EPortStatus } from '../types/myEnums'
+import { EPortType, EPaymentPeriod, EPortStatus } from '../types/myEnums'
 import { QSelectOption } from '../types/myTypes'
 import SaveCancelBtn from '../components/utils/SaveCancelBtn.vue'
 import { usePortField } from '../hooks/usePortField'
@@ -291,6 +300,10 @@ export default defineComponent({
     childIcon: {
       type: String,
       default: 'mdi-widgets-outline'
+    },
+    interestGuides: {
+      type: Array as PropType<number[]>, // or PropType<Array<string>>
+      default: () => []
     }
   },
   setup(props, { emit }) {
@@ -325,7 +338,7 @@ export default defineComponent({
       model: modelConverter<Port>(props.info) ?? new Port(),
       portInfo,
       subTypeOption,
-      paymentOption: enumToQSelectOptions(EPaymentTerm),
+      paymentOption: enumToQSelectOptions(EPaymentPeriod),
       statusOption: enumToQSelectOptions(EPortStatus),
       portTypeOption,
       strRule,
@@ -336,7 +349,9 @@ export default defineComponent({
       checkboxRule,
       clearValidation,
       getValidate,
-      isFieldVisible: useField.isFieldVisible
+      isFieldVisible: useField.isFieldVisible,
+      periodUnits,
+      periodUnit
     }
   },
   methods: {}

@@ -15,6 +15,32 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
+    path: '/account',
+    component: () => import('../layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('../pages/settings/UserAccountPage.vue'),
+        meta: {
+          requiresAuth: true
+        }
+      }
+    ]
+  },
+  {
+    path: '/preference',
+    component: () => import('../layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('../pages/settings/PreferencePage.vue'),
+        meta: {
+          requiresAuth: true
+        }
+      }
+    ]
+  },
+  {
     path: '/login',
     component: () => import('../layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('../pages/settings/LoginPage.vue') }]
