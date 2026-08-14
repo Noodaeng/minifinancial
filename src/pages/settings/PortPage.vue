@@ -53,6 +53,9 @@
             :enbBtnSave="canSave"
             :childIcon="childIcon"
             :interestGuides="interestGuides"
+            :descriptionGuides="descriptionGuides"
+            :periodGuides="periodGuides"
+            :paymentRateGuides="paymentRateGuides"
             @onClickSave="savePort"
             class="q-mb-md"
           />
@@ -296,7 +299,10 @@ export default defineComponent({
       lastCreditPort,
       lastDebitPort,
       portSessionSummaries: usePort.portSessionSummaries,
-      interestGuides: usePort.interestGuides
+      interestGuides: usePort.interestGuides,
+      descriptionGuides: usePort.descriptionGuides,
+      periodGuides: usePort.periodGuides,
+      paymentRateGuides: usePort.paymentRateGuides
     }
   }
 })

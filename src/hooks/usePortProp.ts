@@ -148,6 +148,54 @@ export function usePortProp() {
   }
 
   // Compute distinct interest rates
+  const periodGuides = computed(() => {
+    const targetPortType = crud.item.value?.portType
+    const term = crud.item.value?.paymentTerm
+    const periods = (crud.items.value as PortDto[])
+      .filter(p => p.portType === targetPortType && p.paymentTerm === term && p.period)
+      .map(p => p.period)
+
+    // Use Set to remove duplicates and sort numerically
+    return [...new Set(periods)].sort((a, b) => a - b)
+  })
+  const paymentRateGuides = computed(() => {
+    const targetPortType = crud.item.value?.portType
+    const term = crud.item.value?.paymentTerm
+    const period = crud.item.value?.period
+    const interest = crud.item.value?.interest
+    const rates = (crud.items.value as PortDto[])
+      .filter(
+        p =>
+          p.portType === targetPortType &&
+          p.paymentTerm === term &&
+          p.period === period &&
+          p.interest === interest &&
+          p.paymentRate
+      )
+      .map(p => p.paymentRate)
+
+    // Use Set to remove duplicates and sort numerically
+    return [...new Set(rates)].sort((a, b) => a - b)
+  })
+  const descriptionGuides = computed(() => {
+    const targetPortType = crud.item.value?.portType
+
+    // 1. Count frequency of each description
+    const counts = new Map<string, number>()
+
+    ;(crud.items.value as PortDto[])
+      .filter(p => p.portType === targetPortType && p.description)
+      .forEach(p => {
+        counts.set(p.description, (counts.get(p.description) || 0) + 1)
+      })
+
+    // 2. Get top 10 by popularity (frequency), then sort alphabetically
+    return Array.from(counts.entries())
+      .sort((a, b) => b[1] - a[1]) // Sort by frequency descending
+      .slice(0, 10) // Take top 10
+      .map(([desc]) => desc) // Keep only the description text
+      .sort((a, b) => a.localeCompare(b)) // Sort final 10 alphabetically
+  })
   const interestGuides = computed(() => {
     const allInterests = (crud.items.value as PortDto[]).map(p => p.interest)
 
@@ -205,6 +253,9 @@ export function usePortProp() {
     portTypeSummaries,
     rawOptions,
     portSessionSummaries,
-    interestGuides
+    interestGuides,
+    descriptionGuides,
+    periodGuides,
+    paymentRateGuides
   }
 }

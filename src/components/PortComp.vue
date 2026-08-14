@@ -14,14 +14,20 @@
             <q-input
               outlined
               v-model="model.description"
+              type="text"
               :label="$t('Port_description')"
               label-color="appLabel"
               :hint="$t('Port_description')"
               :rules="strRule"
+              list="description-list"
               lazy-rules
               dense
               input-class="text-appText"
             />
+            <!-- The datalist provides the custom autocomplete source -->
+            <datalist id="description-list">
+              <option v-for="item in descriptionGuides" :key="item" :value="item" />
+            </datalist>
           </div>
           <div class="col-12 col-sm-6 col-md-3">
             <q-select
@@ -206,34 +212,37 @@
             <q-input
               outlined
               v-model="model.paymentRate"
+              type="number"
               :label="$t('Payment_rate') + ' / ' + periodUnit[model.paymentTerm]"
               label-color="appLabel"
               :hint="$t('Payment_rate') + ' / ' + periodUnit[model.paymentTerm]"
+              list="rate-list"
               dense
               input-class="text-appText"
             />
+            <!-- The datalist provides the custom autocomplete source -->
+            <datalist id="rate-list">
+              <option v-for="item in paymentRateGuides" :key="item" :value="item" />
+            </datalist>
           </div>
 
           <div class="col-12 col-sm-4 col-md-3">
             <q-input
               outlined
               v-model="model.period"
+              type="number"
               :label="$t('Period') + ' (' + periodUnits[model.paymentTerm] + ')'"
               label-color="appLabel"
               :hint="$t('Period') + ' (' + periodUnits[model.paymentTerm] + ')'"
+              list="period-list"
               dense
               input-class="text-appText"
               class="full-width q-mb-sm"
             />
-          </div>
-          <div class="col-12 col-sm-4 col-md-3">
-            <q-checkbox
-              :true-value="1"
-              :false-value="0"
-              v-model="model.isActive"
-              :label="$t('Active')"
-              :rules="checkboxRule"
-            />
+            <!-- The datalist provides the custom autocomplete source -->
+            <datalist id="period-list">
+              <option v-for="item in periodGuides" :key="item" :value="item" />
+            </datalist>
           </div>
         </div>
         <div class="row justify-end items-center q-mt-sm">
@@ -248,7 +257,6 @@
         </div>
       </q-card>
     </q-form>
-    {{ interestGuides }}
   </div>
 </template>
 <script lang="ts">
@@ -302,6 +310,18 @@ export default defineComponent({
       default: 'mdi-widgets-outline'
     },
     interestGuides: {
+      type: Array as PropType<number[]>, // or PropType<Array<string>>
+      default: () => []
+    },
+    descriptionGuides: {
+      type: Array as PropType<string[]>, // or PropType<Array<string>>
+      default: () => []
+    },
+    periodGuides: {
+      type: Array as PropType<number[]>, // or PropType<Array<string>>
+      default: () => []
+    },
+    paymentRateGuides: {
       type: Array as PropType<number[]>, // or PropType<Array<string>>
       default: () => []
     }
