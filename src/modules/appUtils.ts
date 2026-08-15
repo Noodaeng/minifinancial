@@ -39,7 +39,13 @@ import {
   RetainedEarningsTransactionType,
   OtherReservesTransactionType
 } from '../types/myEnums'
-import { FuncBoolAsync, QSelectOption, PortSessionDetail, PeriodUnits } from '../types/myTypes'
+import {
+  FuncBoolAsync,
+  QSelectOption,
+  PortSessionDetail,
+  PeriodUnits,
+  ReFinanceInfo
+} from '../types/myTypes'
 import { Notify, QVueGlobals, date } from 'quasar'
 import MyConfig from './myConfig'
 import Port from '../models/port'
@@ -1823,4 +1829,19 @@ export const periodUnit: PeriodUnits = {
   0: t('day'),
   1: t('month'),
   2: t('year')
+}
+export const getRefinanceInfo = (sessions: Session[], enb: boolean): ReFinanceInfo => {
+  const result = {
+    canRefinance: false,
+    startLoan: '',
+    loanAmount: 0,
+    interest: 0,
+    paidCount: 0,
+    totalPaid: 0,
+    lastRefinance: '',
+    shortageAmount: 0
+  }
+  if (!enb || !sessions || sessions.length <= 0) return result
+
+  return result
 }

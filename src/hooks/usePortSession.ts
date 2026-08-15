@@ -118,6 +118,7 @@ export function usePortSession() {
     crud.item.value.sessionType = sessionType
     crud.item.value.createBy = crud.currentUser
     crud.item.value.createOn = currentDateTimeStr
+    //console.log('!!!!!---sse----', crud.item.value.sessionType)
   }
   //+++++++++api+++++++++++++++++
   // 🔍 Action 1: Get All Data

@@ -106,13 +106,14 @@
         :debitColumns="listColumns"
         :debitRows="filteredDebitRows"
         :enbBtnSave="sesCanSave"
+        :visRefinal="visRefinal"
         :creditPortIdGuide="lastCreditPort ?? ''"
         :debitPortIdGuide="lastDebitPort ?? ''"
         @onClickSave="saveSession"
       />
     </q-dialog>
 
-    <div v-if="childIcon" class="hidden">{{ childIcon }}</div>
+    {{ session }}
   </q-page>
 </template>
 
@@ -127,8 +128,12 @@ import StateCtrlBtn from '../../components/utils/StateCtrlBtn.vue'
 import { usePortProp } from '../../hooks/usePortProp.js'
 import { usePortSession } from '../../hooks/usePortSession.js'
 import { EPortType } from '../../types/myEnums.js'
-
-import { getGuideRows, getPreviousUsedPortId, getPortSessionInfo } from '../../modules/appUtils.js'
+import {
+  getGuideRows,
+  getPreviousUsedPortId,
+  getPortSessionInfo,
+  getRefinanceInfo
+} from '../../modules/appUtils.js'
 export default defineComponent({
   name: 'PortPage',
   components: {
@@ -158,7 +163,7 @@ export default defineComponent({
     const useSession = usePortSession()
     const isDialogOpen = ref(false)
     const usePort = usePortProp()
-
+    const sessionType = ref(0)
     onMounted(async () => {
       await usePort.initOtherList()
       await init()
@@ -184,8 +189,8 @@ export default defineComponent({
     )
 
     const handleSessionClick = (index: number) => {
-      console.log('------- click session index:', index)
       useSession.onCreateSession(index)
+      sessionType.value = useSession.item.value.sessionType
       isDialogOpen.value = true
     }
 
@@ -259,9 +264,17 @@ export default defineComponent({
       if (row) {
         useSession.onRowClick(row)
         isDialogOpen.value = true
+        sessionType.value = useSession.item.value.sessionType
       }
     }
-
+    const visRefinal = computed(() => {
+      return (
+        [1].includes(Number(props.portType)) &&
+        [0].includes(usePort.item.value.paymentTerm) &&
+        [4].includes(useSession.item.value.sessionType)
+      )
+    })
+    const reFinanceInfo = computed(() => getRefinanceInfo(useSession.items.value, visRefinal.value))
     return {
       splitterModel: ref(35),
       myPortComp,
@@ -290,7 +303,7 @@ export default defineComponent({
       isPortValid: usePort.isPortValid,
       sessionDetails,
       session: useSession.item,
-      sessions: useSession.items,
+      sessionType,
       sesOnfilter: useSession.onFilter,
       sesFilterRows: useSession.filteredRows,
       sesListColumns: useSession.listColumns,
@@ -302,7 +315,9 @@ export default defineComponent({
       interestGuides: usePort.interestGuides,
       descriptionGuides: usePort.descriptionGuides,
       periodGuides: usePort.periodGuides,
-      paymentRateGuides: usePort.paymentRateGuides
+      paymentRateGuides: usePort.paymentRateGuides,
+      visRefinal,
+      reFinanceInfo
     }
   }
 })

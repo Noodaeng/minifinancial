@@ -59,3 +59,14 @@ export interface MultiPortTypeSummary {
 }
 
 export type PeriodUnits = Record<number, string>
+
+export interface ReFinanceInfo {
+  canRefinance: boolean
+  startLoan: string
+  loanAmount: number
+  interest: number
+  paidCount: number
+  totalPaid: number
+  lastRefinance: string
+  shortageAmount: number
+}

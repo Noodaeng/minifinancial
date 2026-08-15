@@ -56,7 +56,7 @@
               label-color="appLabel"
               :hint="$t('Amount')"
               :rules="amountRule"
-              :readonly="false"
+              :readonly="visRefinal"
               dense
               input-class="text-appText"
             />
@@ -197,7 +197,93 @@
         </div>
       </q-form>
     </q-card-section>
-
+    <!-- Re-Final Info Section -->
+    <q-card-section v-if="visRefinal" class="q-pt-none">
+      <q-separator class="q-mb-md" />
+      <div class="text-subtitle2 text-primary q-mb-sm">Refinance Information</div>
+      <div class="row q-col-gutter-md bg-body text-appText">
+        <div class="col-12 col-sm-3 col-md-3">
+          <q-input
+            outlined
+            dense
+            readonly
+            :model-value="reFinanceInfo.loanAmount"
+            label="Loan Amount"
+            label-color="appLabel"
+            input-class="text-appText"
+          />
+        </div>
+        <div class="col-12 col-sm-3 col-md-3">
+          <q-input
+            outlined
+            dense
+            readonly
+            :model-value="reFinanceInfo.interest"
+            label="Interest"
+            label-color="appLabel"
+            input-class="text-appText"
+          />
+        </div>
+        <div class="col-12 col-sm-3 col-md-3">
+          <q-input
+            outlined
+            dense
+            readonly
+            :model-value="reFinanceInfo.totalPaid"
+            label="Total Paid"
+            label-color="appLabel"
+            input-class="text-appText"
+          />
+        </div>
+        <div class="col-12 col-sm-3 col-md-3">
+          <q-input
+            outlined
+            dense
+            readonly
+            :model-value="reFinanceInfo.shortageAmount"
+            label="Shortage Amount"
+            label-color="appLabel"
+            input-class="text-appText"
+          />
+        </div>
+        <div class="col-12 col-sm-3 col-md-3">
+          <q-input
+            outlined
+            dense
+            readonly
+            :model-value="reFinanceInfo.paidCount"
+            label="Paid Count"
+            label-color="appLabel"
+            input-class="text-appText"
+          />
+        </div>
+        <div class="col-12 col-sm-3 col-md-3">
+          <q-input
+            outlined
+            dense
+            readonly
+            :model-value="reFinanceInfo.startLoan"
+            label="Start Loan"
+            label-color="appLabel"
+            input-class="text-appText"
+          />
+        </div>
+        <div class="col-12 col-sm-3 col-md-3">
+          <q-input
+            outlined
+            dense
+            readonly
+            :model-value="reFinanceInfo.lastRefinance"
+            label="Last Refinance"
+            label-color="appLabel"
+            input-class="text-appText"
+          />
+        </div>
+        <div class="col-12 col-sm-3 col-md-3 flex items-center">
+          <q-checkbox readonly :model-value="reFinanceInfo.canRefinance" label="Can Refinance" />
+        </div>
+      </div>
+    </q-card-section>
     <!-- Footer Actions -->
     <q-card-actions align="right" class="q-pa-md bg-body">
       <SaveCancelBtn
@@ -206,6 +292,7 @@
         @onClickSave="$emit('onClickSave')"
       />
     </q-card-actions>
+    {{ visRefinal }}-{{ portType }}
   </q-card>
 </template>
 
@@ -221,6 +308,7 @@ import Session from '../models/session'
 import { useValidationRules } from '../hooks/useValidationRules'
 import { i18n } from '../i18n'
 import { EPortType, EPaymentPeriod } from '../types/myEnums'
+import { ReFinanceInfo } from '../types/myTypes'
 import ListComp from './utils/ListComp.vue'
 import SaveCancelBtn from '../components/utils/SaveCancelBtn.vue'
 import { QPopupProxy, QTableColumn, date } from 'quasar'
@@ -265,6 +353,23 @@ export default defineComponent({
     enbBtnSave: {
       type: Boolean,
       default: false
+    },
+    visRefinal: {
+      type: Boolean,
+      default: false
+    },
+    reFinanceInfo: {
+      type: Object as PropType<ReFinanceInfo>,
+      default: (): ReFinanceInfo => ({
+        canRefinance: false,
+        startLoan: '',
+        loanAmount: 0,
+        interest: 0,
+        paidCount: 0,
+        totalPaid: 0,
+        lastRefinance: '',
+        shortageAmount: 0
+      })
     }
   },
 
@@ -336,6 +441,7 @@ export default defineComponent({
         Object.values(row).some(value => String(value).toLowerCase().includes(filterValue))
       )
     })
+
     return {
       sessionInfo,
       Session,
@@ -343,7 +449,7 @@ export default defineComponent({
       paymentOption: enumToQSelectOptions(EPaymentPeriod),
       portTypeOption: enumToQSelectOptions(EPortType),
       strRule: rules.string(),
-      amountRule: rules.floatRange(0, 1000000),
+      amountRule: rules.floatRange(1, 1000000),
       selectorRule: rules.enumSelect(),
       myForm,
       sessionTypeOptions,

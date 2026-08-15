@@ -12,8 +12,9 @@ export function useDataState() {
   ) => {
     // console.log(
     //   'state control--->',
+    //   state.value,
     //   `init-> ${isInit} select->${isSelected} valid->${isValidated} req->${reqCreate} `
-    //)
+    // )
     if (isInit) {
       state.value = EDataState.Init
       return
