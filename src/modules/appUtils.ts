@@ -438,7 +438,7 @@ export const getGuideRows = (
   let debitTarget: TargetMatch | null = null
   let creditTarget: TargetMatch | null = null
 
-  // Target matching currentPort specifically
+  // Helper matching currentPort specifically
   const CURRENT_PORT_TARGET: TargetMatch = {
     portType: pType,
     subTypes:
@@ -1064,6 +1064,11 @@ export const getGuideRows = (
 
   const activeTarget = isCredit ? creditTarget : debitTarget
   if (!activeTarget) return []
+
+  // Direct check: If active target is CURRENT_PORT_TARGET, return currentPort exclusively
+  if (activeTarget === CURRENT_PORT_TARGET) {
+    return [currentPort]
+  }
 
   // Ensure currentPort is in candidate list if it matches target portType
   const hasCurrentPort = ports.some(p => p.portId === currentPort.portId)

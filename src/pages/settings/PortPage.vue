@@ -116,8 +116,6 @@
         @onClickDelete="deleteSession"
       />
     </q-dialog>
-
-    {{ session }}
   </q-page>
 </template>
 
