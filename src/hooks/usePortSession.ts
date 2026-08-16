@@ -120,11 +120,13 @@ export function usePortSession() {
     crud.item.value.sessionType = sessionType
     crud.item.value.createBy = crud.currentUser
     crud.item.value.createOn = currentDateTimeStr
-    if (sessionType === 0) crud.item.value.amount = port.amount
-    if (sessionType === 1) crud.item.value.amount = port.paymentRate
-    if (sessionType === 2) crud.item.value.amount = port.amount * (port.interest / 100)
-    if (sessionType === 5) crud.item.value.amount = port.paymentRate
-    //console.log('!!!!!---sse----', crud.item.value.sessionType)
+    if (port.portType === 1) {
+      if (sessionType === 0) crud.item.value.amount = port.amount
+      if (sessionType === 1) crud.item.value.amount = port.paymentRate
+      if (sessionType === 2) crud.item.value.amount = port.amount * (port.interest / 100)
+      if (sessionType === 5) crud.item.value.amount = port.paymentRate
+      //console.log('!!!!!---sse----', crud.item.value.sessionType)
+    }
   }
   //+++++++++api+++++++++++++++++
   // 🔍 Action 1: Get All Data
