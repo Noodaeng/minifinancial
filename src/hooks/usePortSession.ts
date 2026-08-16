@@ -3,6 +3,7 @@ import { EPortType } from '../types/myEnums'
 import { useCrudProp } from './useCrudProp'
 import { showError, getSessionType, currentDateTimeStr } from '../modules/appUtils'
 import Session from '../models/session'
+import Port from '../models/port'
 import MyConfig from '../modules/myConfig'
 import { useApi } from '../services/api'
 export function usePortSession() {
@@ -111,13 +112,18 @@ export function usePortSession() {
   const onFilter = (val: string) => {
     filter.value = val
   }
-  const onCreateSession = (sessionType: number) => {
+  const onCreateSession = (sessionType: number, port: Port) => {
+    if (!port) return
     crud.onCreate()
     crud.item.value.sessionId = ''
     crud.item.value.portId = portId.value
     crud.item.value.sessionType = sessionType
     crud.item.value.createBy = crud.currentUser
     crud.item.value.createOn = currentDateTimeStr
+    if (sessionType === 0) crud.item.value.amount = port.amount
+    if (sessionType === 1) crud.item.value.amount = port.paymentRate
+    if (sessionType === 2) crud.item.value.amount = port.amount * (port.interest / 100)
+    if (sessionType === 5) crud.item.value.amount = port.paymentRate
     //console.log('!!!!!---sse----', crud.item.value.sessionType)
   }
   //+++++++++api+++++++++++++++++

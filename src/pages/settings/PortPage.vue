@@ -96,6 +96,7 @@
       class="bg-body text-appText"
       transition-show="scale"
       transition-hide="scale"
+      @before-hide="onBeforeDialogHide"
     >
       <PortDialogComp
         ref="myDiaComp"
@@ -106,10 +107,13 @@
         :debitColumns="listColumns"
         :debitRows="filteredDebitRows"
         :enbBtnSave="sesCanSave"
+        :enbBtnDelete="sesCanDelete"
         :visRefinal="visRefinal"
+        :reFinanceInfo="reFinanceInfo"
         :creditPortIdGuide="lastCreditPort ?? ''"
         :debitPortIdGuide="lastDebitPort ?? ''"
         @onClickSave="saveSession"
+        @onClickDelete="deleteSession"
       />
     </q-dialog>
 
@@ -132,7 +136,8 @@ import {
   getGuideRows,
   getPreviousUsedPortId,
   getPortSessionInfo,
-  getRefinanceInfo
+  getRefinanceInfo,
+  canCreateSession
 } from '../../modules/appUtils.js'
 export default defineComponent({
   name: 'PortPage',
@@ -189,9 +194,9 @@ export default defineComponent({
     )
 
     const handleSessionClick = (index: number) => {
-      useSession.onCreateSession(index)
+      useSession.onCreateSession(index, usePort.item.value)
       sessionType.value = useSession.item.value.sessionType
-      isDialogOpen.value = true
+      isDialogOpen.value = canCreateSession(useSession.items.value, index, usePort.item.value)
     }
 
     const init = async () => {
@@ -221,10 +226,20 @@ export default defineComponent({
         useSession.resetDataState()
         return
       }
-      useSession.onSave()
+      await useSession.onSave()
       isDialogOpen.value = false
+
       await usePort.getSessionTypesByPortType()
       await usePort.updateSessionSummaries()
+      await useSession.initSessions()
+    }
+    const deleteSession = async () => {
+      await useSession.onDelete()
+      isDialogOpen.value = false
+
+      await usePort.getSessionTypesByPortType()
+      await usePort.updateSessionSummaries()
+      await useSession.initSessions()
     }
 
     const custOption = computed(() => usePort.rawOptionToQSelectOptions('customers'))
@@ -274,7 +289,12 @@ export default defineComponent({
         [4].includes(useSession.item.value.sessionType)
       )
     })
-    const reFinanceInfo = computed(() => getRefinanceInfo(useSession.items.value, visRefinal.value))
+    const reFinanceInfo = computed(() =>
+      getRefinanceInfo(useSession.items.value, usePort.item.value, visRefinal.value)
+    )
+    const onBeforeDialogHide = () => {
+      useSession.resetDataState()
+    }
     return {
       splitterModel: ref(35),
       myPortComp,
@@ -308,7 +328,10 @@ export default defineComponent({
       sesFilterRows: useSession.filteredRows,
       sesListColumns: useSession.listColumns,
       sesCanSave: useSession.canSave,
+      sesCanDelete: useSession.canDelete,
+      deleteSession,
       saveSession,
+      onBeforeDialogHide,
       lastCreditPort,
       lastDebitPort,
       portSessionSummaries: usePort.portSessionSummaries,

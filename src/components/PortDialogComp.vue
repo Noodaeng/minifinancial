@@ -56,7 +56,7 @@
               label-color="appLabel"
               :hint="$t('Amount')"
               :rules="amountRule"
-              :readonly="visRefinal"
+              :readonly="visRefinal || model.sessionType === 0"
               dense
               input-class="text-appText"
             />
@@ -286,6 +286,19 @@
     </q-card-section>
     <!-- Footer Actions -->
     <q-card-actions align="right" class="q-pa-md bg-body">
+      <q-btn
+        icon="delete"
+        @click="$emit('onClickDelete')"
+        :disable="!enbBtnDelete"
+        unelevated
+        round
+        :class="[
+          enbBtnDelete
+            ? 'q-ma-sm shadow-3 bg-body text-appText'
+            : 'q-ma-sm shadow-3 bg-body text-appLayout'
+        ]"
+      >
+      </q-btn>
       <SaveCancelBtn
         :enbBtnDiscard="false"
         :enbBtnSave="enbBtnSave"
@@ -354,6 +367,10 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
+    enbBtnDelete: {
+      type: Boolean,
+      default: false
+    },
     visRefinal: {
       type: Boolean,
       default: false
@@ -368,12 +385,13 @@ export default defineComponent({
         paidCount: 0,
         totalPaid: 0,
         lastRefinance: '',
-        shortageAmount: 0
+        shortageAmount: 0,
+        refinanceAmount: 0
       })
     }
   },
 
-  emits: ['onClickSave'],
+  emits: ['onClickSave', 'onClickDelete'],
 
   setup(props, { emit }) {
     const myForm = ref()
@@ -386,7 +404,9 @@ export default defineComponent({
     if (!model.value.createOn) {
       model.value.createOn = date.formatDate(Date.now(), 'DD/MM/YYYY')
     }
-
+    if (props.visRefinal) {
+      model.value.amount = props.reFinanceInfo.refinanceAmount
+    }
     const popupCreditRef = ref<QPopupProxy | null>(null)
     const popupDebitRef = ref<QPopupProxy | null>(null)
 

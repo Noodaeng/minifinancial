@@ -438,6 +438,15 @@ export const getGuideRows = (
   let debitTarget: TargetMatch | null = null
   let creditTarget: TargetMatch | null = null
 
+  // Target matching currentPort specifically
+  const CURRENT_PORT_TARGET: TargetMatch = {
+    portType: pType,
+    subTypes:
+      currentPort.portSubType !== undefined && currentPort.portSubType !== null
+        ? [Number(currentPort.portSubType)]
+        : []
+  }
+
   // Standard Cash & Deposit Helper Accounts
   const CASH_SAVINGS: TargetMatch = {
     portType: EPortType.CashAndDeposits,
@@ -507,30 +516,27 @@ export const getGuideRows = (
     case EPortType.LoansReceivable:
       switch (sType) {
         case LoanTransactionType.LoanIssued:
-          debitTarget = LOAN_ALL
+          debitTarget = CURRENT_PORT_TARGET
           creditTarget = CASH_SAVINGS
           break
         case LoanTransactionType.LoanRepayment:
           debitTarget = CASH_SAVINGS
-          creditTarget = LOAN_ALL
+          creditTarget = CURRENT_PORT_TARGET
           break
         case LoanTransactionType.LoanInterestAccrual:
-          debitTarget = LOAN_ALL
-          creditTarget = {
-            portType: EPortType.InterestIncome,
-            subTypes: [EInterestIncomeSubType.LoanInterest]
-          }
+          debitTarget = CASH_SAVINGS
+          creditTarget = CURRENT_PORT_TARGET
           break
         case LoanTransactionType.BadDebtWriteOff:
           debitTarget = {
             portType: EPortType.BadDebtExpense,
             subTypes: [EBadDebtExpenseSubType.BadDebtWriteOff]
           }
-          creditTarget = LOAN_ALL
+          creditTarget = CURRENT_PORT_TARGET
           break
         case LoanTransactionType.LoanReFinance:
-          debitTarget = LOAN_ALL
-          creditTarget = LOAN_ALL
+          debitTarget = CURRENT_PORT_TARGET
+          creditTarget = CASH_SAVINGS
           break
         case LoanTransactionType.BrokerPayment:
           debitTarget = {
@@ -1830,18 +1836,91 @@ export const periodUnit: PeriodUnits = {
   1: t('month'),
   2: t('year')
 }
-export const getRefinanceInfo = (sessions: Session[], enb: boolean): ReFinanceInfo => {
-  const result = {
+export const getRefinanceInfo = (sessions: Session[], port: Port, enb: boolean): ReFinanceInfo => {
+  const defaultInfo: ReFinanceInfo = {
     canRefinance: false,
-    startLoan: '',
+    startLoan: '-',
     loanAmount: 0,
     interest: 0,
     paidCount: 0,
     totalPaid: 0,
-    lastRefinance: '',
-    shortageAmount: 0
+    lastRefinance: '-',
+    shortageAmount: 0,
+    refinanceAmount: 0
   }
-  if (!enb || !sessions || sessions.length <= 0) return result
 
-  return result
+  if (!enb || !sessions?.length || !port) return defaultInfo
+
+  // Use toSorted to avoid mutating original array
+  const sortDec = sessions.toSorted((a, b) => (b.createOn || '').localeCompare(a.createOn || ''))
+
+  const startSession = sortDec.find(s => s.sessionType === 0 || s.sessionType === 4)
+  const startCreateOn = startSession?.createOn || ''
+
+  const lastPaids = startCreateOn
+    ? sessions.filter(s => s.sessionType === 1 && (s.createOn || '') > startCreateOn)
+    : []
+
+  const totalPaid = lastPaids.reduce((sum, s) => sum + (s.amount || 0), 0)
+  const incomeInterest = port.amount * (port.interest / 100)
+  const diff = totalPaid - incomeInterest
+  const canRefinance = diff >= 0
+
+  return {
+    canRefinance,
+    startLoan: sessions.find(s => s.sessionType === 0)?.createOn ?? '-',
+    loanAmount: port.amount,
+    interest: port.interest,
+    paidCount: lastPaids.length,
+    totalPaid,
+    lastRefinance: startSession?.sessionType === 4 ? (startSession.createOn ?? '-') : '-',
+    refinanceAmount: canRefinance ? diff : 0,
+    shortageAmount: canRefinance ? 0 : Math.abs(diff)
+  }
+}
+
+export const canCreateSession = (sessions: Session[], sessionType: number, port: Port): boolean => {
+  switch (port.portType) {
+    // Assets (0 - 4)
+    case EPortType.CashAndDeposits:
+      return true
+    case EPortType.LoansReceivable:
+      switch (sessionType) {
+        case 0:
+          return !sessions || sessions.length <= 0 || !sessions.some(s => s.sessionType === 0)
+        default:
+          return true
+      }
+    case EPortType.Securities:
+    case EPortType.EquityHoldings:
+    case EPortType.OtherInvestments:
+      return true
+
+    // Liabilities (5 - 6)
+    case EPortType.Borrowings:
+    case EPortType.Payables:
+      return true
+
+    // Revenue (7 - 9)
+    case EPortType.OperatingRevenue:
+    case EPortType.InterestIncome:
+    case EPortType.DividendIncome:
+      return true
+
+    // Expenses (10 - 13)
+    case EPortType.OperatingExpense:
+    case EPortType.InterestExpense:
+    case EPortType.BadDebtExpense:
+    case EPortType.DisposalLoss:
+      return true
+
+    // Equity (14 - 16)
+    case EPortType.PaidInCapital:
+    case EPortType.RetainedEarnings:
+    case EPortType.OtherReserves:
+      return true
+
+    default:
+      throw true
+  }
 }

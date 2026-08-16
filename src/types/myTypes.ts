@@ -69,4 +69,5 @@ export interface ReFinanceInfo {
   totalPaid: number
   lastRefinance: string
   shortageAmount: number
+  refinanceAmount: number
 }
