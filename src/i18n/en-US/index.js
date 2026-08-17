@@ -24,6 +24,9 @@ export default {
   System_Management: 'System Management',
   System_Configure: 'System Configure',
   Preference: 'Preference',
+  Search: 'Search',
+  Description: 'Description',
+  Unknow_name: 'Unknow name',
   //+++++++Customer+++++++++++++++++
   Customer: 'Customer',
   Customers: 'Customers',
@@ -131,7 +134,51 @@ export default {
   SavingShareIncome: 'Saving Share Income', // รับค่า แชร์/ออมหมุนเวียน
   InsurancePremium: 'Insurance Premium', // การซื้อประกัน / จ่ายเบี้ยประกัน
   InsuranceBenefit: 'Insurance Benefit', // ผลประโยชน์จากกรมธรรม์ (เงินคืน/คุ้มครอง)
-  //+++++++++++CashAndDepositsSubType
+  //+++++++++ BorrowingsTransactionType----1
+  Drawdown: 'Drawdown', // เบิกเงินกู้ / รับเงินกู้ยืม
+  Repayment: ' Repayment', // ชำระคืนเงินกู้
+  BorrowingInterestAccrual: 'Borrowing Interest Accrual', // ดอกเบี้ยค้างจ่าย (รับรู้ดอกเบี้ย)
+  BorrowingRefinance: 'Borrowing Refinance', // รีไฟแนนซ์
+  //++++++++PayablesTransactionType
+  InvoiceReceived: 'Invoice Received', // รับใบแจ้งหนี้ / ตั้งเจ้าหนี้
+  PaymentMade: 'Payment Made', // ชำระเงินให้เจ้าหนี้
+  CreditNoteReceived: 'Credit Note Received', // รับใบลดหนี้
+  //+++++++++OperatingRevenueTransactionType
+  ServiceInvoiced: 'Service Invoiced', // ออกใบแจ้งหนี้ค่าบริการ / รายได้
+  RevenueRecognition: 'Revenue Recognition', // รับรู้รายได้
+  CashReceived: 'Cash Received', // รับชำระเงินสด
+  //+++++++++InterestIncomeTransactionType
+  InterestReceived: 'Interest Received', // รับดอกเบี้ยเข้าบัญชี
+  InterestIncomeAccrued: 'Interest Income Accrued', // บันทึกดอกเบี้ยค้างรับ
+  //+++++++++++DividendIncomeTransactionType
+  //DividendReceived: 'Dividend Received', // รับเงินปันผล
+  DividendDeclared: 'Dividend Declared', // ประกาศจ่ายเงินปันผล (ค้างรับ)
+  //++++++++++++OperatingExpenseTransactionType
+  ExpenseIncurred: 'Expense Incurred', // บันทึกค่าใช้จ่าย
+  ExpensePaid: 'Expense Paid', // ชำระค่าใช้จ่าย
+  BrokerFeePaid: 'Broker FeePaid', // ชำระค่าธรรมเนียมโบรกเกอร์
+  //++++++++++++InterestExpenseTransactionType
+  InterestExpenseAccrued: 'Interest Expense Accrued', // ตั้งตั้งดอกเบี้ยค้างจ่าย
+  InterestPaid: 'Interest Paid', // จ่ายดอกเบี้ย
+  //+++++++++++BadDebtExpenseTransactionType
+  ProvisionRecognized: 'Provision Recognized', // รับรู้ค่าเผื่อหนี้สงสัยจะสูญ
+  BadDebtWrittenOff: 'Bad Debt Written Off', // ตัดจำหน่ายหนี้สูญ
+  //++++++++++DisposalLossTransactionType
+  AssetDisposed: 'Asset Disposed', // บันทึกขาดทุนจากการขายทรัพย์สิน
+  FairValueLossAdjusted: 'Fair Value Loss Adjusted', // ปรับมูลค่ายุติธรรม (ขาดทุน)
+  //++++++++++PaidInCapitalTransactionType
+  CapitalContribution: 'Capital Contribution', // การเพิ่มทุน / ชำระค่าหุ้น (Capital Inflow)
+  CapitalReduction: 'Capital Reduction', // การลดทุน / คืนทุน (Capital Outflow)
+  //++++++++++RetainedEarningsTransactionType
+  DividendPayout: 'Dividend Payout', // การจ่ายเงินปันผลให้ผู้ถือหุ้น (Dividend Paid)
+  AppropriationOfEarnings: 'Appropriation Of Earnings', // การจัดสรรกำไรสะสมเข้าสำรอง (Appropriation to Reserves)
+  UnappropriatedTransfer: 'Unappropriated Transfer', // การโอนสำรองกลับเข้ากำไรสะสม (Transfer Back to Retained Earnings)
+  //+++++++++++OtherReservesTransactionType
+  SharePremiumReceived: 'Share Premium Received', // รับส่วนเกินมูลค่าหุ้น (Share Premium Received)
+  ReserveAllocation: 'Reserve Allocation', // รับโอนจัดสรรสำรองตามกฎหมาย (Legal Reserve Allocation)
+  RevaluationAdjustment: 'Revaluation Adjustment', // ปรับปรุงส่วนเกินทุนจากการตีราคา assets (Revaluation Adjustment)
+
+  //+++++++++++CashAndDepositsSubType---2
   Cash: 'Cash', // เงินสด
   SavingsAccount: 'Savings Account', // บัญชีออมทรัพย์
   FixedDeposit: 'Fixed Deposit', // เงินฝากประจำ
@@ -164,5 +211,15 @@ export default {
   Session_Detail: 'Session Detail',
   Session_Details: 'Session Details',
   Session_Transaction: 'Session Transaction',
-  Session_Transactions: 'Session Transactions'
+  Session_Transactions: 'Session Transactions',
+  //++++++++Port state
+  Draft: 'Draft',
+  //Active: 'Active',
+  Pending: 'Pending Approval',
+  Suspended: 'Suspended',
+  Closed: 'Settled / Closed',
+  Cancelled: 'Cancelled',
+  WrittenOff: 'Written Off',
+  Defaulted: 'Defaulted / Non-Performing',
+  Matured: 'Matured / Due for Settlement'
 }

@@ -23,6 +23,9 @@ export default {
   System_Management: 'การจัดการระบบ',
   System_Configure: 'การตั้งค่าระบบ',
   Preference: 'การกำหนดค่า',
+  Search: 'ค้นหา',
+  Description: 'รายละเอียด',
+  Unknow_name: 'ไม่ระบุ ชื่อ',
   //+++++++Customer+++++++++++++++++
   Customer: 'ลูกค้า',
   Customers: 'ลูกค้า',
@@ -130,6 +133,60 @@ export default {
   SavingShareIncome: 'รับค่าแชร์', // รับค่า แชร์/ออมหมุนเวียน
   InsurancePremium: 'จ่ายเบี้ยประกัน', // การซื้อประกัน / จ่ายเบี้ยประกัน
   InsuranceBenefit: 'ผลประโยชน์จากกรมธรรม์', // ผลประโยชน์จากกรมธรรม์ (เงินคืน/คุ้มครอง)
+  // BorrowingsTransactionType
+  Drawdown: 'เบิกเงินกู้',
+  Repayment: 'ชำระคืนเงินกู้',
+  BorrowingInterestAccrual: 'บันทึกดอกเบี้ยกู้ยืมค้างจ่าย',
+  BorrowingRefinance: 'รีไฟแนนซ์เงินกู้',
+
+  // PayablesTransactionType
+  InvoiceReceived: 'รับใบแจ้งหนี้ / ตั้งเจ้าหนี้',
+  PaymentMade: 'ชำระเงินให้เจ้าหนี้',
+  CreditNoteReceived: 'รับใบลดหนี้',
+
+  // OperatingRevenueTransactionType
+  ServiceInvoiced: 'ออกใบแจ้งหนี้ค่าบริการ',
+  RevenueRecognition: 'รับรู้รายได้',
+  CashReceived: 'รับชำระเงิน',
+
+  // InterestIncomeTransactionType
+  InterestReceived: 'รับดอกเบี้ย',
+  InterestIncomeAccrued: 'บันทึกดอกเบี้ยค้างรับ',
+
+  // DividendIncomeTransactionType
+  //DividendReceived: 'รับเงินปันผล',
+  DividendDeclared: 'บันทึกเงินปันผลค้างรับ',
+
+  // OperatingExpenseTransactionType
+  ExpenseIncurred: 'บันทึกค่าใช้จ่าย',
+  ExpensePaid: 'ชำระค่าใช้จ่าย',
+  BrokerFeePaid: 'ชำระค่าธรรมเนียมนายหน้า',
+
+  // InterestExpenseTransactionType
+  InterestExpenseAccrued: 'บันทึกดอกเบี้ยจ่ายค้างจ่าย',
+  InterestPaid: 'ชำระดอกเบี้ย',
+
+  // BadDebtExpenseTransactionType
+  ProvisionRecognized: 'รับรู้ค่าเผื่อหนี้สงสัยจะสูญ',
+  BadDebtWrittenOff: 'ตัดจำหน่ายหนี้สูญ',
+
+  // DisposalLossTransactionType
+  AssetDisposed: 'บันทึกการตัดจำหน่ายทรัพย์สิน',
+  FairValueLossAdjusted: 'ปรับปรุงขาดทุนจากมูลค่ายุติธรรม',
+
+  // PaidInCapitalTransactionType
+  CapitalContribution: 'การเพิ่มทุน / รับชำระค่าหุ้น',
+  CapitalReduction: 'การลดทุน / คืนทุน',
+
+  // RetainedEarningsTransactionType
+  DividendPayout: 'จ่ายเงินปันผล',
+  AppropriationOfEarnings: 'จัดสรรกำไรสะสมเข้าทุนสำรอง',
+  UnappropriatedTransfer: 'โอนทุนสำรองกลับเข้ากำไรสะสม',
+
+  // OtherReservesTransactionType
+  SharePremiumReceived: 'รับส่วนเกินมูลค่าหุ้น',
+  ReserveAllocation: 'จัดสรรทุนสำรองตามกฎหมาย',
+  RevaluationAdjustment: 'ปรับปรุงส่วนเกินทุนจากการตีราคาสินทรัพย์',
   //+++++++++++CashAndDepositsSubType
   Cash: 'เงินสด', // เงินสด
   SavingsAccount: 'บัญชีออมทรัพย์', // บัญชีออมทรัพย์
@@ -163,5 +220,15 @@ export default {
   Session_Detail: 'รายละเอียดรอบการบันทึก',
   Session_Details: 'รายละเอียดรอบการบันทึกทั้งหมด',
   Session_Transaction: 'รายการธุรกรรมประจำรอบ',
-  Session_Transactions: 'รายการธุรกรรมทั้งหมดประจำรอบ'
+  Session_Transactions: 'รายการธุรกรรมทั้งหมดประจำรอบ',
+  //++++++++Port state
+  Draft: 'ร่างรายการ',
+  //Active: 'มีผลใช้งาน',
+  Pending: 'รอการอนุมัติหรือตรวจสอบ',
+  Suspended: 'ระงับชั่วคราว',
+  Closed: 'ปิดรายการ / ชำระครบถ้วน',
+  Cancelled: 'ยกเลิกรายการ',
+  WrittenOff: 'ตัดสูญหรือจำหน่ายออก',
+  Defaulted: 'ผิดนัดชำระ / NPL',
+  Matured: 'ครบกำหนดชำระ'
 }

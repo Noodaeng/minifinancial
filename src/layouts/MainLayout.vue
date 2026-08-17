@@ -24,7 +24,7 @@
           </q-toolbar-title>
         </div>
 
-        <!-- Right Section: Actions & Language Selector (Scoped wrapper added) -->
+        <!-- Right Section: Actions & Language Selector -->
         <div class="row items-center no-wrap q-gutter-xs q-gutter-sm-sm header-controls">
           <!-- Fullscreen Utility Toggle -->
           <q-btn
@@ -91,19 +91,19 @@
 
         <EssentialLink
           class="bg-appLayout text-appText"
-          v-for="link in essentialLinks || []"
+          v-for="link in essentialLinks"
           :key="link.title"
           v-bind="link"
         />
       </q-list>
     </q-drawer>
 
-    <!-- Main Dynamic Application Container Target Space -->
+    <!-- Main Dynamic Application Container -->
     <q-page-container>
       <router-view class="fit bg-body text-appText" />
     </q-page-container>
 
-    <!-- Footer Area Base Component Layout -->
+    <!-- Footer -->
     <q-footer
       bordered
       class="bg-appLayout text-appText q-px-md row items-center justify-between"
@@ -223,7 +223,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* Restrict field styling to the header controls container only */
 .header-controls :deep(.q-field__native),
 .header-controls :deep(.q-field__prefix),
 .header-controls :deep(.q-field__suffix),
@@ -231,7 +230,6 @@ export default defineComponent({
   color: var(--v-primary-base);
 }
 
-/* Scope layout media queries directly under the main layout class */
 @media (max-width: 600px) {
   .main-layout-root > .q-header {
     min-height: 56px !important;

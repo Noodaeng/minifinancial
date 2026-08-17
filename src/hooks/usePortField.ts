@@ -23,6 +23,7 @@ export function usePortField() {
       case 'customerId':
         return [1].includes(currentPortType)
       case 'amount':
+        return [1].includes(currentPortType)
       case 'description':
       case 'status':
       case 'remark':

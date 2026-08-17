@@ -51,6 +51,7 @@ import MyConfig from './myConfig'
 import Port from '../models/port'
 import Session from '../models/session'
 const { t } = i18n.global
+
 export const showError = async (err: any) => {
   if (err) {
     if (err.response) {

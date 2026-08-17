@@ -28,7 +28,9 @@ export const useAuthStore = defineStore('auth', {
         //const privateKey = MyConfig.instance.AppConfig.PrivateKey
 
         // const encodeUsername = btoa(payload.username + privateKey)
-        // const encodePassword = btoa(payload.password + privateKey)
+
+        //const encodePassword = btoa(payload.password + privateKey)
+        //console.log('encode===>password=>', encodePassword)
         console.log('encode user password=>', payload.username, payload.password)
         const sendpayload = {
           token: secretToken,

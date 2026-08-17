@@ -158,7 +158,7 @@
             />
           </div>
 
-          <div class="col-12 col-sm-6 col-md-3">
+          <div v-if="isFieldVisible('amount', model.portSubType)" class="col-12 col-sm-6 col-md-3">
             <q-input
               outlined
               v-model="model.amount"
@@ -170,7 +170,10 @@
             />
           </div>
 
-          <div class="col-12 col-sm-6 col-md-3">
+          <div
+            v-if="isFieldVisible('interest', model.portSubType)"
+            class="col-12 col-sm-6 col-md-3"
+          >
             <q-input
               outlined
               v-model.number="model.interest"
@@ -189,7 +192,10 @@
           </div>
 
           <!-- Row 4 Items -->
-          <div class="col-12 col-sm-4 col-md-3">
+          <div
+            v-if="isFieldVisible('paymentTerm', model.portSubType)"
+            class="col-12 col-sm-4 col-md-3"
+          >
             <q-select
               v-model="model.paymentTerm"
               class="bg-body text-appText"
@@ -208,7 +214,10 @@
             />
           </div>
 
-          <div class="col-12 col-sm-4 col-md-3">
+          <div
+            v-if="isFieldVisible('paymentRate', model.portSubType)"
+            class="col-12 col-sm-4 col-md-3"
+          >
             <q-input
               outlined
               v-model="model.paymentRate"
@@ -226,7 +235,7 @@
             </datalist>
           </div>
 
-          <div class="col-12 col-sm-4 col-md-3">
+          <div v-if="isFieldVisible('period', model.portSubType)" class="col-12 col-sm-4 col-md-3">
             <q-input
               outlined
               v-model="model.period"
