@@ -18,13 +18,12 @@
               :label="$t('User_Name')"
               label-color="appLabel"
               :hint="$t('User_Name')"
-              :rules="strRule"
+              :rules="[...strRule, val => val !== 'super' || $t('Username_Super_Not_Allowed')]"
               lazy-rules
               dense
               input-class="text-appText"
             />
           </div>
-
           <div class="col-12 col-sm-6 col-md-3">
             <q-input
               outlined
