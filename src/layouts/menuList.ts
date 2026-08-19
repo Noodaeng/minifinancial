@@ -16,16 +16,16 @@ const linksList = [
         access: 0,
         compType: 0,
         children: []
-      },
-      {
-        title: 'Preference',
-        icon: 'mdi-tune-variant',
-        link: '/preference',
-        level: 1,
-        access: 0,
-        compType: 0,
-        children: []
       }
+      // {
+      //   title: 'Preference',
+      //   icon: 'mdi-tune-variant',
+      //   link: '/preference',
+      //   level: 1,
+      //   access: 0,
+      //   compType: 0,
+      //   children: []
+      // }
     ]
   },
   {
