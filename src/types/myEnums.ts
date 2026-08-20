@@ -1,14 +1,14 @@
 export enum ERole {
   //[Description("Guest")]
-  Guest,
+  Guest = 0,
   //[Description("User")]
-  User,
+  User = 1,
   //[Description("Supervisor")]
-  Supervisor,
+  Supervisor = 2,
   //[Description("Admin")]
-  Admin,
+  Admin = 3,
   //[Description("Power User")]
-  PowerUser
+  PowerUser = 4
 }
 export enum EAlarmLevel {
   //[Description("None")]

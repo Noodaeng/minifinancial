@@ -8,7 +8,7 @@ import { Action, ActionSingle, OptionalData } from '../types/myTypes'
 import DataOption from '../models/dataOption'
 import { useDataState } from './useDataState'
 import { EDataState } from '@/types/myEnums'
-import { useAuthStore } from '../stores/authStore'
+//import { useAuthStore } from '../stores/authStore'
 interface BaseEntity {
   [key: string]: any
 }
@@ -23,7 +23,7 @@ export function useCrudProp<T extends BaseEntity, S>(
 ) {
   const $q = useQuasar()
   const { t } = i18n.global
-  const authStore = useAuthStore()
+  //const authStore = useAuthStore()
   const items = ref<T[]>([]) as any
   const item = ref<T>(new ModelConstructor())
   const clearValidate = ref<Action | undefined>(undefined)
@@ -55,11 +55,13 @@ export function useCrudProp<T extends BaseEntity, S>(
   )
 
   const listColumns = ref<QTableColumn[]>(columnsConfig(t))
-  const convertToUser = (obj: object | null): { name: string; role: string; exp: any } => {
-    if (!obj) return { name: 'Unknown', role: 'User', exp: null }
-    return obj as { name: string; role: string; exp: any }
-  }
-  const currentUser = convertToUser(authStore.getUser).name
+  // const convertToUser = (
+  //   obj: object | null
+  // ): { userId: string; name: string; role: string; exp: any } => {
+  //   if (!obj) return { userId: '-', name: 'Unknown', role: 'User', exp: null }
+  //   return obj as { userId: string; name: string; role: string; exp: any }
+  // }
+  const currentUser = MyConfig.instance.LoginUserId
   // +++++++ Init +++++++++++++++++++++++
   const Init = async () => {
     try {

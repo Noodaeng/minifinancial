@@ -1,7 +1,9 @@
 import { ApplicationTheme } from '../types/myTypes'
 import { ref, Ref } from 'vue'
 import axios from 'axios'
-
+import { useApi } from '../services/api'
+import User from '../models/user'
+import { useAuthStore } from '../stores/authStore'
 export default class MyConfig {
   private constructor() {
     this.isConstructed = true
@@ -16,27 +18,24 @@ export default class MyConfig {
 
   initialized = false
   isConstructed = false
-
+  private _users = ref<{ userId: string; role: number }[]>([{ userId: 'USR-0001', role: 4 }])
+  private _loginUser = ref<{ userId: string; name: string; role: string; exp: any }>()
   get publicPath(): string {
     return location.origin.toString() ? location.origin.toString() : 'http://localhost:9000'
   }
   //User
-  private _loginBy = ''
-  get LoginBy() {
-    return this._loginBy
+  get LoginUserId(): string {
+    const authStore = useAuthStore()
+    return authStore.getUser?.userId ?? '-'
   }
-  set LoginBy(value: string) {
-    this._loginBy = value
+  get LoginUserName(): string {
+    const authStore = useAuthStore()
+    return authStore.getUser?.name ?? 'Unknow'
   }
-  //User role
-  private _loginRole = ''
-  get LoginRole() {
-    return this._loginRole
+  get LoginUserRole(): string | number {
+    const authStore = useAuthStore()
+    return authStore.getUser?.role ?? 0
   }
-  set LoginRole(value: string) {
-    this._loginRole = value
-  }
-
   //Token
   get Token(): string {
     const token = sessionStorage.getItem('token')
@@ -96,6 +95,39 @@ export default class MyConfig {
       .catch(err => {
         throw err.response.data
       })
+  }
+
+  async loadUsers() {
+    try {
+      const api = useApi()
+      const secretToken = MyConfig.instance.AppConfig.AuthToken
+      const baseUrl = MyConfig.instance.AppConfig.DbUrl
+
+      const url = `${baseUrl}/api/crud/get-alldata`
+      const response = await api.post(url, {
+        token: secretToken,
+        table: 'users'
+      })
+
+      const users: User[] = response.data?.data || []
+      if (users && users.length > 0) {
+        users.forEach(u => {
+          if (!this._users.value.some(k => k.userId === u.userId)) {
+            this._users.value.push({ userId: u.userId, role: u.role ?? 0 })
+          }
+        })
+      }
+    } catch (err) {
+      console.error('load all user:', err)
+      return []
+    }
+  }
+  getUserRole(userId: string): number {
+    const user = this._users.value.find(u => u.userId === userId)
+    return user ? user.role : 0
+  }
+  setUserLogin(user: { userId: string; name: string; role: string; exp: any }) {
+    this._loginUser.value = user
   }
 }
 

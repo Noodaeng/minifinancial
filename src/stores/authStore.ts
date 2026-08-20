@@ -5,6 +5,7 @@ import { showError, errorToLog, msgToLog } from '../modules/appUtils'
 import MyConfig from '../modules/myConfig'
 
 interface UserProfile {
+  userId: string
   name: string
   role: string | number
   exp?: any
@@ -51,13 +52,15 @@ export const useAuthStore = defineStore('auth', {
           await this.setToken(sessionToken)
 
           const user = {
+            userId: data.user?.userId || '-',
             name: payload.username || 'Unknown',
-            role: data.user?.role || 'User',
+            role: data.user?.role || 0,
             exp: null
           }
 
           const permissions: any[] = []
           await this.setMe(user, permissions)
+
           return true
         }
 
@@ -136,7 +139,7 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async setMe(
-      user: { name: string; role: string; exp: any },
+      user: { userId: string; name: string; role: string; exp: any },
       permissions: { Menuname: string; Privilege: number }[]
     ) {
       try {
@@ -146,10 +149,9 @@ export const useAuthStore = defineStore('auth', {
 
         this.me = user
         this.permissions = permissions
-
         const conf = MyConfig.instance
-        conf.LoginBy = user.name
-        conf.LoginRole = user.role
+        conf.setUserLogin(user)
+        await conf.loadUsers()
         await msgToLog('login to system')
       } catch (err) {
         await errorToLog(err)

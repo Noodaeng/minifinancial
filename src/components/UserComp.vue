@@ -119,7 +119,7 @@ import { useValidationRules } from '../hooks/useValidationRules'
 import { i18n } from '../i18n'
 import { ERole } from '../types/myEnums'
 import SaveCancelBtn from '../components/utils/SaveCancelBtn.vue'
-
+import MyConfig from '../modules/myConfig'
 export default defineComponent({
   name: 'UserComp',
   components: { SaveCancelBtn },
@@ -170,7 +170,9 @@ export default defineComponent({
 
     return {
       model: modelConverter<User>(props.info) ?? new User(),
-      roleOption: enumToQSelectOptions(ERole),
+      roleOption: enumToQSelectOptions(ERole).filter(
+        r => r.value < MyConfig.instance.LoginUserRole
+      ),
       strRule,
       pwd,
       myForm,

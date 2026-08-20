@@ -33,7 +33,7 @@
               <UserComp
                 ref="myChild"
                 :info="user"
-                :enbBtnSave="canSave"
+                v-model:enbBtnSave="canSave"
                 v-model:displayPassword="displayPassword"
                 @onClickSave="onSave"
                 :childIcon="childIcon"

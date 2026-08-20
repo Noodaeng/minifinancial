@@ -164,7 +164,7 @@ export const msgToLog = async (msg: string) => {
   console.log(
     'Client :id',
     MyConfig.instance.AppConfig.ClientId,
-    ' name:' + MyConfig.instance.LoginBy,
+    ' name:' + MyConfig.instance.LoginUserName,
     '=>Message:',
     msg
   )

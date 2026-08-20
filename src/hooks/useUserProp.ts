@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import { useCrudProp } from './useCrudProp'
 import User from '../models/user'
-import { currentDateTimeStr, showError } from '../modules/appUtils'
+import { currentDateTimeStr } from '../modules/appUtils'
 import MyConfig from '../modules/myConfig'
 export function useUserProp() {
   const crud = useCrudProp<User, User>(
@@ -59,6 +59,7 @@ export function useUserProp() {
   }
   const onCreateUser = () => {
     crud.onCreate()
+    crud.item.value.role = 0
     crud.item.value.createBy = crud.currentUser
     crud.item.value.createOn = currentDateTimeStr
   }
