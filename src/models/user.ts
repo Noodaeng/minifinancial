@@ -1,10 +1,9 @@
-export default class User {
+import BaseModel from './baseModel'
+export default class User extends BaseModel {
   userId = ''
   userName = ''
   password = ''
   role?: number | null
   sessionToken?: string | null
   remark?: string | null
-  createOn? = '' // TEXT (date/time string)
-  createBy? = ''
 }

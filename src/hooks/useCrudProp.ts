@@ -1,4 +1,4 @@
-import { ref, watch } from 'vue'
+import { computed, ref, watch, watchEffect } from 'vue'
 import { useApi } from '../services/api'
 import { showError, confirmDelete } from '../modules/appUtils'
 import MyConfig from '../modules/myConfig'
@@ -23,11 +23,13 @@ export function useCrudProp<T extends BaseEntity, S>(
 ) {
   const $q = useQuasar()
   const { t } = i18n.global
+  const myConf = MyConfig.instance
   //const authStore = useAuthStore()
   const items = ref<T[]>([]) as any
   const item = ref<T>(new ModelConstructor())
   const clearValidate = ref<Action | undefined>(undefined)
   const justSave = ref(false)
+  const isPwdVisible = ref(false)
   //const assignInit = ref<ActionSingle<T[]> | undefined>(undefined)
 
   // const getValidate = ref<FuncBoolAsync>(async () => {
@@ -55,13 +57,39 @@ export function useCrudProp<T extends BaseEntity, S>(
   )
 
   const listColumns = ref<QTableColumn[]>(columnsConfig(t))
-  // const convertToUser = (
-  //   obj: object | null
-  // ): { userId: string; name: string; role: string; exp: any } => {
-  //   if (!obj) return { userId: '-', name: 'Unknown', role: 'User', exp: null }
-  //   return obj as { userId: string; name: string; role: string; exp: any }
-  // }
-  const currentUser = MyConfig.instance.LoginUserId
+  const currentUser = myConf.LoginUserId
+  // 1. Calculate relative role hierarchy
+  const ownRcdRole = computed(() => {
+    const createBy = item.value?.createBy
+    return createBy ? Number(myConf.getUserRole(createBy)) || 0 : 0
+  })
+
+  const loginRole = computed(() => Number(myConf.LoginUserRole) || 0)
+
+  // 2. Determine permissions dynamically
+  const isFullAccess = computed(() => {
+    if (myConf.LoginUserName === 'super') return true
+
+    const createBy = item.value?.createBy
+    if (!createBy) return false
+
+    return createBy === myConf.LoginUserId || loginRole.value > ownRcdRole.value
+  })
+
+  const canEditRole = computed(() => loginRole.value >= ownRcdRole.value)
+  // 2. Specific condition checks
+  const isOwnAccount = computed(() => {
+    return tableName === 'users' && String(myConf.LoginUserId) === String(item.value?.userId)
+  })
+  // 3. Sync updates to existing refs without breaking reactivity
+  watchEffect(() => {
+    const hasAccess = isFullAccess.value
+    //console.log('............................', isOwnAccount.value)
+    // Safely mutate the .value property of existing refs
+    dataState.canUserEdit.value = hasAccess || isOwnAccount.value
+    dataState.canUserDel.value = hasAccess
+    isPwdVisible.value = hasAccess || isOwnAccount.value
+  })
   // +++++++ Init +++++++++++++++++++++++
   const Init = async () => {
     try {
@@ -138,8 +166,8 @@ export function useCrudProp<T extends BaseEntity, S>(
 
   // +++++++ Call Api +++++++++++++++++++++++
   const getApiContext = (operation: string) => {
-    const secretToken = MyConfig.instance.AppConfig.AuthToken
-    const baseUrl = MyConfig.instance.AppConfig.DbUrl // e.g. "https://your-worker.workers.dev"
+    const secretToken = myConf.AppConfig.AuthToken
+    const baseUrl = myConf.AppConfig.DbUrl // e.g. "https://your-worker.workers.dev"
 
     return {
       url: `${baseUrl}/api/crud/${operation}`,
@@ -233,8 +261,8 @@ export function useCrudProp<T extends BaseEntity, S>(
   const getDataOptions = async (option: OptionalData): Promise<DataOption[]> => {
     try {
       const api = useApi()
-      const token = MyConfig.instance.AppConfig.AuthToken
-      const baseUrl = MyConfig.instance.AppConfig.DbUrl // e.g. "https://your-worker.workers.dev"
+      const token = myConf.AppConfig.AuthToken
+      const baseUrl = myConf.AppConfig.DbUrl // e.g. "https://your-worker.workers.dev"
       const response = await api.post(`${baseUrl}/api/optionalData`, {
         token: token,
         option: option
@@ -253,6 +281,8 @@ export function useCrudProp<T extends BaseEntity, S>(
     item,
     listColumns,
     clearValidate,
+    isPwdVisible,
+    canEditRole,
     onRowClick,
     onCreate,
     onDelete,

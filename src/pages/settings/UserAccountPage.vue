@@ -35,6 +35,8 @@
                 :info="user"
                 v-model:enbBtnSave="canSave"
                 v-model:displayPassword="displayPassword"
+                v-model:isPwdVisible="isPwdVisible"
+                v-model:canEditRole="canEditRole"
                 @onClickSave="onSave"
                 :childIcon="childIcon"
               />
@@ -113,7 +115,8 @@ export default defineComponent({
       canDelete: useUser.canDelete,
       canCreate: useUser.canCreate,
       canSave: useUser.canSave,
-      state: useUser.state,
+      isPwdVisible: useUser.isPwdVisible,
+      canEditRole: useUser.canEditRole,
       displayPassword,
       myChild
     }

@@ -20,6 +20,7 @@
               :hint="$t('User_Name')"
               :rules="[...strRule, val => val !== 'super' || $t('Username_Super_Not_Allowed')]"
               lazy-rules
+              :readonly="!isPwdVisible"
               dense
               input-class="text-appText"
             />
@@ -27,18 +28,20 @@
           <div class="col-12 col-sm-6 col-md-3">
             <q-input
               outlined
-              type="password"
+              :type="isPwdVisible ? 'text' : 'password'"
               v-model="pwd"
               :label="$t('Password')"
               label-color="appLabel"
               :hint="$t('Password')"
               :rules="strRule"
               lazy-rules
+              :readonly="!isPwdVisible"
               dense
               input-class="text-appText"
+              autocomplete="one-time-code"
+              name="no-autofill-pwd"
             />
           </div>
-
           <!-- Row segment 2 elements -->
           <div class="col-12 col-sm-6 col-md-3">
             <q-select
@@ -48,6 +51,7 @@
               :label="$t('Role')"
               :hint="$t('Role')"
               :options="roleOption"
+              :readonly="!canEditRole"
               dense
               outlined
               emit-value
@@ -64,6 +68,7 @@
               :label="$t('Session_Token')"
               label-color="appLabel"
               :hint="$t('Session_Token')"
+              :readonly="true"
               dense
               input-class="text-appText"
             />
@@ -140,6 +145,14 @@ export default defineComponent({
     childIcon: {
       type: String,
       default: 'mdi-account-outline'
+    },
+    isPwdVisible: {
+      type: Boolean,
+      default: false
+    },
+    canEditRole: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, { emit }) {
@@ -167,12 +180,15 @@ export default defineComponent({
     })
 
     const strRule = rules.string()
+    const roleOption = computed(() =>
+      props.canEditRole
+        ? enumToQSelectOptions(ERole).filter(r => r.value < MyConfig.instance.LoginUserRole)
+        : enumToQSelectOptions(ERole)
+    )
 
     return {
       model: modelConverter<User>(props.info) ?? new User(),
-      roleOption: enumToQSelectOptions(ERole).filter(
-        r => r.value < MyConfig.instance.LoginUserRole
-      ),
+      roleOption,
       strRule,
       pwd,
       myForm,

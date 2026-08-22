@@ -3,6 +3,8 @@ import { EDataState } from '../types/myEnums'
 
 export function useDataState() {
   const state = ref(EDataState.None)
+  const canUserEdit = ref(false)
+  const canUserDel = ref(false)
 
   const stateCtrl = (
     isInit: boolean,
@@ -13,7 +15,7 @@ export function useDataState() {
     console.log(
       'state control--->',
       state.value,
-      `init-> ${isInit} select->${isSelected} valid->${isValidated} req->${reqCreate} `
+      `init-> ${isInit} select->${isSelected} valid->${isValidated} req->${reqCreate}`
     )
     if (isInit) {
       state.value = EDataState.Init
@@ -25,25 +27,20 @@ export function useDataState() {
       case EDataState.Init:
         if (isSelected) {
           state.value = EDataState.Selected
-          return
         } else if (reqCreate) {
           state.value = EDataState.New
-          return
         }
         break
       case EDataState.Selected:
         if (isValidated) {
           state.value = EDataState.ValidEdit
-          return
         } else if (reqCreate) {
           state.value = EDataState.New
-          return
         }
         break
       case EDataState.New:
         if (isValidated) {
           state.value = EDataState.ValidNew
-          return
         }
         break
       case EDataState.ValidEdit:
@@ -60,29 +57,40 @@ export function useDataState() {
         break
     }
   }
+
   const canCreate = computed(() => {
     return state.value === EDataState.Init || state.value === EDataState.Selected
   })
 
+  // Fixed the logical OR expression inside the parenthesis
   const canDelete = computed(() => {
-    return state.value === EDataState.Selected || state.value === EDataState.ValidEdit
+    const isValidState = state.value === EDataState.Selected || state.value === EDataState.ValidEdit
+    return isValidState && canUserDel.value
   })
 
   const canSave = computed(() => {
-    return state.value === EDataState.ValidEdit || state.value === EDataState.ValidNew
+    return (
+      (state.value === EDataState.ValidEdit && canUserEdit.value) ||
+      state.value === EDataState.ValidNew
+    )
   })
+
+  // Unwrapped canSave.value properly
   const resetDataState = () => {
-    if (canSave) {
+    if (canSave.value) {
       stateCtrl(false, false, false, false)
     } else {
       stateCtrl(true, false, false, false)
     }
   }
+
   return {
     state,
     canCreate,
     canDelete,
     canSave,
+    canUserDel,
+    canUserEdit,
     stateCtrl,
     resetDataState
   }

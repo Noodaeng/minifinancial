@@ -1831,16 +1831,20 @@ export const getSessionEffect = (
   if (!infos || infos.length === 0 || !infos[sessionType]) return ''
   return infos[sessionType].effect
 }
-
+export const ceiling = (num: number, step: number = 10): number => {
+  return Math.ceil(num / step) * step
+}
 export const periodUnits: PeriodUnits = {
   0: t('days'),
-  1: t('months'),
-  2: t('years')
+  1: t('weeks'),
+  2: t('months'),
+  3: t('years')
 }
 export const periodUnit: PeriodUnits = {
   0: t('day'),
-  1: t('month'),
-  2: t('year')
+  1: t('week'),
+  2: t('month'),
+  3: t('year')
 }
 export const getRefinanceInfo = (sessions: Session[], port: Port, enb: boolean): ReFinanceInfo => {
   const defaultInfo: ReFinanceInfo = {
@@ -1869,7 +1873,7 @@ export const getRefinanceInfo = (sessions: Session[], port: Port, enb: boolean):
 
   const totalPaid = lastPaids.reduce((sum, s) => sum + (s.amount || 0), 0)
   const incomeInterest = port.amount * (port.interest / 100)
-  const diff = totalPaid - incomeInterest
+  const diff = ceiling(totalPaid - incomeInterest, 10)
   const canRefinance = diff >= 0
 
   return {

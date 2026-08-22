@@ -1,12 +1,11 @@
-export default class Port {
+import BaseModel from './baseModel'
+export default class Port extends BaseModel {
   portId = ''
 
   description = ''
   accountCategory = 0
   portType = 0
   portSubType = 0
-  createBy = ''
-  createOn = ''
 
   status = 0
   remark = ''

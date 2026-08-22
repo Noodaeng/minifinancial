@@ -1,4 +1,6 @@
-export default class Broker {
+import BaseModel from './baseModel'
+
+export default class Broker extends BaseModel {
   brokerId = ''
   cardId = ''
   name = ''
@@ -9,7 +11,5 @@ export default class Broker {
   creditLimit = 0
   isActive = 0
   brokerType = 0
-  createBy = ''
-  createOn = ''
   remark = ''
 }

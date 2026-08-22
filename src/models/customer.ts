@@ -1,4 +1,5 @@
-export default class Customer {
+import BaseModel from './baseModel'
+export default class Customer extends BaseModel {
   customerId = ''
   cardId = ''
   name = ''
@@ -9,7 +10,5 @@ export default class Customer {
   creditLimit = 0
   isActive = 0
   customerType = 0
-  createBy = ''
-  createOn = ''
   remark = ''
 }
