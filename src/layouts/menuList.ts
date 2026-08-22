@@ -1,5 +1,5 @@
 import { EPortType } from '../types/myEnums'
-const linksList = [
+const menuList = [
   {
     title: 'System_Configure',
     icon: 'mdi-cog-outline',
@@ -328,4 +328,4 @@ const linksList = [
     ]
   }
 ]
-export default linksList
+export default menuList

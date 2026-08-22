@@ -4,10 +4,32 @@
       <q-card flat bordered class="bg-body text-appText account-card">
         <q-card-section class="q-pb-xs">
           <div class="row items-center justify-between no-wrap">
-            <div>
+            <div class="row items-center gap-xs">
               <div class="text-h6 text-weight-bold">{{ item.labelTh }}</div>
             </div>
-            <q-avatar :color="item.color" text-color="white" :icon="item.icon" size="42px" />
+
+            <div class="row items-center no-wrap q-gutter-x-xs">
+              <!-- Notification Icon with Badge -->
+              <q-btn
+                v-if="item.notifyCount > 0"
+                flat
+                round
+                dense
+                class="bg-body text-appText"
+                icon="mdi-bell-outline"
+                @click="onNotifyClick(item)"
+              >
+                <q-badge color="negative" floating rounded>
+                  {{ item.notifyCount > 99 ? '99+' : item.notifyCount }}
+                </q-badge>
+                <q-tooltip class="bg-dark text-body2">
+                  {{ item.notifyCount }} notifications
+                </q-tooltip>
+              </q-btn>
+
+              <!-- Category Main Icon -->
+              <q-avatar :color="item.color" text-color="white" :icon="item.icon" size="42px" />
+            </div>
           </div>
         </q-card-section>
 
@@ -66,13 +88,17 @@ export default defineComponent({
       default: () => ({})
     }
   },
-  setup(props) {
-    // Convert object values into a fresh Array so Vue re-evaluates the list on updates
+  emits: ['notify-click'],
+  setup(props, { emit }) {
     const categoryMetadata = computed(() => {
       return Object.values(props.categoryList || {})
     })
 
-    return { formatCurrency, categoryMetadata }
+    const onNotifyClick = (item: CategoryMeta) => {
+      emit('notify-click', item)
+    }
+
+    return { formatCurrency, categoryMetadata, onNotifyClick }
   }
 })
 </script>
@@ -85,7 +111,6 @@ export default defineComponent({
     transform: translateY(-2px)
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1)
 
-/* Prevents text breaking layout on tiny mobile screens */
 .ellipsis
   white-space: nowrap
   overflow: hidden

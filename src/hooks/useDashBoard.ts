@@ -4,11 +4,12 @@ import { useApi } from '../services/api'
 import { CategoryMeta, AccountCategorySummary } from '../types/myTypes'
 import { AccountCategory } from '../types/myEnums'
 import { showError } from '../modules/appUtils'
+import { useLoanNotify } from './useLoanNotify'
 import MyConfig from '../modules/myConfig'
 
 export function useDashBoard() {
   const { t } = i18n.global
-
+  const loanNotify = useLoanNotify()
   // 1. Wrap in reactive() so property mutations trigger UI updates
   const categoryMetadata = reactive<Record<AccountCategory | number, CategoryMeta>>({
     [AccountCategory.Assets]: {
@@ -21,7 +22,8 @@ export function useDashBoard() {
       icon: 'account_balance_wallet',
       color: 'blue-7',
       totalCredit: 0,
-      totalDebit: 0
+      totalDebit: 0,
+      notifyCount: 0
     },
     [AccountCategory.Liabilities]: {
       value: AccountCategory.Liabilities,
@@ -32,7 +34,8 @@ export function useDashBoard() {
       icon: 'receipt_long',
       color: 'orange-8',
       totalCredit: 0,
-      totalDebit: 0
+      totalDebit: 0,
+      notifyCount: 0
     },
     [AccountCategory.Equity]: {
       value: AccountCategory.Equity,
@@ -43,7 +46,8 @@ export function useDashBoard() {
       icon: 'pie_chart',
       color: 'purple-7',
       totalCredit: 0,
-      totalDebit: 0
+      totalDebit: 0,
+      notifyCount: 0
     },
     [AccountCategory.Revenue]: {
       value: AccountCategory.Revenue,
@@ -54,7 +58,8 @@ export function useDashBoard() {
       icon: 'trending_up',
       color: 'positive',
       totalCredit: 0,
-      totalDebit: 0
+      totalDebit: 0,
+      notifyCount: 0
     },
     [AccountCategory.Expenses]: {
       value: AccountCategory.Expenses,
@@ -65,14 +70,15 @@ export function useDashBoard() {
       icon: 'trending_down',
       color: 'negative',
       totalCredit: 0,
-      totalDebit: 0
+      totalDebit: 0,
+      notifyCount: 0
     }
   })
 
   const Init = async () => {
     try {
       const result = await getSessionSummaryByAccountCategory()
-      console.log('sessions=========>>', result)
+      await loanNotify.initNotify()
 
       // Reset totals
       Object.values(categoryMetadata).forEach(cat => {
@@ -88,6 +94,11 @@ export function useDashBoard() {
             accCat.totalCredit = item.totalAmount
           } else if (item.type === 'debit') {
             accCat.totalDebit = item.totalAmount
+          }
+          if (accCat.value === AccountCategory.Assets) {
+            accCat.notifyCount = loanNotify.loanNotifies?.value
+              ? loanNotify.loanNotifies.value.length
+              : 0
           }
         }
       })

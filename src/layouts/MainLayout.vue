@@ -91,9 +91,9 @@
 
         <EssentialLink
           class="bg-appLayout text-appText"
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
+          v-for="menu in menuList"
+          :key="menu.title"
+          v-bind="menu"
         />
       </q-list>
     </q-drawer>
@@ -120,7 +120,7 @@ import { defineComponent, ref, onMounted, computed, onBeforeUnmount, watch } fro
 import EssentialLink from './EssentialLink.vue'
 import LanguageSwitcher from './LanguageSwitcher.vue'
 import ThemeSwitcher from './ThemeSwitcher.vue'
-import linksList from './menuList'
+import menuList from './menuList'
 import { AppFullscreen } from 'quasar'
 import { useAuthStore } from '../stores/authStore'
 import { useRouter } from 'vue-router'
@@ -207,7 +207,7 @@ export default defineComponent({
     }
 
     return {
-      essentialLinks: linksList,
+      menuList,
       leftDrawerOpen,
       isFullscreen,
       toggleLeftDrawer,

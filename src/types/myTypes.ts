@@ -39,6 +39,7 @@ export interface CategoryMeta {
   color: string
   totalCredit: number
   totalDebit: number
+  notifyCount: number
 }
 export interface PortTypeSummary {
   sessionType: number
@@ -70,4 +71,49 @@ export interface ReFinanceInfo {
   lastRefinance: string
   shortageAmount: number
   refinanceAmount: number
+}
+// Single row item returned from the SQL query
+export interface LoanPaymentRecord {
+  portId: string
+  accountCategory: number
+  portType: number
+  portSubType: number
+  status: number
+  customerId: string
+  brokerId: string
+  amount: number
+  interest: string
+  paymentTerm: number
+  paymentRate: number
+  period: number
+  customerName: string | null
+  sessionId: string | null
+  sessionType: number | null
+  sessionAmount: number | null
+  sessionCreateOn: string | null
+  totalType1AfterSession: number
+  totalType2AfterSession: number
+  totalType1And2AfterSession: number
+  totalCountType1AfterSession: number
+  totalCountType2AfterSession: number
+  totalCountType1And2AfterSession: number
+}
+// Full API Response Wrapper
+export interface LoanPaymentsApiResponse {
+  status: 'success' | 'error'
+  message?: string
+  data?: LoanPaymentRecord[]
+}
+export interface BatchNotifiesApiResponse {
+  status: 'success' | 'error'
+  message?: string
+  totalProcessed?: number
+  totalInserted?: number
+  totalIgnored?: number
+}
+export interface LoanNotify {
+  portId: string
+  notifyCode: string
+  customerName: string | null
+  description: string
 }

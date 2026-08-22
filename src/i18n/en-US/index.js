@@ -27,6 +27,7 @@ export default {
   Search: 'Search',
   Description: 'Description',
   Unknow_name: 'Unknow name',
+  Times: 'Times',
   //+++++++Customer+++++++++++++++++
   Customer: 'Customer',
   Customers: 'Customers',
@@ -224,5 +225,10 @@ export default {
   Cancelled: 'Cancelled',
   WrittenOff: 'Written Off',
   Defaulted: 'Defaulted / Non-Performing',
-  Matured: 'Matured / Due for Settlement'
+  Matured: 'Matured / Due for Settlement',
+  //++++++Notify++++++++
+  Payment_delay: 'Payment delay', // ชำระเงินล่าช้า / ค้างชำระ
+  Interest_rate_changed: 'Interest rate changed', // มีการเปลี่ยนแปลงอัตราดอกเบี้ย
+  Maturity_approaching: 'Maturity approaching', // ใกล้ถึงวันครบกำหนดชำระ / สัญญาหมดอายุ
+  Overdue_principal: 'Overdue principal' // เงินต้นค้างชำระเกินกำหนด
 }

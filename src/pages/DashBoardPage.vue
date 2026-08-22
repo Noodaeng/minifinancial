@@ -3,7 +3,11 @@
     <div class="text-h5 text-weight-bold q-mb-md">Dashboard Overview</div>
 
     <!-- Account Categories Summary Grid -->
-    <DashBoardComp :categoryList="categoryMetadata" class="q-mb-lg" />
+    <DashBoardComp
+      :categoryList="categoryMetadata"
+      @notify-click="handleCategoryNotify"
+      class="q-mb-lg"
+    />
 
     <!-- Rest of your dashboard widgets -->
     <div class="row q-col-gutter-md">
@@ -16,6 +20,7 @@
 import { defineComponent, ref, onMounted } from 'vue'
 import DashBoardComp from '../components/DashBoardComp.vue'
 import { useDashBoard } from '../hooks/useDashBoard'
+import { CategoryMeta } from '../types/myTypes.js'
 export default defineComponent({
   name: 'DashBoardPage',
   components: {
@@ -27,9 +32,12 @@ export default defineComponent({
     onMounted(async () => {
       await useDash.Init()
     })
-
+    const handleCategoryNotify = (item: CategoryMeta) => {
+      console.log('item---click#####', item)
+    }
     return {
-      categoryMetadata: useDash.categoryMetadata
+      categoryMetadata: useDash.categoryMetadata,
+      handleCategoryNotify
     }
   }
 })

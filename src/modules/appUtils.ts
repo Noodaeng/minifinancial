@@ -415,6 +415,32 @@ export const formatCurrency = (val: number, currencyCode: string = 'THB'): strin
     maximumFractionDigits: 2
   }).format(val || 0)
 }
+export const getDaysDifference = (lastPayDateStr?: string | null): number | null => {
+  if (!lastPayDateStr || lastPayDateStr === '-') return null
+
+  // Safely extract date portion using fallback string
+  const datePart = lastPayDateStr.split(',')[0] || ''
+  const parts = datePart.trim().split('/')
+
+  if (parts.length < 3) return null
+
+  const day = Number(parts[0])
+  const month = Number(parts[1])
+  const year = Number(parts[2])
+
+  if (isNaN(day) || isNaN(month) || isNaN(year)) return null
+
+  // JS Date month parameter is 0-indexed (Jan = 0, Aug = 7)
+  const lastPayDate = new Date(year, month - 1, day)
+  const today = new Date()
+
+  // Clear time to compare exact dates
+  lastPayDate.setHours(0, 0, 0, 0)
+  today.setHours(0, 0, 0, 0)
+
+  const diffInMs = today.getTime() - lastPayDate.getTime()
+  return Math.floor(diffInMs / (1000 * 60 * 60 * 24))
+}
 //Session helpers
 
 /**
@@ -1933,4 +1959,11 @@ export const canCreateSession = (sessions: Session[], sessionType: number, port:
     default:
       throw true
   }
+}
+
+export const notifyCodes: Record<string, string> = {
+  '010001': t('Payment_delay'), // ชำระเงินล่าช้า / ค้างชำระ
+  '010002': t('Interest_rate_changed'), // มีการเปลี่ยนแปลงอัตราดอกเบี้ย
+  '010003': t('Maturity_approaching'), // ใกล้ถึงวันครบกำหนดชำระ / สัญญาหมดอายุ
+  '010004': t('Overdue_principal') // เงินต้นค้างชำระเกินกำหนด
 }

@@ -20,6 +20,7 @@ export default class MyConfig {
   isConstructed = false
   private _users = ref<{ userId: string; role: number }[]>([{ userId: 'USR-0001', role: 4 }])
   private _loginUser = ref<{ userId: string; name: string; role: string; exp: any }>()
+  private _loanNotifySaved = false
   get publicPath(): string {
     return location.origin.toString() ? location.origin.toString() : 'http://localhost:9000'
   }
@@ -128,6 +129,13 @@ export default class MyConfig {
   }
   setUserLogin(user: { userId: string; name: string; role: string; exp: any }) {
     this._loginUser.value = user
+  }
+  //++++++Notify++++++
+  setLoanNotifySaved() {
+    this._loanNotifySaved = true
+  }
+  get IsLoanNotifySaved() {
+    return this._loanNotifySaved
   }
 }
 
