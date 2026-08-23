@@ -13,6 +13,15 @@
     <div class="row q-col-gutter-md">
       <!-- Charts, tables, etc. -->
     </div>
+    <!-- Loan notifies-->
+    <q-dialog
+      v-model="isLoanNotifiesOpen"
+      class="bg-body text-appText"
+      transition-show="scale"
+      transition-hide="scale"
+    >
+      <DiaLoanNotifies v-model:notifies="notifies" />
+    </q-dialog>
   </q-page>
 </template>
 
@@ -21,22 +30,31 @@ import { defineComponent, ref, onMounted } from 'vue'
 import DashBoardComp from '../components/DashBoardComp.vue'
 import { useDashBoard } from '../hooks/useDashBoard'
 import { CategoryMeta } from '../types/myTypes.js'
+import DiaLoanNotifies from '../components/DiaLoanNotifies.vue'
+import { AccountCategory } from '../types/myEnums.js'
 export default defineComponent({
   name: 'DashBoardPage',
   components: {
-    DashBoardComp
+    DashBoardComp,
+    DiaLoanNotifies
   },
 
   setup() {
     const useDash = useDashBoard()
+    const isLoanNotifiesOpen = ref(false)
     onMounted(async () => {
       await useDash.Init()
     })
     const handleCategoryNotify = (item: CategoryMeta) => {
-      console.log('item---click#####', item)
+      isLoanNotifiesOpen.value =
+        item.value === AccountCategory.Assets &&
+        useDash.loanNotifies.value &&
+        useDash.loanNotifies.value.length > 0
     }
     return {
       categoryMetadata: useDash.categoryMetadata,
+      notifies: useDash.loanNotifies,
+      isLoanNotifiesOpen,
       handleCategoryNotify
     }
   }

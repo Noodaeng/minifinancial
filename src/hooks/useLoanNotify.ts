@@ -25,6 +25,7 @@ export function useLoanNotify() {
   const initNotify = async () => {
     const payments = await getLoanPayments()
     if (!payments || payments.length <= 0) return
+    //console.log('*******get---------payments*****', payments)
     const output = getLoanNotifies(payments)
     const models = output[0]
     loanNotifies.value = output[1]
@@ -48,7 +49,7 @@ export function useLoanNotify() {
       // 1. Calculate how many payment terms have elapsed
       switch (p.paymentTerm) {
         case 0: // Daily
-          periodsPassed = dateDif - 1 // Grace period of 1 day
+          periodsPassed = dateDif // Grace period of 1 day
           break
         case 1: // Weekly
           periodsPassed = Math.trunc(dateDif / 7)
@@ -68,10 +69,10 @@ export function useLoanNotify() {
 
       // 2. Expected payment = rate per period * periods passed
       const expectedAmount = p.paymentRate * periodsPassed
-      const difAmount = expectedAmount - expectedAmount
+      const difAmount = expectedAmount - p.totalType1And2AfterSession
       const difCount = p.paymentRate > 0 ? ceiling(difAmount / p.paymentRate, 1) : 0
       // 3. Payment delay occurs if expected total > actual payments made
-      if (expectedAmount > p.totalType1And2AfterSession) {
+      if (dateDif > 0 && expectedAmount > p.totalType1And2AfterSession) {
         output[0].push({
           notifyCode: '010001', // Payment_delay
           portId: p.portId,
@@ -82,7 +83,7 @@ export function useLoanNotify() {
           portId: p.portId,
           notifyCode: '010001', // Payment_delay
           customerName: p.customerName,
-          description: `${notifyCodes['010001'] ?? ''} ${t('Amount')}  : ${difAmount} : ${difCount} ${t('Times')}`
+          description: `${notifyCodes['010001'] ?? ''} ${t('Total_Amount')}  : ${difAmount} : ${difCount} ${t('Times')}`
         })
       }
     })

@@ -5,5 +5,5 @@
   "DbUrl": "https://minifinancial-worker.apptawee-api.workers.dev",
   "AuthToken": "MiniFinancial_Secret_Token_2026_XYZ",
   "PrivateKey": "finance",
-  "Version": "1.0.1"
+  "Version": "1.0.0"
 }

@@ -27,7 +27,15 @@ export default {
   Description: 'รายละเอียด',
   Unknow_name: 'ไม่ระบุ ชื่อ',
   Times: 'ครั้ง',
-  //+++++++Customer+++++++++++++++++
+  Close: 'ปิด',
+  Acknowledge_All: 'ยอมรับ',
+  Loan_Warnings: 'คำเตือนสินเชื่อ',
+  notifications: 'การแจ้งเตือน',
+  requiring_attention: 'ต้องดำเนินการ',
+  PortId: 'พอร์ต',
+  Notify_Code: 'ระหัส แจ้งเตือน',
+  Warning_Description: 'รายละเอียด แจ้งเตือน',
+  //+++++++Customer+++++++++แจ้งเตือน++++++++
   Customer: 'ลูกค้า',
   Customers: 'ลูกค้า',
   Customers_and_Brokers: 'ลูกค้าและนายหน้า',

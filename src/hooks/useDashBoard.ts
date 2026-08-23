@@ -16,7 +16,7 @@ export function useDashBoard() {
       value: AccountCategory.Assets,
       name: 'Assets',
       labelTh: t('Assets'),
-      description: 'ลูกหนี้',
+      description: 'ลูกหนี้,ปล่อยกู้',
       drEffect: '+',
       crEffect: '-',
       icon: 'account_balance_wallet',
@@ -29,6 +29,7 @@ export function useDashBoard() {
       value: AccountCategory.Liabilities,
       name: 'Liabilities',
       labelTh: t('Liabilities'),
+      description: 'หนี้สิน',
       drEffect: '-',
       crEffect: '+',
       icon: 'receipt_long',
@@ -41,6 +42,7 @@ export function useDashBoard() {
       value: AccountCategory.Equity,
       name: 'Equity',
       labelTh: t('Equity'),
+      description: 'ทุน',
       drEffect: '-',
       crEffect: '+',
       icon: 'pie_chart',
@@ -53,6 +55,7 @@ export function useDashBoard() {
       value: AccountCategory.Revenue,
       name: 'Revenue',
       labelTh: t('Revenue'),
+      description: 'รายได้ต่างๆ',
       drEffect: '-',
       crEffect: '+',
       icon: 'trending_up',
@@ -65,6 +68,7 @@ export function useDashBoard() {
       value: AccountCategory.Expenses,
       name: 'Expenses',
       labelTh: t('Expenses'),
+      description: 'ค่าใช้จ่ายต่างๆ',
       drEffect: '+',
       crEffect: '-',
       icon: 'trending_down',
@@ -74,7 +78,6 @@ export function useDashBoard() {
       notifyCount: 0
     }
   })
-
   const Init = async () => {
     try {
       const result = await getSessionSummaryByAccountCategory()
@@ -128,6 +131,7 @@ export function useDashBoard() {
 
   return {
     categoryMetadata,
-    Init
+    Init,
+    ...loanNotify
   }
 }
