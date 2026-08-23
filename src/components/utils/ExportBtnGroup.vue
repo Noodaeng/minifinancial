@@ -1,5 +1,5 @@
 <template>
-  <div class="row justify-end items-end">
+  <div class="row items-center justify-end">
     <!-- Export to Excel Button -->
     <q-btn
       icon="mdi-file-excel"
@@ -8,11 +8,8 @@
       :loading="loadingExcel"
       unelevated
       round
-      :class="[
-        enableExport && rows.length > 0
-          ? 'q-ma-sm shadow-3 bg-body text-appText'
-          : 'q-ma-sm shadow-3 bg-body text-appLayout'
-      ]"
+      size="sm"
+      class="q-mx-xs shadow-3 bg-body text-appText"
     >
       <q-tooltip>{{ $t('Export to Excel') }}</q-tooltip>
     </q-btn>
@@ -25,11 +22,8 @@
       :loading="loadingPdf"
       unelevated
       round
-      :class="[
-        enableExport && rows.length > 0
-          ? 'q-ma-sm shadow-3 bg-body text-appText'
-          : 'q-ma-sm shadow-3 bg-body text-appLayout'
-      ]"
+      size="sm"
+      class="q-mx-xs shadow-3 bg-body text-appText"
     >
       <q-tooltip>{{ $t('Export to PDF') }}</q-tooltip>
     </q-btn>
@@ -42,6 +36,9 @@ import type { QTableColumn } from 'quasar'
 import * as XLSX from 'xlsx'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
+
+// Import your Thai Base64 font string (adjust the relative path to match your folder structure)
+import { sarabunFontBase64 } from '../../assets/fonts/Sarabun-Regular-normal'
 
 export default defineComponent({
   name: 'ExportBtnGroup',
@@ -70,7 +67,7 @@ export default defineComponent({
     const loadingExcel = ref(false)
     const loadingPdf = ref(false)
 
-    // Helper to extract plain text values for fields
+    // Helper to format table fields and headers
     const formatRowData = () => {
       const activeColumns = props.columns.filter(col => !col.required || col.name)
 
@@ -92,7 +89,7 @@ export default defineComponent({
       return { headers: activeColumns.map(c => c.label), formattedRows }
     }
 
-    // Export Excel Handler
+    // Export to Excel
     const exportExcel = async () => {
       try {
         loadingExcel.value = true
@@ -111,21 +108,37 @@ export default defineComponent({
       }
     }
 
-    // Export PDF Handler
+    // Export to PDF (with Thai Font Fix)
     const exportPDF = async () => {
       try {
         loadingPdf.value = true
         const { headers, formattedRows } = formatRowData()
 
         const doc = new jsPDF({ orientation: 'landscape' })
+
+        // 1. Register Thai Font
+        doc.addFileToVFS('Sarabun-Regular.ttf', sarabunFontBase64)
+        doc.addFont('Sarabun-Regular.ttf', 'Sarabun', 'normal')
+        doc.setFont('Sarabun')
+
         const tableBody = formattedRows.map(row => headers.map(h => row[h]))
 
+        // 2. Generate PDF Table
         autoTable(doc, {
           head: [headers],
           body: tableBody,
           theme: 'grid',
-          styles: { fontSize: 8 },
-          headStyles: { fillColor: [46, 55, 69] } // Matches #2E3745 from your header styling
+          styles: {
+            font: 'Sarabun',
+            fontStyle: 'normal',
+            fontSize: 9
+          },
+          headStyles: {
+            fillColor: [46, 55, 69], // Matches #2E3745
+            font: 'Sarabun',
+            fontStyle: 'normal',
+            fontSize: 9
+          }
         })
 
         doc.save(`${props.fileName}.pdf`)
