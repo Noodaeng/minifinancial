@@ -71,6 +71,13 @@
                   @onRowClick="onSesRowClick"
                   @onFilter="sesOnfilter"
                 />
+                <!-- Export Buttons -->
+                <ExportBtnGroup
+                  :rows="sesFilterRows"
+                  :columns="sesListColumns"
+                  :enable-export="true"
+                  file-name="Port_List_Report"
+                />
               </div>
             </div>
 
@@ -125,6 +132,7 @@ import PortComp from '../../components/PortComp.vue'
 import PortSessionComp from '../../components/PortSessionComp.vue'
 import PortDialogComp from '../../components/PortDialogComp.vue'
 import ListComp from '../../components/utils/ListComp.vue'
+import ExportBtnGroup from '../../components/utils/ExportBtnGroup.vue'
 import PortTypeSessionComp from '../../components/PortTypeSessionComp.vue'
 import StateCtrlBtn from '../../components/utils/StateCtrlBtn.vue'
 import { usePortProp } from '../../hooks/usePortProp.js'
@@ -145,7 +153,8 @@ export default defineComponent({
     StateCtrlBtn,
     PortSessionComp,
     PortDialogComp,
-    PortTypeSessionComp
+    PortTypeSessionComp,
+    ExportBtnGroup
   },
   props: {
     portType: {
