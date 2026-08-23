@@ -184,7 +184,16 @@
               <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
                   <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                    <q-date v-model="model.createOn" mask="DD/MM/YYYY" class="bg-body text-appText">
+                    <q-date
+                      v-model="model.createOn"
+                      mask="DD/MM/YYYY"
+                      class="bg-body text-appText"
+                      @update:model-value="
+                        val => {
+                          if (val) model.createOn = val
+                        }
+                      "
+                    >
                       <div class="row items-center justify-end">
                         <q-btn v-close-popup label="Close" flat />
                       </div>
