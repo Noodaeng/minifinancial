@@ -222,9 +222,9 @@
               outlined
               v-model="model.paymentRate"
               type="number"
-              :label="$t('Payment_rate') + ' / ' + periodUnit[model.paymentTerm]"
+              :label="$t('Payment_rate') + ' / ' + $t('month')"
               label-color="appLabel"
-              :hint="$t('Payment_rate') + ' / ' + periodUnit[model.paymentTerm]"
+              :hint="$t('Payment_rate') + ' / ' + $t('month')"
               list="rate-list"
               dense
               input-class="text-appText"
