@@ -239,7 +239,7 @@ export function useCrudProp<T extends BaseEntity, S>(
         recordData[key] = item.value[key] ?? null
       })
 
-      console.log('Save Item---->', item.value)
+      //console.log('Save Item---->', item.value)
       const response = await api.post(url, {
         token: token,
         table: tableName,

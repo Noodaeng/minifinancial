@@ -64,6 +64,19 @@ export default defineComponent({
   },
   emits: ['onFilter', 'onRowClick'],
   setup(props, { emit }) {
+    const getFirstColumnName = (): string => {
+      if (props.columns.length > 0) {
+        const firstCol = props.columns[0]
+        return firstCol?.name || (typeof firstCol?.field === 'string' ? firstCol.field : '')
+      }
+      return ''
+    }
+    const pagination = ref({
+      sortBy: getFirstColumnName(),
+      descending: false,
+      page: 1,
+      rowsPerPage: 5
+    })
     const filter = ref(props.initGuide)
     const onFiltering = (val: string | number | null) => {
       emit('onFilter', val)
@@ -74,9 +87,7 @@ export default defineComponent({
     return {
       filter,
       onFiltering,
-      pagination: ref({
-        rowsPerPage: 0
-      })
+      pagination
     }
   }
 })

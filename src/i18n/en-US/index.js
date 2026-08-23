@@ -235,8 +235,13 @@ export default {
   Defaulted: 'Defaulted / Non-Performing',
   Matured: 'Matured / Due for Settlement',
   //++++++Notify++++++++
+
   Payment_delay: 'Payment delay', // ชำระเงินล่าช้า / ค้างชำระ
   Interest_rate_changed: 'Interest rate changed', // มีการเปลี่ยนแปลงอัตราดอกเบี้ย
   Maturity_approaching: 'Maturity approaching', // ใกล้ถึงวันครบกำหนดชำระ / สัญญาหมดอายุ
-  Overdue_principal: 'Overdue principal' // เงินต้นค้างชำระเกินกำหนด
+  Overdue_principal: 'Overdue principal', // เงินต้นค้างชำระเกินกำหนด
+  Would_you_like_to_delete: 'Would you like to delete',
+  Item_deleted_successfully: 'Item deleted successfully',
+  Failed_to_delete_item: 'Failed to delete item',
+  Deletion_cancelled_by_user: 'Deletion cancelled by user'
 }
