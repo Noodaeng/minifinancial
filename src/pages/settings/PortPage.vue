@@ -70,14 +70,18 @@
                   :columns="sesListColumns"
                   @onRowClick="onSesRowClick"
                   @onFilter="sesOnfilter"
-                />
-                <!-- Export Buttons -->
-                <ExportBtnGroup
-                  :rows="sesFilterRows"
-                  :columns="sesListColumns"
-                  :enable-export="true"
-                  file-name="Port_List_Report"
-                />
+                >
+                  <!-- Inject buttons directly into the append slot -->
+                  <template #append>
+                    <!-- Export Buttons -->
+                    <ExportBtnGroup
+                      :rows="sesFilterRows"
+                      :columns="sesListColumns"
+                      :enable-export="true"
+                      file-name="Port_List_Report"
+                    />
+                  </template>
+                </ListComp>
               </div>
             </div>
 
