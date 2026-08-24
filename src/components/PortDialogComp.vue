@@ -334,7 +334,8 @@ import { ReFinanceInfo } from '../types/myTypes'
 import ListComp from './utils/ListComp.vue'
 import SaveCancelBtn from '../components/utils/SaveCancelBtn.vue'
 import { QPopupProxy, QTableColumn, date } from 'quasar'
-
+import { dateLocaleTH } from '../i18n/th-TH/index'
+import { dateLocaleEN } from '../i18n/en-US/index'
 export default defineComponent({
   name: 'PortDialogComp',
   components: { ListComp, SaveCancelBtn },
@@ -505,22 +506,5 @@ export default defineComponent({
   max-width: 90vw;
   max-height: 85vh;
   overflow-y: auto;
-}
-::v-deep(.q-select .q-field__native) {
-  color: var(--q-color-appText); /* or your custom color */
-}
-/* Scoped or global */
-::v-deep(.q-date__header) {
-  background-color: var(--q-body); /* your custom background */
-  color: var(--q-appText); /* your custom text color */
-}
-
-/* If you want to style the year/date text separately */
-::v-deep(.q-date__header-title) {
-  color: var(--q-appText); /* text color for "2026" */
-}
-
-::v-deep(.q-date__header-subtitle) {
-  color: var(--q-appText); /* text color for "Mon, Aug 17" */
 }
 </style>
