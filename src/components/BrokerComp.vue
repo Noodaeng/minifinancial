@@ -111,17 +111,40 @@
             />
           </div>
 
-          <div class="col-12 col-sm-6 col-md-3">
+          <div class="col-12 col-sm-3 col-md-3">
             <q-input
               outlined
               v-model="model.createOn"
-              :label="$t('Create_on')"
+              mask="##/##/####"
+              :label="$t('Create_On')"
               label-color="appLabel"
-              :hint="$t('Create_on')"
-              :readonly="true"
+              :hint="$t('Create_On')"
+              :rules="strRule"
               dense
+              readonly
               input-class="text-appText"
-            />
+            >
+              <template v-slot:append>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-date
+                      v-model="model.createOn"
+                      mask="DD/MM/YYYY"
+                      class="bg-body text-appText"
+                      @update:model-value="
+                        val => {
+                          if (val) model.createOn = val
+                        }
+                      "
+                    >
+                      <div class="row items-center justify-end">
+                        <q-btn v-close-popup label="Close" flat />
+                      </div>
+                    </q-date>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
           </div>
 
           <!-- Column row-clump 3 -->

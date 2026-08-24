@@ -204,12 +204,6 @@ export default defineComponent({
       }
     )
 
-    const handleSessionClick = (index: number) => {
-      useSession.onCreateSession(index, usePort.item.value)
-      sessionType.value = useSession.item.value.sessionType
-      isDialogOpen.value = canCreateSession(useSession.items.value, index, usePort.item.value)
-    }
-
     const init = async () => {
       usePort.portType.value = props.portType
       useSession.portType.value = props.portType
@@ -285,7 +279,15 @@ export default defineComponent({
         false
       )
     })
-
+    const handleSessionClick = (index: number) => {
+      useSession.onCreateSession(index, usePort.item.value)
+      sessionType.value = useSession.item.value.sessionType
+      isDialogOpen.value = canCreateSession(useSession.items.value, index, usePort.item.value)
+      if (isDialogOpen.value) {
+        useSession.item.value.creditPortId = lastCreditPort.value ?? ''
+        useSession.item.value.debitPortId = lastDebitPort.value ?? ''
+      }
+    }
     const onSesRowClick = (row: any) => {
       if (row) {
         useSession.onRowClick(row)
