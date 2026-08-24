@@ -139,12 +139,14 @@ export function usePortProp() {
       await crud.Init()
       //++++++
       portTypeSummaries.value = await getSessionTypesByPortType()
+      console.log('Test new-------->api####-1', portTypeSummaries.value)
     } catch (err) {
       await showError(err)
     }
   }
   const updateSessionSummaries = async () => {
     portSessionSummaries.value = await getSessionTypesBreakdown()
+    console.log('Test new-------->api####-1', portSessionSummaries.value)
   }
 
   // Compute distinct interest rates
