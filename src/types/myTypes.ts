@@ -41,6 +41,19 @@ export interface CategoryMeta {
   totalDebit: number
   notifyCount: number
 }
+export interface EntryTypeMeta {
+  portType: number
+  name: string
+  drEffect: '+' | '-'
+  crEffect: '+' | '-'
+  icon: string
+  totalCredit: number
+  totalDebit: number
+  creditCount: number
+  debitCount: number
+  balance: number
+}
+
 export interface PortTypeSummary {
   sessionType: number
   totalAmount: number

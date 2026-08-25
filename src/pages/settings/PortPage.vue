@@ -30,10 +30,11 @@
 
           <!-- Pinned Bottom Session Summary -->
           <div class="q-pa-xs bg-surface">
-            <PortTypeSessionComp
-              :sessionTypeSummaries="sessionTypeSummaries"
-              :portType="portType"
-            />
+            <PortTypeSessionComp :sessionTypeSummaries="sessionTypeSummaries" :portType="portType">
+              <template #append>
+                <EntryTypeComp :portType="portType" :sessionSummaries="sessionTypeSummaries" />
+              </template>
+            </PortTypeSessionComp>
           </div>
         </q-card>
       </div>
@@ -78,6 +79,7 @@
                       :rows="sesFilterRows"
                       :columns="sesListColumns"
                       :enable-export="true"
+                      :title="getTitle"
                       file-name="Port_List_Report"
                     />
                   </template>
@@ -93,7 +95,11 @@
                   :portSessionSummaries="portSessionSummaries"
                   :isPortValid="isPortValid"
                   @onSessionClick="handleSessionClick"
-                />
+                >
+                  <template #append>
+                    <EntryTypeComp :portType="portType" :sessionSummaries="portSessionSummaries" />
+                  </template>
+                </PortSessionComp>
               </div>
             </div>
           </div>
@@ -139,6 +145,7 @@ import ListComp from '../../components/utils/ListComp.vue'
 import ExportBtnGroup from '../../components/utils/ExportBtnGroup.vue'
 import PortTypeSessionComp from '../../components/PortTypeSessionComp.vue'
 import StateCtrlBtn from '../../components/utils/StateCtrlBtn.vue'
+import EntryTypeComp from '../../components/utils/EntryTypeComp.vue'
 import { usePortProp } from '../../hooks/usePortProp.js'
 import { usePortSession } from '../../hooks/usePortSession.js'
 import { EPortType } from '../../types/myEnums.js'
@@ -158,7 +165,8 @@ export default defineComponent({
     PortSessionComp,
     PortDialogComp,
     PortTypeSessionComp,
-    ExportBtnGroup
+    ExportBtnGroup,
+    EntryTypeComp
   },
   props: {
     portType: {
@@ -308,6 +316,16 @@ export default defineComponent({
     const onBeforeDialogHide = () => {
       useSession.resetDataState()
     }
+    const getTitle = computed(() => {
+      if (!usePort.item.value) return ':-'
+      return (
+        usePort.item.value.portId +
+        ':' +
+        usePort.item.value.description +
+        ',' +
+        usePort.item.value.customerName
+      )
+    })
     return {
       splitterModel: ref(35),
       myPortComp,
@@ -353,7 +371,8 @@ export default defineComponent({
       periodGuides: usePort.periodGuides,
       paymentRateGuides: usePort.paymentRateGuides,
       visRefinal,
-      reFinanceInfo
+      reFinanceInfo,
+      getTitle
     }
   }
 })

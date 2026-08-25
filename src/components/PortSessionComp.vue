@@ -59,6 +59,7 @@
     <div v-else class="col row items-center justify-center text-caption text-grey-6 q-pa-md">
       No session summary available
     </div>
+    <slot name="append"></slot>
   </q-card>
 </template>
 

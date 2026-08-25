@@ -57,6 +57,10 @@ export default defineComponent({
       type: Boolean,
       default: true
     },
+    title: {
+      type: String,
+      default: 'Title'
+    },
     fileName: {
       type: String,
       default: 'export_data'
@@ -95,7 +99,14 @@ export default defineComponent({
         loadingExcel.value = true
         const { formattedRows } = formatRowData()
 
-        const worksheet = XLSX.utils.json_to_sheet(formattedRows)
+        const worksheet = XLSX.utils.json_to_sheet([])
+
+        // 1. Add Title in cell A1
+        XLSX.utils.sheet_add_aoa(worksheet, [[props.title]], { origin: 'A1' })
+
+        // 2. Add table data starting at row 3 (cell A3) to leave space under the title
+        XLSX.utils.sheet_add_json(worksheet, formattedRows, { origin: 'A3', skipHeader: false })
+
         const workbook = XLSX.utils.book_new()
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Data')
 
@@ -121,10 +132,15 @@ export default defineComponent({
         doc.addFont('Sarabun-Regular.ttf', 'Sarabun', 'normal')
         doc.setFont('Sarabun')
 
+        // 2. Add Title Text
+        doc.setFontSize(14)
+        doc.text(props.title, 14, 15)
+
         const tableBody = formattedRows.map(row => headers.map(h => row[h]))
 
-        // 2. Generate PDF Table
+        // 3. Generate PDF Table (starts below the title at startY: 20)
         autoTable(doc, {
+          startY: 20,
           head: [headers],
           body: tableBody,
           theme: 'grid',

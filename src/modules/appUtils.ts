@@ -1181,6 +1181,62 @@ export const getAccountCategoryByPortType = (portType: EPortType | number): Acco
       throw new Error(`Invalid EPortType: ${portType}`)
   }
 }
+export const getEffectPortType = (portType: EPortType | number): ['+' | '-', '+' | '-'] => {
+  const pType = Number(portType)
+
+  let creditEffect: '+' | '-'
+  let debitEffect: '+' | '-'
+
+  switch (pType) {
+    // Assets (0 - 4): Debit increases, Credit decreases
+    case EPortType.CashAndDeposits:
+    case EPortType.LoansReceivable:
+    case EPortType.Securities:
+    case EPortType.EquityHoldings:
+    case EPortType.OtherInvestments:
+      debitEffect = '+'
+      creditEffect = '-'
+      break
+
+    // Liabilities (5 - 6): Debit decreases, Credit increases
+    case EPortType.Borrowings:
+    case EPortType.Payables:
+      debitEffect = '-'
+      creditEffect = '+'
+      break
+
+    // Revenue (7 - 9): Debit decreases, Credit increases
+    case EPortType.OperatingRevenue:
+    case EPortType.InterestIncome:
+    case EPortType.DividendIncome:
+      debitEffect = '-'
+      creditEffect = '+'
+      break
+
+    // Expenses (10 - 13): Debit increases, Credit decreases
+    case EPortType.OperatingExpense:
+    case EPortType.InterestExpense:
+    case EPortType.BadDebtExpense:
+    case EPortType.DisposalLoss:
+      debitEffect = '+'
+      creditEffect = '-'
+      break
+
+    // Equity (14 - 16): Debit decreases, Credit increases
+    case EPortType.PaidInCapital:
+    case EPortType.RetainedEarnings:
+    case EPortType.OtherReserves:
+      debitEffect = '-'
+      creditEffect = '+'
+      break
+
+    default:
+      throw new Error(`Invalid EPortType: ${portType}`)
+  }
+
+  return [creditEffect, debitEffect]
+}
+
 export const getPortSessionInfo = (
   portType: string | number | EPortType,
   subType: number
