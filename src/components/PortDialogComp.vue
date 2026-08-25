@@ -195,7 +195,7 @@
                       "
                     >
                       <div class="row items-center justify-end">
-                        <q-btn v-close-popup label="Close" flat />
+                        <q-btn v-close-popup :label="$t('Close')" flat />
                       </div>
                     </q-date>
                   </q-popup-proxy>

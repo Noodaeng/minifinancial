@@ -18,54 +18,25 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref, onMounted } from 'vue'
+import { defineComponent, Ref, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useQuasar } from 'quasar'
 import MyConfig from '../modules/myConfig'
-
-// Import Quasar language packs directly
-import langTh from 'quasar/lang/th'
-import langEn from 'quasar/lang/en-US'
-import langZh from 'quasar/lang/zh-CN'
-
+//import { useI18nLoader } from '../hooks/useI18nLoader'
 export default defineComponent({
-  name: 'LanguageSwitcher',
+  name: 'LanguageSwitcherCopy',
   setup() {
-    const $q = useQuasar()
+    //const { changeLocaleSafe } = useI18nLoader()
     const { locale } = useI18n({ useScope: 'global' })
-
     const langs: Ref<{ value: string; label: string }[]> = ref([
       { value: 'th-TH', label: 'ภาษาไทย' },
       { value: 'en-US', label: 'English' },
       { value: 'zh-CN', label: '中國人' }
     ])
 
-    // Map your locale codes to Quasar language pack objects
-    const quasarLangPacks: Record<string, any> = {
-      'th-TH': langTh,
-      'en-US': langEn,
-      'zh-CN': langZh
-    }
-
     const updateLanguage = async (val: string) => {
-      // 1. Update vue-i18n (already handled by v-model="locale", but explicit here)
-      locale.value = val
-
-      // 2. Update Quasar's global language ( localizes <q-date> automatically )
-      if (quasarLangPacks[val]) {
-        $q.lang.set(quasarLangPacks[val])
-      }
-
-      // 3. Save to user config
+      //await changeLocaleSafe(val)
       MyConfig.instance.LastLanguage = val
     }
-
-    // Initialize Quasar language on component mount to match active locale
-    onMounted(() => {
-      if (quasarLangPacks[locale.value]) {
-        $q.lang.set(quasarLangPacks[locale.value])
-      }
-    })
 
     return {
       locale,
