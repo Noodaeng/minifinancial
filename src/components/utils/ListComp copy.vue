@@ -31,24 +31,11 @@
           :pagination="pagination"
           :rows-per-page-options="[0]"
           :virtual-scroll-sticky-size-start="48"
-          :row-key="getRowKey"
+          row-key="Id"
           :rows="rows"
           :columns="columns"
-        >
-          <!-- Custom Row Slot without Checkboxes -->
-          <template v-slot:body="props">
-            <q-tr
-              :props="props"
-              class="cursor-pointer"
-              :class="{ 'selected-row-text': selectedRowKey === getRowKey(props.row) }"
-              @click="handleRowClick(props.row)"
-            >
-              <q-td v-for="col in props.cols" :key="col.name" :props="props">
-                {{ col.value }}
-              </q-td>
-            </q-tr>
-          </template>
-        </q-table>
+          @row-click="(evt, row) => $emit('onRowClick', row)"
+        />
       </div>
     </div>
     <slot name="append"></slot>
@@ -61,7 +48,7 @@ import { defineComponent, ref, onMounted } from 'vue'
 import type { QTableColumn } from 'quasar'
 
 export default defineComponent({
-  name: 'ListComp',
+  name: 'ListCompCopy',
   props: {
     rows: {
       type: Array as () => Array<any>,
@@ -78,26 +65,6 @@ export default defineComponent({
   },
   emits: ['onFilter', 'onRowClick'],
   setup(props, { emit }) {
-    // Tracks the single selected row key
-    const selectedRowKey = ref<string | number | null>(null)
-
-    // Helper to extract a unique key from each row object
-    const getRowKey = (row: any): string | number => {
-      if (row.Id !== undefined) return row.Id
-      if (row.id !== undefined) return row.id
-      if (props.columns.length > 0 && props.columns[0]?.field) {
-        const field = props.columns[0].field
-        return typeof field === 'function' ? field(row) : row[field]
-      }
-      return JSON.stringify(row)
-    }
-
-    // Handles single row selection on click
-    const handleRowClick = (row: any) => {
-      selectedRowKey.value = getRowKey(row)
-      emit('onRowClick', row)
-    }
-
     const getFirstColumnName = (): string => {
       if (props.columns.length > 0) {
         const firstCol = props.columns[0]
@@ -105,31 +72,23 @@ export default defineComponent({
       }
       return ''
     }
-
     const pagination = ref({
       sortBy: getFirstColumnName(),
       descending: false,
       page: 1,
       rowsPerPage: 5
     })
-
     const filter = ref(props.initGuide)
-
     const onFiltering = (val: string | number | null) => {
       emit('onFilter', val)
     }
-
     onMounted(() => {
       onFiltering(filter.value)
     })
-
     return {
       filter,
       onFiltering,
-      pagination,
-      selectedRowKey,
-      getRowKey,
-      handleRowClick
+      pagination
     }
   }
 })
@@ -137,15 +96,12 @@ export default defineComponent({
 
 <style lang="sass" scoped>
 .my-sticky-dynamic
+  /* Force full height within the flex container */
   height: 100%
   display: flex
   flex-direction: column
 
-  /* Text color changes to secondary theme color when selected */
-  .selected-row-text td
-    color: var(--appHint) !important
-    font-weight: 600 /* Optional: makes text bold for emphasis */
-
+  /* Expand table body to push pagination footer to bottom edge */
   :deep(.q-table__middle)
     flex-grow: 1
 
