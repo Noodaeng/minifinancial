@@ -32,7 +32,7 @@
           <div class="q-pa-xs bg-surface">
             <PortTypeSessionComp :sessionTypeSummaries="sessionTypeSummaries" :portType="portType">
               <template #append>
-                <EntryTypeComp :portType="portType" :sessionSummaries="sessionTypeSummaries" />
+                <EntryTypeComp :portType="portType" :sessionSummaries="sessionTypeEntries" />
               </template>
             </PortTypeSessionComp>
           </div>
@@ -326,6 +326,12 @@ export default defineComponent({
         usePort.item.value.customerName
       )
     })
+    const sessionTypeSummaries = computed(() =>
+      usePort.portTypeSummaries?.value.filter(t => t.sessionType < 100)
+    )
+    const sessionTypeEntries = computed(() =>
+      usePort.portTypeSummaries?.value.filter(t => t.sessionType > 500)
+    )
     return {
       splitterModel: ref(35),
       myPortComp,
@@ -339,7 +345,8 @@ export default defineComponent({
       port: usePort.item,
       ports: usePort.items,
       rawOptions: usePort.rawOptions,
-      sessionTypeSummaries: usePort.portTypeSummaries,
+      sessionTypeSummaries,
+      sessionTypeEntries,
       onRowClick: usePort.onRowClick,
       onFilter: usePort.onFilter,
       onCreate: usePort.onCreatePort,
