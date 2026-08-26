@@ -92,12 +92,12 @@
               <div class="col scroll">
                 <PortSessionComp
                   :details="sessionDetails"
-                  :portSessionSummaries="portSessionSummaries"
+                  :portSessionSummaries="sessionSummaries"
                   :isPortValid="isPortValid"
                   @onSessionClick="handleSessionClick"
                 >
                   <template #append>
-                    <EntryTypeComp :portType="portType" :sessionSummaries="portSessionSummaries" />
+                    <EntryTypeComp :portType="portType" :sessionSummaries="sessionEntries" />
                   </template>
                 </PortSessionComp>
               </div>
@@ -332,6 +332,12 @@ export default defineComponent({
     const sessionTypeEntries = computed(() =>
       usePort.portTypeSummaries?.value.filter(t => t.sessionType > 500)
     )
+    const sessionSummaries = computed(() =>
+      usePort.portSessionSummaries?.value.filter(t => t.sessionType < 100)
+    )
+    const sessionEntries = computed(() =>
+      usePort.portSessionSummaries?.value.filter(t => t.sessionType > 500)
+    )
     return {
       splitterModel: ref(35),
       myPortComp,
@@ -372,7 +378,8 @@ export default defineComponent({
       onBeforeDialogHide,
       lastCreditPort,
       lastDebitPort,
-      portSessionSummaries: usePort.portSessionSummaries,
+      sessionSummaries,
+      sessionEntries,
       interestGuides: usePort.interestGuides,
       descriptionGuides: usePort.descriptionGuides,
       periodGuides: usePort.periodGuides,

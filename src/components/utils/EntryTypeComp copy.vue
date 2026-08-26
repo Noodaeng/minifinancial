@@ -5,20 +5,8 @@
       bordered
       class="summary-card q-pa-xs bg-body text-appText fit column justify-between cursor-pointer transition-generic"
     >
-      <div class="row items-center justify-between text-caption q-mb-xs">
-        <q-checkbox v-model="showEntry" :label="$t('Show_entry')" />
-        <div
-          v-if="showEntry"
-          class="text-right text-weight-bolder text-subtitle2 text-primary ellipsis"
-        >
-          <q-badge outline :color="badgeColor" size="xs">
-            {{ formatCurrency(entryData.balance) }}
-          </q-badge>
-        </div>
-      </div>
-      <q-separator v-if="showEntry" class="q-my-xs opacity-20" />
       <!-- Top Section: Icon + Description + Count -->
-      <div v-if="showEntry" class="row items-center justify-between text-caption q-mb-xs">
+      <div class="row items-center justify-between text-caption q-mb-xs">
         <q-chip
           dense
           size="sm"
@@ -33,7 +21,7 @@
       </div>
 
       <!-- Cr Row -->
-      <div v-if="showEntry" class="row items-center justify-between text-caption">
+      <div class="row items-center justify-between text-caption">
         <q-chip
           dense
           size="sm"
@@ -46,26 +34,36 @@
           {{ formatCurrency(entryData.totalCredit) }}
         </div>
       </div>
+
+      <q-separator class="q-my-xs opacity-20" />
+
+      <!-- Bottom Section: Total Amount -->
+
+      <div class="text-right text-weight-bolder text-subtitle2 text-primary ellipsis min-width-0">
+        <q-badge
+          outline
+          :color="entryData.balance < 0 ? 'red' : entryData.balance > 0 ? 'green' : 'grey-6'"
+          size="xs"
+        >
+          {{ formatCurrency(entryData.balance) }}
+        </q-badge>
+      </div>
     </q-card>
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, PropType, ref } from 'vue'
-import type { PortTypeSummary, EntryTypeMeta } from '../../types/myTypes'
+import { computed, defineComponent, PropType } from 'vue'
+import { PortTypeSummary, EntryTypeMeta } from '../../types/myTypes'
 import { EPortType } from '../../types/myEnums'
 import { getEffectPortType, formatCurrency } from '../../modules/appUtils'
-
-const SESSION_TYPE_CREDIT = 1000
-const SESSION_TYPE_DEBIT = 1001
-
-const DEBIT_INCREMENT_TYPES = new Set([0, 1, 2, 3, 4, 10, 11, 12, 13])
-const CREDIT_INCREMENT_TYPES = new Set([5, 6, 7, 8, 9, 14, 15, 16])
-
 export default defineComponent({
-  name: 'EntryTypeComp',
-
+  name: 'EntryTypeCompCopy',
+  data() {
+    return {}
+  },
   props: {
     portType: {
+      // Highlighted change: added String alongside Number
       type: [Number, String] as PropType<string | number | EPortType>,
       default: EPortType.CashAndDeposits
     },
@@ -75,32 +73,48 @@ export default defineComponent({
       default: (): PortTypeSummary[] => []
     }
   },
-
   setup(props) {
     const getBalance = (dr: number, cr: number, pType: number): number => {
-      if (DEBIT_INCREMENT_TYPES.has(pType)) {
+      if ([0, 1, 2, 3, 4].includes(pType)) {
         return dr - cr
-      }
-      if (CREDIT_INCREMENT_TYPES.has(pType)) {
+      } else if ([5, 6].includes(pType)) {
         return cr - dr
+      } else if ([7, 8, 9].includes(pType)) {
+        return cr - dr
+      } else if ([10, 11, 12, 13].includes(pType)) {
+        return dr - cr
+      } else if ([14, 15, 16].includes(pType)) {
+        return cr - dr
+      } else {
+        return 0
       }
-      return 0
     }
-
     const entryData = computed<EntryTypeMeta>(() => {
-      const pTypeNum = Number(props.portType)
-
-      const sessionMap = new Map<number, PortTypeSummary>()
-      for (const item of props.sessionSummaries) {
-        if (item.sessionType === SESSION_TYPE_CREDIT || item.sessionType === SESSION_TYPE_DEBIT) {
-          sessionMap.set(item.sessionType, item)
+      const entries = props.sessionSummaries.filter(
+        t => t.sessionType === 1000 || t.sessionType === 1001
+      )
+      if (entries && entries.length >= 2) {
+        const entryCredit = entries.find(t => t.sessionType === 1000)
+        const entryDedit = entries.find(t => t.sessionType === 1001)
+        const effect = getEffectPortType(Number(props.portType))
+        const balance = getBalance(
+          entryDedit?.totalAmount ?? 0,
+          entryCredit?.totalAmount ?? 0,
+          Number(props.portType)
+        )
+        return {
+          portType: 500,
+          name: '-',
+          drEffect: effect[0],
+          crEffect: effect[1],
+          icon: '-',
+          totalCredit: entryCredit?.totalAmount ?? 0,
+          totalDebit: entryDedit?.totalAmount ?? 0,
+          creditCount: entryCredit?.count ?? 0,
+          debitCount: entryDedit?.count ?? 0,
+          balance: balance
         }
-      }
-
-      const entryCredit = sessionMap.get(SESSION_TYPE_CREDIT)
-      const entryDebit = sessionMap.get(SESSION_TYPE_DEBIT)
-
-      if (!entryCredit && !entryDebit) {
+      } else {
         return {
           portType: 500,
           name: '-',
@@ -114,38 +128,10 @@ export default defineComponent({
           balance: 0
         }
       }
-
-      const effect = getEffectPortType(pTypeNum)
-      const totalCredit = entryCredit?.totalAmount ?? 0
-      const totalDebit = entryDebit?.totalAmount ?? 0
-
-      return {
-        portType: 500,
-        name: '-',
-        drEffect: effect[0],
-        crEffect: effect[1],
-        icon: '-',
-        totalCredit,
-        totalDebit,
-        creditCount: entryCredit?.count ?? 0,
-        debitCount: entryDebit?.count ?? 0,
-        balance: getBalance(totalDebit, totalCredit, pTypeNum)
-      }
     })
-
-    const badgeColor = computed(() => {
-      if (entryData.value.balance < 0) return 'red'
-      if (entryData.value.balance > 0) return 'green'
-      return 'grey-6'
-    })
-    const showEntry = ref(false)
-    return {
-      formatCurrency,
-      entryData,
-      badgeColor,
-      showEntry
-    }
-  }
+    return { formatCurrency, entryData }
+  },
+  methods: {}
 })
 </script>
 <style scoped>

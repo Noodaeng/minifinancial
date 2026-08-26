@@ -1,26 +1,6 @@
 // This is just an example,
 // so you can safely delete all default props below
-export const dateLocaleEN = {
-  days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-  daysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-  months: [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
-  ],
-  monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-  firstDayOfWeek: 0, // 0 = Sunday, 1 = Monday
-  pluralDay: 'days'
-}
+
 export default {
   themes: {
     'bcs-default': 'Default',
@@ -91,6 +71,7 @@ export default {
   PortId: 'PortId',
   Notify_Code: 'Notify_Code',
   Warning_Description: 'Warning / Description',
+  Show_entry: 'Show entry',
   //+++++++Customer+++++++++++++++++
   Customer: 'Customer',
   Customers: 'Customers',

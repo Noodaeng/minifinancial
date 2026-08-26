@@ -1,39 +1,5 @@
 //load from db...
 // Export directly inside your existing index.js
-export const dateLocaleTH = {
-  days: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
-  daysShort: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
-  months: [
-    'มกราคม',
-    'กุมภาพันธ์',
-    'มีนาคม',
-    'เมษายน',
-    'พฤษภาคม',
-    'มิถุนายน',
-    'กรกฎาคม',
-    'สิงหาคม',
-    'กันยายน',
-    'ตุลาคม',
-    'พฤศจิกายน',
-    'ธันวาคม'
-  ],
-  monthsShort: [
-    'ม.ค.',
-    'ก.พ.',
-    'มี.ค.',
-    'เม.ย.',
-    'พ.ค.',
-    'มิ.ย.',
-    'ก.ค.',
-    'ส.ค.',
-    'ก.ย.',
-    'ต.ค.',
-    'พ.ย.',
-    'ธ.ค.'
-  ],
-  firstDayOfWeek: 0, // 0 = Sunday, 1 = Monday
-  pluralDay: 'วัน'
-}
 
 export default {
   themes: {
@@ -105,6 +71,7 @@ export default {
   PortId: 'พอร์ต',
   Notify_Code: 'ระหัส แจ้งเตือน',
   Warning_Description: 'รายละเอียด แจ้งเตือน',
+  Show_entry: 'แสดงบันทึกบัญชี',
   //+++++++Customer+++++++++แจ้งเตือน++++++++
   Customer: 'ลูกค้า',
   Customers: 'ลูกค้า',

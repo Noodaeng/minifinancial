@@ -1234,7 +1234,7 @@ export const getEffectPortType = (portType: EPortType | number): ['+' | '-', '+'
       throw new Error(`Invalid EPortType: ${portType}`)
   }
 
-  return [creditEffect, debitEffect]
+  return [debitEffect, creditEffect]
 }
 
 export const getPortSessionInfo = (
