@@ -72,6 +72,7 @@ export default {
   Notify_Code: 'ระหัส แจ้งเตือน',
   Warning_Description: 'รายละเอียด แจ้งเตือน',
   Show_entry: 'แสดงบันทึกบัญชี',
+  No_: 'ลำดับ',
   //+++++++Customer+++++++++แจ้งเตือน++++++++
   Customer: 'ลูกค้า',
   Customers: 'ลูกค้า',

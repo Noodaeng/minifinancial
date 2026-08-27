@@ -80,7 +80,7 @@
                       :columns="sesListColumns"
                       :enable-export="true"
                       :title="getTitle"
-                      file-name="Port_List_Report"
+                      :file-name="getPortFileName"
                     />
                   </template>
                 </ListComp>
@@ -338,6 +338,13 @@ export default defineComponent({
     const sessionEntries = computed(() =>
       usePort.portSessionSummaries?.value.filter(t => t.sessionType > 500)
     )
+    const getPortFileName = computed(() => {
+      const uniqueKey = Date.now() // Or any dynamic key generator (e.g., crypto.randomUUID())
+      const portId = usePort.item?.value?.portId ?? ''
+
+      return `${portId}_${uniqueKey}`
+    })
+
     return {
       splitterModel: ref(35),
       myPortComp,
@@ -386,7 +393,8 @@ export default defineComponent({
       paymentRateGuides: usePort.paymentRateGuides,
       visRefinal,
       reFinanceInfo,
-      getTitle
+      getTitle,
+      getPortFileName
     }
   }
 })

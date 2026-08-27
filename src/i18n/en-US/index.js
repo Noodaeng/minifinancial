@@ -72,6 +72,7 @@ export default {
   Notify_Code: 'Notify_Code',
   Warning_Description: 'Warning / Description',
   Show_entry: 'Show entry',
+  No_: 'No.',
   //+++++++Customer+++++++++++++++++
   Customer: 'Customer',
   Customers: 'Customers',

@@ -4,10 +4,9 @@ import { useCrudProp } from './useCrudProp'
 import { showError, getSessionType, currentDateTimeStr } from '../modules/appUtils'
 import Session from '../models/session'
 import Port from '../models/port'
-import SessionDto from '../models/sessionDto'
 import MyConfig from '../modules/myConfig'
 import { useApi } from '../services/api'
-export function usePortSession() {
+export function usePortSessionCopy() {
   const portId = ref('')
   const portType: Ref<string | number | EPortType> = ref(EPortType.CashAndDeposits)
   const crud = useCrudProp<Session, Session>(
@@ -15,14 +14,6 @@ export function usePortSession() {
     'sessions',
     Session,
     t => [
-      {
-        name: 'itemNo',
-        required: true,
-        label: t('No_'),
-        align: 'left',
-        field: 'itemNo',
-        sortable: true
-      },
       {
         name: 'sessionId',
         required: true,
@@ -55,6 +46,22 @@ export function usePortSession() {
         align: 'left',
         field: 'amount',
         sortable: true
+      },
+      {
+        name: 'creditPortId',
+        required: true,
+        label: t('Credit_Port_Id'),
+        align: 'left',
+        field: 'creditPortId',
+        sortable: true
+      },
+      {
+        name: 'debitPortId',
+        required: true,
+        label: t('Debit_Port_Id'),
+        align: 'left',
+        field: 'debitPortId',
+        sortable: true
       }
     ],
     undefined,
@@ -82,16 +89,17 @@ export function usePortSession() {
   const filter = ref('')
 
   const filteredRows = computed(() => {
-    const dto = getDto(crud.items.value, Number(portType.value))
     if (!filter.value) {
-      return dto
+      return crud.items.value
     }
 
     const lowerFilter = filter.value.toLowerCase()
 
-    return dto.filter((session: Session) => {
+    return crud.items.value.filter((session: Session) => {
       return (
         String(session.sessionId).toLowerCase().includes(lowerFilter) ||
+        String(session.creditPortId).toLowerCase().includes(lowerFilter) ||
+        String(session.debitPortId).toLowerCase().includes(lowerFilter) ||
         String(session.createOn).toLowerCase().includes(lowerFilter) ||
         String(session.amount).toLowerCase().includes(lowerFilter) ||
         String(getSessionType(portType.value, session.sessionType))
@@ -100,32 +108,6 @@ export function usePortSession() {
       )
     })
   })
-
-  const getDto = (sessions: Session[], pType: number): SessionDto[] => {
-    if (!sessions || sessions.length === 0) return []
-
-    // Create a shallow copy before sorting to avoid mutating the original array
-    const sortedSessions = [...sessions].sort((a, b) => {
-      const dateA = a.createOn ? new Date(a.createOn).getTime() : 0
-      const dateB = b.createOn ? new Date(b.createOn).getTime() : 0
-      return dateA - dateB // Ascending order (oldest first)
-    })
-
-    let item = 0
-
-    return sortedSessions.map(s => {
-      if (pType === 1) {
-        item = s.sessionType === 0 || s.sessionType === 4 ? 0 : item + 1
-      } else {
-        item++
-      }
-
-      // Instantiates SessionDto correctly while preserving class methods if present
-      const dto = new SessionDto()
-      Object.assign(dto, s, { itemNo: item })
-      return dto
-    })
-  }
 
   const onFilter = (val: string) => {
     filter.value = val
