@@ -16,6 +16,14 @@ export function usePortSession() {
     Session,
     t => [
       {
+        name: 'createOn',
+        required: true,
+        label: t('Create_on'),
+        align: 'left',
+        field: 'createOn',
+        sortable: true
+      },
+      {
         name: 'itemNo',
         required: true,
         label: t('No_'),
@@ -31,14 +39,7 @@ export function usePortSession() {
         field: 'sessionId',
         sortable: true
       },
-      {
-        name: 'createOn',
-        required: true,
-        label: t('Create_on'),
-        align: 'left',
-        field: 'createOn',
-        sortable: true
-      },
+
       {
         name: 'sessionType',
         required: true,
