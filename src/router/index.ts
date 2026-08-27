@@ -39,20 +39,4 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     }
   })
   return Router
-
-  // Router.beforeEach((to, from, next) => {
-  //   const authStore = useAuthStore()
-  //   // authStore.checkSession() // Restore session if possible
-
-  //   if (to.meta.requiresAuth && !authStore.getAuthenticated) {
-  //     // Redirect to login if not authenticated
-  //     console.log('Redirecting to login → Authenticated:', authStore.getAuthenticated)
-  //     next({
-  //       path: '/login',
-  //       query: { to: to.path },
-  //     })
-  //   } else {
-  //     next() // Continue to the route
-  //   }
-  // })
 })
