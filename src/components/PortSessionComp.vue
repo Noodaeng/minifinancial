@@ -83,7 +83,7 @@ export default defineComponent({
       default: (): PortTypeSummary[] => []
     },
     isPortValid: {
-      type: Boolean,
+      type: [Boolean, String] as PropType<boolean | string>,
       default: false
     }
   },

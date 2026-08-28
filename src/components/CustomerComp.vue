@@ -112,39 +112,19 @@
           </div>
 
           <div class="col-12 col-sm-3 col-md-3">
-            <q-input
-              outlined
-              v-model="model.createOn"
-              mask="##/##/####"
-              :label="$t('Create_On')"
-              label-color="appLabel"
-              :hint="$t('Create_On')"
+            <AppDatePicker
+              v-model:modelValue="model.createOn"
+              :label="$t('Create_on')"
+              :hint="$t('Create_on')"
               :rules="strRule"
-              dense
-              readonly
-              input-class="text-appText"
-            >
-              <template v-slot:append>
-                <q-icon name="event" class="cursor-pointer">
-                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                    <q-date
-                      v-model="model.createOn"
-                      mask="DD/MM/YYYY"
-                      class="bg-body text-appText"
-                      @update:model-value="
-                        val => {
-                          if (val) model.createOn = val
-                        }
-                      "
-                    >
-                      <div class="row items-center justify-end">
-                        <q-btn v-close-popup :label="$t('Close')" flat />
-                      </div>
-                    </q-date>
-                  </q-popup-proxy>
-                </q-icon>
-              </template>
-            </q-input>
+              @update:modelValue="
+                (val: string | null) => {
+                  if (val) {
+                    model.createOn = val
+                  }
+                }
+              "
+            />
           </div>
 
           <!-- Row segment 3 elements -->
@@ -212,9 +192,10 @@ import { useValidationRules } from '../hooks/useValidationRules'
 import { i18n } from '../i18n'
 import { ECreditCustomerType } from '../types/myEnums'
 import SaveCancelBtn from '../components/utils/SaveCancelBtn.vue'
+import AppDatePicker from '../components/utils/AppDatePicker.vue'
 export default defineComponent({
   name: 'CustomerComp',
-  components: { SaveCancelBtn },
+  components: { SaveCancelBtn, AppDatePicker },
   data() {
     return {}
   },

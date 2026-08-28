@@ -7,6 +7,7 @@ import Port from '../models/port'
 import SessionDto from '../models/sessionDto'
 import MyConfig from '../modules/myConfig'
 import { useApi } from '../services/api'
+import { date } from 'quasar'
 export function usePortSession() {
   const portId = ref('')
   const portType: Ref<string | number | EPortType> = ref(EPortType.CashAndDeposits)
@@ -84,6 +85,8 @@ export function usePortSession() {
 
   const filteredRows = computed(() => {
     const dto = getDto(crud.items.value, Number(portType.value))
+    console.log('=======dto=======', portType.value, dto)
+
     if (!filter.value) {
       return dto
     }
@@ -105,13 +108,22 @@ export function usePortSession() {
   const getDto = (sessions: Session[], pType: number): SessionDto[] => {
     if (!sessions || sessions.length === 0) return []
 
-    // Create a shallow copy before sorting to avoid mutating the original array
+    // Helper to safely convert DD/MM/YYYY string to timestamp
+    const getTimestamp = (dateStr?: string): number => {
+      if (!dateStr) return 0
+      // Use Quasar date parser for DD/MM/YYYY string format
+      const parsedDate = date.extractDate(dateStr, 'DD/MM/YYYY')
+      return parsedDate ? parsedDate.getTime() : 0
+    }
+
+    // Create a shallow copy before sorting
     const sortedSessions = [...sessions].sort((a, b) => {
-      const dateA = a.createOn ? new Date(a.createOn).getTime() : 0
-      const dateB = b.createOn ? new Date(b.createOn).getTime() : 0
+      const dateA = getTimestamp(a.createOn)
+      const dateB = getTimestamp(b.createOn)
       return dateA - dateB // Ascending order (oldest first)
     })
 
+    console.log('=======sorted=======', sortedSessions)
     let item = 0
 
     return sortedSessions.map(s => {
@@ -121,7 +133,6 @@ export function usePortSession() {
         item++
       }
 
-      // Instantiates SessionDto correctly while preserving class methods if present
       const dto = new SessionDto()
       Object.assign(dto, s, { itemNo: item })
       return dto

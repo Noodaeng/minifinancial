@@ -3,9 +3,8 @@
     <!-- Header -->
     <q-card-section class="row items-center q-pb-none">
       <q-icon name="mdi-account-details-outline" size="md" color="primary" />
-      <div class="text-h6 q-ml-sm">{{ sessionInfo }} : {{ model.sessionId || 'New' }}</div>
+      <div class="text-h6 q-ml-sm">{{ sessionInfo }} : {{ localModel.sessionId || 'New' }}</div>
       <q-space />
-      <!-- v-close-popup works automatically inside q-popup-proxy -->
       <q-btn icon="close" flat round dense v-close-popup />
     </q-card-section>
 
@@ -17,7 +16,7 @@
           <div class="col-12 col-sm-3 col-md-3">
             <q-input
               outlined
-              v-model="model.portId"
+              v-model="localModel.portId"
               :label="$t('Port_Id')"
               label-color="appLabel"
               :hint="$t('Port_Id')"
@@ -31,7 +30,7 @@
 
           <div class="col-12 col-sm-3 col-md-3">
             <q-select
-              v-model="model.sessionType"
+              v-model="localModel.sessionType"
               label-color="appLabel"
               :label="$t('Session_Type')"
               :hint="$t('Session_Type')"
@@ -51,12 +50,12 @@
           <div class="col-12 col-sm-3 col-md-3">
             <q-input
               outlined
-              v-model="model.amount"
+              v-model="localModel.amount"
               :label="$t('Amount')"
               label-color="appLabel"
               :hint="$t('Amount')"
               :rules="amountRule"
-              :readonly="visRefinal || (portType === 1 && model.sessionType === 0)"
+              :readonly="visRefinal || (portType === 1 && localModel.sessionType === 0)"
               dense
               input-class="text-appText"
             />
@@ -66,7 +65,7 @@
           <div class="col-12 col-sm-3 col-md-3">
             <q-input
               outlined
-              v-model="model.creditPortId"
+              v-model="localModel.creditPortId"
               :label="$t('Credit_Port_Id')"
               label-color="appLabel"
               :hint="$t('Credit_Port_Id')"
@@ -75,10 +74,11 @@
               dense
               input-class="text-appText"
               :readonly="true"
-              ><template v-slot:append>
+            >
+              <template v-slot:append>
                 <q-icon
                   name="mdi-dots-horizontal"
-                  class="bg-body text-appText"
+                  class="bg-body text-appText cursor-pointer"
                   @click="() => popupCreditRef?.show()"
                 />
                 <div ref="popupAnchor">
@@ -99,7 +99,6 @@
                       class="absolute-top-right z-max q-pa-none"
                       style="top: 10px; right: 10px"
                     />
-                    <!-- Padding container to push ListComp below the button -->
                     <div class="q-pt-xl q-px-md q-pb-md">
                       <ListComp
                         :rows="filterCreditRows"
@@ -110,14 +109,15 @@
                       ></ListComp>
                     </div>
                   </q-popup-proxy>
-                </div> </template
-            ></q-input>
+                </div>
+              </template>
+            </q-input>
           </div>
 
           <div class="col-12 col-sm-3 col-md-3">
             <q-input
               outlined
-              v-model="model.debitPortId"
+              v-model="localModel.debitPortId"
               :label="$t('Debit_Port_Id')"
               label-color="appLabel"
               :hint="$t('Debit_Port_Id')"
@@ -126,10 +126,11 @@
               dense
               :readonly="true"
               input-class="text-appText"
-              ><template v-slot:append>
+            >
+              <template v-slot:append>
                 <q-icon
                   name="mdi-dots-horizontal"
-                  class="bg-body text-appText"
+                  class="bg-body text-appText cursor-pointer"
                   @click="() => popupDebitRef?.show()"
                 />
                 <div ref="popupAnchor">
@@ -141,7 +142,6 @@
                     transition-show="scale"
                     transition-hide="scale"
                   >
-                    <!-- Absolute top-right close button -->
                     <q-btn
                       icon="close"
                       flat
@@ -151,8 +151,6 @@
                       class="absolute-top-right z-max q-pa-none"
                       style="top: 10px; right: 10px"
                     />
-
-                    <!-- Padding container to push ListComp below the button -->
                     <div class="q-pt-xl q-px-md q-pb-md">
                       <ListComp
                         :rows="filterDebitRows"
@@ -168,44 +166,20 @@
             </q-input>
           </div>
 
+          <!-- Fixed Date Picker Input -->
           <div class="col-12 col-sm-3 col-md-3">
-            <q-input
-              outlined
-              v-model="model.createOn"
-              mask="##/##/####"
-              :label="$t('Create_On')"
-              label-color="appLabel"
-              :hint="$t('Create_On')"
+            <AppDatePicker
+              v-model:modelValue="localModel.createOn"
+              :label="$t('Create_on')"
+              :hint="$t('Create_on')"
               :rules="strRule"
-              dense
-              readonly
-              input-class="text-appText"
-            >
-              <template v-slot:append>
-                <q-icon name="event" class="cursor-pointer">
-                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                    <q-date
-                      v-model="model.createOn"
-                      mask="DD/MM/YYYY"
-                      class="bg-body text-appText"
-                      @update:model-value="
-                        val => {
-                          if (val) model.createOn = val
-                        }
-                      "
-                    >
-                      <div class="row items-center justify-end">
-                        <q-btn v-close-popup :label="$t('Close')" flat />
-                      </div>
-                    </q-date>
-                  </q-popup-proxy>
-                </q-icon>
-              </template>
-            </q-input>
+              @update:modelValue="onDateSelect"
+            />
           </div>
         </div>
       </q-form>
     </q-card-section>
+
     <!-- Re-Final Info Section -->
     <q-card-section v-if="visRefinal" class="q-pt-none">
       <q-separator class="q-mb-md" />
@@ -293,6 +267,7 @@
         </div>
       </div>
     </q-card-section>
+
     <!-- Footer Actions -->
     <q-card-actions align="right" class="q-pa-md bg-body">
       <q-btn
@@ -314,7 +289,6 @@
         @onClickSave="$emit('onClickSave')"
       />
     </q-card-actions>
-    {{ visRefinal }}-{{ portType }}
   </q-card>
 </template>
 
@@ -332,13 +306,13 @@ import { i18n } from '../i18n'
 import { EPortType, EPaymentPeriod } from '../types/myEnums'
 import { ReFinanceInfo } from '../types/myTypes'
 import ListComp from './utils/ListComp.vue'
+import AppDatePicker from './utils/AppDatePicker.vue'
 import SaveCancelBtn from '../components/utils/SaveCancelBtn.vue'
 import { QPopupProxy, QTableColumn, date } from 'quasar'
-import { dateLocaleTH } from '../i18n/th-TH/index'
-import { dateLocaleEN } from '../i18n/en-US/index'
+
 export default defineComponent({
   name: 'PortDialogComp',
-  components: { ListComp, SaveCancelBtn },
+  components: { ListComp, SaveCancelBtn, AppDatePicker },
 
   props: {
     info: {
@@ -409,16 +383,39 @@ export default defineComponent({
     const rules = useValidationRules(t)
     const creditFilter = ref(props.creditPortIdGuide)
     const debitFilter = ref(props.debitPortIdGuide)
-    const model = computed(() => modelConverter<Session>(props.info) ?? new Session())
 
-    if (!model.value.createOn) {
-      model.value.createOn = date.formatDate(Date.now(), 'DD/MM/YYYY')
-    }
-    if (props.visRefinal) {
-      model.value.amount = props.reFinanceInfo.refinanceAmount
-    }
+    // Popup proxies
     const popupCreditRef = ref<QPopupProxy | null>(null)
     const popupDebitRef = ref<QPopupProxy | null>(null)
+
+    // Local reactive model to safely mutate template state
+    const localModel = ref<Session>(new Session())
+
+    const syncModel = () => {
+      const converted = modelConverter<Session>(props.info) ?? new Session()
+      if (!converted.createOn) {
+        converted.createOn = date.formatDate(Date.now(), 'DD/MM/YYYY')
+      }
+      if (props.visRefinal) {
+        converted.amount = props.reFinanceInfo.refinanceAmount
+      }
+      localModel.value = converted
+    }
+
+    // Initialize state & sync on prop changes
+    syncModel()
+    watch(
+      () => props.info,
+      () => syncModel(),
+      { deep: true }
+    )
+
+    // Dedicated Handler for Date Picker Selection
+    const onDateSelect = (val: string | null) => {
+      if (val) {
+        localModel.value.createOn = val
+      }
+    }
 
     const clearValidation = () => {
       myForm.value?.resetValidation()
@@ -432,12 +429,12 @@ export default defineComponent({
     const sessionTypeOptions = computed(() => sessionTypeToQSelectOptions(props.portType))
 
     const sessionInfo = computed(() =>
-      getSessionType(props.portType, modelConverter<Session>(props.info)?.sessionType ?? 0)
+      getSessionType(props.portType, localModel.value.sessionType ?? 0)
     )
 
     const onCreditRowClick = (row: any) => {
-      if (model.value && row?.portId) {
-        model.value.creditPortId = row.portId
+      if (localModel.value && row?.portId) {
+        localModel.value.creditPortId = row.portId
         popupCreditRef.value?.hide()
       }
     }
@@ -455,8 +452,8 @@ export default defineComponent({
     })
 
     const onDebitRowClick = (row: any) => {
-      if (model.value && row?.portId) {
-        model.value.debitPortId = row.portId
+      if (localModel.value && row?.portId) {
+        localModel.value.debitPortId = row.portId
         popupDebitRef.value?.hide()
       }
     }
@@ -475,7 +472,7 @@ export default defineComponent({
     return {
       sessionInfo,
       Session,
-      model,
+      localModel,
       paymentOption: enumToQSelectOptions(EPaymentPeriod),
       portTypeOption: enumToQSelectOptions(EPortType),
       strRule: rules.string(),
@@ -485,6 +482,8 @@ export default defineComponent({
       sessionTypeOptions,
       popupCreditRef,
       popupDebitRef,
+      //datePopupRef,
+      onDateSelect,
       modelConverter,
       clearValidation,
       getValidate,
