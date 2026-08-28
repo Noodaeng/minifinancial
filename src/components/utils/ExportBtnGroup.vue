@@ -11,7 +11,7 @@
       size="sm"
       class="q-mx-xs shadow-3 bg-body text-appText"
     >
-      <q-tooltip>{{ $t('Export to Excel') }}</q-tooltip>
+      <q-tooltip>{{ $t('Export_to_Excel') }}</q-tooltip>
     </q-btn>
 
     <!-- Export to PDF Button -->
@@ -25,7 +25,7 @@
       size="sm"
       class="q-mx-xs shadow-3 bg-body text-appText"
     >
-      <q-tooltip>{{ $t('Export to PDF') }}</q-tooltip>
+      <q-tooltip>{{ $t('Export_to_PDF') }}</q-tooltip>
     </q-btn>
   </div>
 </template>

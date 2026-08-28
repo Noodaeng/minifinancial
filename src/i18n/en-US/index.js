@@ -73,6 +73,8 @@ export default {
   Warning_Description: 'Warning / Description',
   Show_entry: 'Show entry',
   No_: 'No.',
+  Export_to_Excel: 'Export to Excel',
+  Export_to_PDF: 'Export to PDF',
   //+++++++Customer+++++++++++++++++
   Customer: 'Customer',
   Customers: 'Customers',

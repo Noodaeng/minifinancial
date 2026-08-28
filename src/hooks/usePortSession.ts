@@ -85,7 +85,7 @@ export function usePortSession() {
 
   const filteredRows = computed(() => {
     const dto = getDto(crud.items.value, Number(portType.value))
-    console.log('=======dto=======', portType.value, dto)
+    //console.log('=======dto=======', portType.value, dto)
 
     if (!filter.value) {
       return dto
@@ -123,7 +123,7 @@ export function usePortSession() {
       return dateA - dateB // Ascending order (oldest first)
     })
 
-    console.log('=======sorted=======', sortedSessions)
+    //console.log('=======sorted=======', sortedSessions)
     let item = 0
 
     return sortedSessions.map(s => {

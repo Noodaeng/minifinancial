@@ -99,7 +99,7 @@ export function useCrudProp<T extends BaseEntity, S>(
       if (clearValidate.value) {
         clearValidate.value()
       }
-      console.log('###### Init items length---->', items.value.length)
+      //console.log('###### Init items length---->', items.value.length)
       if (assignInit && items.value && items.value.length > 0) {
         assignInit(items.value)
         dataState.stateCtrl(false, true, false, false)

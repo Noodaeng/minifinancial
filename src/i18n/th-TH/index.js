@@ -73,6 +73,8 @@ export default {
   Warning_Description: 'รายละเอียด แจ้งเตือน',
   Show_entry: 'แสดงบันทึกบัญชี',
   No_: 'ลำดับ',
+  Export_to_Excel: 'Export to Excel',
+  Export_to_PDF: 'Export to PDF',
   //+++++++Customer+++++++++แจ้งเตือน++++++++
   Customer: 'ลูกค้า',
   Customers: 'ลูกค้า',

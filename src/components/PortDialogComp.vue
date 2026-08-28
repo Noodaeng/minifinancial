@@ -55,7 +55,7 @@
               label-color="appLabel"
               :hint="$t('Amount')"
               :rules="amountRule"
-              :readonly="visRefinal || (portType === 1 && localModel.sessionType === 0)"
+              :readonly="false"
               dense
               input-class="text-appText"
             />

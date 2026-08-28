@@ -90,16 +90,16 @@ export default defineComponent({
         submitting.value = true
 
         const success = await authStore.doLogin(login.value)
-        console.log('????Is login successful=>', success)
+        //console.log('????Is login successful=>', success)
         if (success) {
           const toPath = router.currentRoute.value.query.to as string | undefined
 
           if (toPath) {
             router.push(toPath)
-            console.log('Form submitted push=>', toPath)
+            //console.log('Form submitted push=>', toPath)
           } else {
             router.push('/')
-            console.log('Force submitted push=>??', toPath)
+            //console.log('Force submitted push=>??', toPath)
           }
         } else {
           await showNotify('Login_failed_Please_check_Username_or_Password', 4)
