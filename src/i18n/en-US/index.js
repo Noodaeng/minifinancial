@@ -75,6 +75,7 @@ export default {
   No_: 'No.',
   Export_to_Excel: 'Export to Excel',
   Export_to_PDF: 'Export to PDF',
+  Show_all: 'Show_all',
   //+++++++Customer+++++++++++++++++
   Customer: 'Customer',
   Customers: 'Customers',
@@ -100,6 +101,13 @@ export default {
   Customer_Name: 'Customer Name',
   Amount: 'Amount',
   Total: 'Total',
+  Loan_amount: 'Loan Amount',
+  // "Interest": "Interest",
+  Total_paid: 'Total Paid',
+  Shortage_amount: 'Shortage Amount',
+  Paid_count: 'Paid Count',
+  Start_loan: 'Loan Start Date',
+  Last_refinance: 'Last Refinance Date',
   //++++++Broker++++++++
   Broker: 'Broker',
   Broker_Accounts: 'Broker Accounts',

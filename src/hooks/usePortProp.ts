@@ -15,6 +15,7 @@ export function usePortProp() {
   const filter = ref('')
   const portType: Ref<string | number | EPortType> = ref(EPortType.CashAndDeposits)
   const isPortValid = ref(false)
+  const isShowAll = ref(true)
   const portTypeSummaries = ref<PortTypeSummary[]>([])
   const portSessionSummaries = ref<PortTypeSummary[]>([])
   // 1. Initialize our generic CRUD composable
@@ -83,9 +84,12 @@ export function usePortProp() {
 
   // 3. Update filtering logic to look through the enriched rows and filter by portType
   const filteredRows = computed(() => {
+    const ignoreStatus = new Set([0, 4, 5, 6])
     // Filter by the type passed to the composable first
     const typeMatchedPorts = crud.items.value.filter(
-      (port: PortDto) => Number(port.portType) === Number(portType.value)
+      (port: PortDto) =>
+        Number(port.portType) === Number(portType.value) &&
+        (!ignoreStatus.has(port.status) || isShowAll.value)
     )
     if (!filter.value) {
       return typeMatchedPorts
@@ -258,6 +262,7 @@ export function usePortProp() {
     interestGuides,
     descriptionGuides,
     periodGuides,
-    paymentRateGuides
+    paymentRateGuides,
+    isShowAll
   }
 }

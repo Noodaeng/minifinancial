@@ -75,6 +75,7 @@ export default {
   No_: 'ลำดับ',
   Export_to_Excel: 'Export to Excel',
   Export_to_PDF: 'Export to PDF',
+  Show_all: 'แสดงทั้งหมด',
   //+++++++Customer+++++++++แจ้งเตือน++++++++
   Customer: 'ลูกค้า',
   Customers: 'ลูกค้า',
@@ -100,6 +101,13 @@ export default {
   Customer_Name: 'ชื่อลูกค้า',
   Amount: 'จำนวน',
   Total: 'รวม',
+  Loan_amount: 'จำนวนเงินกู้',
+  //"Interest": "ดอกเบี้ย",
+  Total_paid: 'ยอดชำระแล้วทั้งหมด',
+  Shortage_amount: 'ยอดเงินที่ขาด',
+  Paid_count: 'จำนวนครั้งที่ชำระแล้ว',
+  Start_loan: 'วันที่เริ่มกู้',
+  Last_refinance: 'การรีไฟแนนซ์ครั้งล่าสุด',
   //++++++Broker++++++++
   Broker: 'นายหน้า',
   Broker_Accounts: 'บัญชีนายหน้า',

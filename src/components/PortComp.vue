@@ -181,9 +181,9 @@
               outlined
               v-model.number="model.interest"
               type="number"
-              :label="$t('Interest') + ' (% ' + ' / ' + periodUnit[model.paymentTerm] + ')'"
+              :label="$t('Interest') + ' (% ' + ' / ' + $t('month') + ')'"
               label-color="appLabel"
-              :hint="$t('Interest') + ' (% ' + ' / ' + periodUnit[model.paymentTerm] + ')'"
+              :hint="$t('Interest') + ' (% ' + ' / ' + $t('month') + ')'"
               list="interest-list"
               dense
               input-class="text-appText"
@@ -225,9 +225,9 @@
               outlined
               v-model="model.paymentRate"
               type="number"
-              :label="$t('Payment_rate') + ' / ' + $t('month')"
+              :label="$t('Payment_rate') + ' / ' + periodUnit[model.paymentTerm]"
               label-color="appLabel"
-              :hint="$t('Payment_rate') + ' / ' + $t('month')"
+              :hint="$t('Payment_rate') + ' / ' + periodUnit[model.paymentTerm]"
               list="rate-list"
               dense
               input-class="text-appText"

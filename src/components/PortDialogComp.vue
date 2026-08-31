@@ -191,7 +191,8 @@
             dense
             readonly
             :model-value="reFinanceInfo.loanAmount"
-            label="Loan Amount"
+            :label="$t('Loan_amount')"
+            :hint="$t('Loan_amount')"
             label-color="appLabel"
             input-class="text-appText"
           />
@@ -202,7 +203,8 @@
             dense
             readonly
             :model-value="reFinanceInfo.interest"
-            label="Interest"
+            :label="$t('Interest')"
+            :hint="$t('Interest')"
             label-color="appLabel"
             input-class="text-appText"
           />
@@ -213,7 +215,8 @@
             dense
             readonly
             :model-value="reFinanceInfo.totalPaid"
-            label="Total Paid"
+            :label="$t('Total_paid')"
+            :hint="$t('Total_paid')"
             label-color="appLabel"
             input-class="text-appText"
           />
@@ -224,7 +227,8 @@
             dense
             readonly
             :model-value="reFinanceInfo.shortageAmount"
-            label="Shortage Amount"
+            :label="$t('Shortage_amount')"
+            :hint="$t('Shortage_amount')"
             label-color="appLabel"
             input-class="text-appText"
           />
@@ -235,7 +239,8 @@
             dense
             readonly
             :model-value="reFinanceInfo.paidCount"
-            label="Paid Count"
+            :label="$t('Paid_count')"
+            :hint="$t('Paid_count')"
             label-color="appLabel"
             input-class="text-appText"
           />
@@ -246,7 +251,8 @@
             dense
             readonly
             :model-value="reFinanceInfo.startLoan"
-            label="Start Loan"
+            :label="$t('Start_loan')"
+            :hint="$t('Start_loan')"
             label-color="appLabel"
             input-class="text-appText"
           />
@@ -257,7 +263,8 @@
             dense
             readonly
             :model-value="reFinanceInfo.lastRefinance"
-            label="Last Refinance"
+            :label="$t('Last_refinance')"
+            :hint="$t('Last_refinance')"
             label-color="appLabel"
             input-class="text-appText"
           />

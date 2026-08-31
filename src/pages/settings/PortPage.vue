@@ -13,7 +13,9 @@
               @onClickCreate="onCreate"
               @onClickDelete="onDelete"
             />
+            <q-checkbox v-model="isShowAll" :label="$t('Show_all')" />
           </div>
+
           <q-separator />
 
           <!-- Dynamic Port List (Expands to fill remaining vertical height) -->
@@ -123,7 +125,7 @@
         :creditRows="filteredCreditRows"
         :debitColumns="listColumns"
         :debitRows="filteredDebitRows"
-        :enbBtnSave="sesCanSave"
+        :enbBtnSave="sesCanSave || isDialogOpen"
         :enbBtnDelete="sesCanDelete"
         :visRefinal="visRefinal"
         :reFinanceInfo="reFinanceInfo"
@@ -394,7 +396,8 @@ export default defineComponent({
       visRefinal,
       reFinanceInfo,
       getTitle,
-      getPortFileName
+      getPortFileName,
+      isShowAll: usePort.isShowAll
     }
   }
 })

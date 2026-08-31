@@ -25,7 +25,7 @@ export function useLoanNotify() {
   const initNotify = async () => {
     const payments = await getLoanPayments()
     if (!payments || payments.length <= 0) return
-    //console.log('*******get---------payments*****', payments)
+    // console.log('*******get---------payments*****', payments)
     const output = getLoanNotifies(payments)
     const models = output[0]
     loanNotifies.value = output[1]
@@ -72,7 +72,12 @@ export function useLoanNotify() {
       const difAmount = expectedAmount - p.totalType1And2AfterSession
       const difCount = p.paymentRate > 0 ? ceiling(difAmount / p.paymentRate, 1) : 0
       // 3. Payment delay occurs if expected total > actual payments made
-      if (dateDif > 0 && expectedAmount > p.totalType1And2AfterSession) {
+      const ignoreStatus = new Set([0, 4, 5, 6])
+      if (
+        dateDif > 0 &&
+        expectedAmount > p.totalType1And2AfterSession &&
+        !ignoreStatus.has(p.status)
+      ) {
         output[0].push({
           notifyCode: '010001', // Payment_delay
           portId: p.portId,
