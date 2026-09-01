@@ -5,5 +5,5 @@
   "DbUrl": "https://minifinancial-worker.pare-pare2521.workers.dev",
   "AuthToken": "MiniFinancial_Secret_Token_2026_XYZ",
   "PrivateKey": "finance",
-  "Version": "1.0.3"
+  "Version": "1.0.4"
 }

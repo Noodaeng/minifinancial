@@ -4,10 +4,15 @@ import Port from '../models/port'
 import DataOption from '../models/dataOption'
 import { useCrudProp } from './useCrudProp'
 import { useApi } from '../services/api'
-import { EPortType } from '../types/myEnums'
+import { EPortType, EPaymentPeriod } from '../types/myEnums'
 import { QSelectOption, PortTypeSummary } from '../types/myTypes'
 import { i18n } from '../i18n'
-import { showError, currentDateTimeStr, getAccountCategoryByPortType } from '../modules/appUtils'
+import {
+  showError,
+  currentDateTimeStr,
+  getAccountCategoryByPortType,
+  enumToString
+} from '../modules/appUtils'
 import MyConfig from '../modules/myConfig'
 export function usePortProp() {
   const rawOptions = ref<DataOption[]>([])
@@ -65,6 +70,15 @@ export function usePortProp() {
         align: 'left',
         field: 'description',
         sortable: true
+      },
+      {
+        name: 'paymentTerm',
+        required: true,
+        label: t('Payment_period'),
+        align: 'left',
+        field: 'paymentTerm',
+        format: (val: number) => enumToString(EPaymentPeriod, val),
+        sortable: true
       }
     ],
     Port,
@@ -102,7 +116,8 @@ export function usePortProp() {
         String(port.portId).toLowerCase().includes(lowerFilter) ||
         String(port.customerId).toLowerCase().includes(lowerFilter) ||
         String(port.customerName).toLowerCase().includes(lowerFilter) ||
-        String(port.description).toLowerCase().includes(lowerFilter)
+        String(port.description).toLowerCase().includes(lowerFilter) ||
+        String(enumToString(EPaymentPeriod, port.paymentTerm)).toLowerCase().includes(lowerFilter)
       )
     })
   })
