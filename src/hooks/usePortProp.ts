@@ -15,7 +15,7 @@ export function usePortProp() {
   const filter = ref('')
   const portType: Ref<string | number | EPortType> = ref(EPortType.CashAndDeposits)
   const isPortValid = ref(false)
-  const isShowAll = ref(true)
+  const isShowAll = ref(false)
   const portTypeSummaries = ref<PortTypeSummary[]>([])
   const portSessionSummaries = ref<PortTypeSummary[]>([])
   // 1. Initialize our generic CRUD composable
