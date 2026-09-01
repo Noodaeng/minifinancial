@@ -14,6 +14,7 @@ import {
   enumToString
 } from '../modules/appUtils'
 import MyConfig from '../modules/myConfig'
+
 export function usePortProp() {
   const rawOptions = ref<DataOption[]>([])
   const { t } = i18n.global
@@ -34,6 +35,7 @@ export function usePortProp() {
       isPortValid.value = false
     }
   }
+
   const crud = useCrudProp<PortDto, Port>(
     'portId',
     'ports',
@@ -110,14 +112,17 @@ export function usePortProp() {
     }
 
     const lowerFilter = filter.value.toLowerCase()
-
+    const showPaymentTerm = [1, 2, 3, 4, 5, 6].includes(Number(portType.value))
     return typeMatchedPorts.filter((port: PortDto) => {
       return (
         String(port.portId).toLowerCase().includes(lowerFilter) ||
         String(port.customerId).toLowerCase().includes(lowerFilter) ||
         String(port.customerName).toLowerCase().includes(lowerFilter) ||
         String(port.description).toLowerCase().includes(lowerFilter) ||
-        String(enumToString(EPaymentPeriod, port.paymentTerm)).toLowerCase().includes(lowerFilter)
+        (showPaymentTerm &&
+          String(enumToString(EPaymentPeriod, port.paymentTerm))
+            .toLowerCase()
+            .includes(lowerFilter))
       )
     })
   })

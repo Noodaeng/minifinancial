@@ -346,14 +346,20 @@ export default defineComponent({
 
       return `${portId}_${uniqueKey}`
     })
-
+    const listColumns = computed(() => {
+      const showPaymentTerm = [1, 2, 3, 4, 5, 6].includes(Number(usePort.portType.value))
+      if (showPaymentTerm) {
+        return usePort.listColumns.value
+      }
+      return usePort.listColumns.value.filter(col => col.name !== 'paymentTerm')
+    })
     return {
       splitterModel: ref(35),
       myPortComp,
       myDiaComp,
       custOption,
       brokerOption,
-      listColumns: usePort.listColumns,
+      listColumns,
       filteredRows: usePort.filteredRows,
       filteredCreditRows,
       filteredDebitRows,
