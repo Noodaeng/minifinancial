@@ -8,13 +8,13 @@ export function usePortField() {
 
     switch (fieldName) {
       case 'period':
-        return [1].includes(currentPortType) && ![100].includes(portSubType)
+        return [1, 4].includes(currentPortType) && ![100].includes(portSubType)
       case 'paymentRate':
-        return [1].includes(currentPortType)
+        return [1, 4].includes(currentPortType)
       case 'paymentTerm':
-        return [1].includes(currentPortType)
+        return [1, 4].includes(currentPortType)
       case 'interest':
-        return [1].includes(currentPortType)
+        return [1, 4].includes(currentPortType)
 
       case 'brokerId':
         // Example: Show broker for type 1 or 2
