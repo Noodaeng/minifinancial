@@ -60,6 +60,10 @@ export function useLoanNotify() {
         case 3: // Yearly
           periodsPassed = Math.trunc(dateDif / 365)
           break
+
+        case 4: // CustomDays
+          periodsPassed = Math.trunc(dateDif / (p.paymentRate || 1))
+          break
         default:
           return
       }

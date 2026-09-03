@@ -1920,13 +1920,15 @@ export const periodUnits: PeriodUnits = {
   0: t('days'),
   1: t('weeks'),
   2: t('months'),
-  3: t('years')
+  3: t('years'),
+  4: t('days')
 }
 export const periodUnit: PeriodUnits = {
   0: t('day'),
   1: t('week'),
   2: t('month'),
-  3: t('year')
+  3: t('year'),
+  4: t('day')
 }
 export const getRefinanceInfo = (sessions: Session[], port: Port, enb: boolean): ReFinanceInfo => {
   const defaultInfo: ReFinanceInfo = {
