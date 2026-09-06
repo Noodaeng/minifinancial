@@ -185,7 +185,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, computed } from 'vue'
 import { modelConverter, enumToQSelectOptions } from '../modules/appUtils'
 import Customer from '../models/customer'
 import { useValidationRules } from '../hooks/useValidationRules'
@@ -218,7 +218,7 @@ export default defineComponent({
     const myForm = ref()
     const { t } = i18n.global
     const rules = useValidationRules(t)
-
+    const model = computed(() => modelConverter<Customer>(props.info) ?? new Customer())
     const clearValidation = () => {
       myForm.value?.resetValidation()
     }
@@ -233,7 +233,7 @@ export default defineComponent({
     const custTypeRule = rules.enumSelect()
     const checkboxRule = rules.integer()
     return {
-      model: modelConverter<Customer>(props.info) ?? new Customer(),
+      model,
       custOption: enumToQSelectOptions(ECreditCustomerType),
       strRule,
       emailRule,

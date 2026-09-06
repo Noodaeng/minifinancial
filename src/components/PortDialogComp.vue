@@ -491,7 +491,7 @@ export default defineComponent({
       popupDebitRef,
       //datePopupRef,
       onDateSelect,
-      modelConverter,
+      //modelConverter,
       clearValidation,
       getValidate,
       onCreditRowClick,

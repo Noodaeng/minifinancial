@@ -159,7 +159,7 @@ export default defineComponent({
     const myForm = ref()
     const { t } = i18n.global
     const rules = useValidationRules(t)
-
+ const model = computed(() => modelConverter<User>(props.info) ?? new User())
     const clearValidation = () => {
       myForm.value?.resetValidation()
     }
@@ -187,7 +187,7 @@ export default defineComponent({
     )
 
     return {
-      model: modelConverter<User>(props.info) ?? new User(),
+      model,
       roleOption,
       strRule,
       pwd,

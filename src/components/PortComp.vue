@@ -69,7 +69,7 @@
 
           <div class="col-12 col-sm-3 col-md-3">
             <AppDatePicker
-              v-model:modelValue="model.createOn"
+              v-model="model.createOn"
               :label="$t('Create_on')"
               :hint="$t('Create_on')"
               :rules="strRule"
@@ -344,6 +344,7 @@ export default defineComponent({
     const { t } = i18n.global
     const rules = useValidationRules(t)
     const useField = usePortField()
+    const model = computed(() => modelConverter<Port>(props.info) ?? new Port())
     useField.portType.value = props.portType
     watch(
       () => props.portType,
@@ -368,7 +369,7 @@ export default defineComponent({
     const portInfo = computed(() => enumToString(EPortType, Number(props.portType)))
     const subTypeOption = computed(() => subTypeToQSelectOptions(Number(props.portType)))
     return {
-      model: modelConverter<Port>(props.info) ?? new Port(),
+      model,
       portInfo,
       subTypeOption,
       paymentOption: enumToQSelectOptions(EPaymentPeriod),
