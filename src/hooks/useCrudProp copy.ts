@@ -115,7 +115,7 @@ export function useCrudPropCopy<T extends BaseEntity, S>(
   // +++++++ Event handling +++++++++++++++++
   const onRowClick = (row: any) => {
     if (row) {
-      dataState.stateCtrl(true, false, false, false)
+      dataState.stateCtrl(false, false, false, false)
       const targetId = (row as T)[idKey]
       const selected = items.value.find((c: any) => c[idKey] === targetId)
 

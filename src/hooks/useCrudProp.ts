@@ -448,7 +448,7 @@ export function useCrudProp<T extends BaseEntity, S extends object = T>(
       return
     }
 
-    dataState.stateCtrl(true, false, false, false)
+    dataState.stateCtrl(false, false, false, false)
 
     const targetId = row[idKey]
 
