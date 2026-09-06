@@ -64,19 +64,19 @@
           />
 
           <!-- Responsive Split View for Sessions & Session Details -->
-          <div class="row q-col-gutter-md col">
-            <!-- Left Half: Session List (Given more width for table columns) -->
-            <div class="col-12 col-lg-7 col-xl-8 column" style="min-width: 0">
-              <div class="col scroll">
+          <div class="row q-col-gutter-md col" style="min-width: 0">
+            <!-- Left Half: Session List -->
+            <div class="col-12 col-lg-7 col-xl-8 column" style="min-width: 0; max-width: 100%">
+              <div class="col column no-wrap overflow-hidden" style="min-width: 0; width: 100%">
                 <ListComp
                   :rows="sesFilterRows"
                   :columns="sesListColumns"
+                  class="fit"
                   @onRowClick="onSesRowClick"
                   @onFilter="sesOnfilter"
                 >
                   <!-- Inject buttons directly into the append slot -->
                   <template #append>
-                    <!-- Export Buttons -->
                     <ExportBtnGroup
                       :rows="sesFilterRows"
                       :columns="sesListColumns"
@@ -89,7 +89,7 @@
               </div>
             </div>
 
-            <!-- Right Half: Session Card Details (Given appropriate summary width) -->
+            <!-- Right Half: Session Card Details -->
             <div class="col-12 col-lg-5 col-xl-4 column" style="min-width: 0">
               <div class="col scroll">
                 <PortSessionComp
@@ -422,4 +422,12 @@ export default defineComponent({
 @media (max-width: $breakpoint-xs-max)
   .full-height-card
     min-height: auto
+
+// Force Quasar QTable to respect container limits and scroll internally
+:deep(.q-table__container)
+  max-width: 100% !important
+  overflow-x: auto !important
+
+:deep(.q-table__middle)
+  max-width: 100% !important
 </style>
