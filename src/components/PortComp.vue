@@ -216,7 +216,23 @@
               popup-content-class="bg-body text-appText"
             />
           </div>
-
+          <div
+            v-if="isFieldVisible('customDays', model.portSubType) && model.paymentTerm === 4"
+            class="col-12 col-sm-4 col-md-3"
+          >
+            <q-input
+              outlined
+              v-model="model.customDays"
+              type="number"
+              :label="$t('CustomDays') + ' ' + $t('days')"
+              label-color="appLabel"
+              :hint="$t('CustomDays') + ' ' + $t('days')"
+              list="rate-list"
+              :rules="customDaysRule"
+              dense
+              input-class="text-appText"
+            />
+          </div>
           <div
             v-if="isFieldVisible('paymentRate', model.portSubType)"
             class="col-12 col-sm-4 col-md-3"
@@ -368,6 +384,7 @@ export default defineComponent({
     const portTypeOption = computed(() => enumToQSelectOptions(EPortType))
     const portInfo = computed(() => enumToString(EPortType, Number(props.portType)))
     const subTypeOption = computed(() => subTypeToQSelectOptions(Number(props.portType)))
+    const customDaysRule = rules.intRange(0, 365)
     return {
       model,
       portInfo,
@@ -379,6 +396,7 @@ export default defineComponent({
       emailRule,
       creditRule,
       selectorRule,
+      customDaysRule,
       myForm,
       checkboxRule,
       clearValidation,

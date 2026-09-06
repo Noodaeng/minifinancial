@@ -62,7 +62,8 @@ export function useLoanNotify() {
           break
 
         case 4: // CustomDays
-          periodsPassed = Math.trunc(dateDif / (p.paymentRate || 1))
+          const cusDays = p.customDays && p.customDays > 0 ? p.customDays : 1
+          periodsPassed = Math.trunc(dateDif / cusDays)
           break
         default:
           return

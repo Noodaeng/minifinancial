@@ -98,6 +98,7 @@ export interface LoanPaymentRecord {
   interest: string
   paymentTerm: number
   paymentRate: number
+  customDays: number
   period: number
   customerName: string | null
   sessionId: string | null

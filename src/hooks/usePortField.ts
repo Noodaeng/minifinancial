@@ -28,6 +28,7 @@ export function usePortField() {
       case 'status':
       case 'remark':
       case 'isActive':
+      case 'customDays':
       default:
         // Always visible
         return true

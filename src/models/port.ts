@@ -18,4 +18,5 @@ export default class Port extends BaseModel {
   paymentTerm = 0
   paymentRate = 0
   period = 0
+  customDays = 1
 }
