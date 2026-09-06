@@ -64,10 +64,10 @@
           />
 
           <!-- Responsive Split View for Sessions & Session Details -->
-          <div class="row q-col-gutter-md col overflow-hidden">
-            <!-- Left Half: Session List -->
-            <div class="col-12 col-lg-7 col-xl-8 column style-min-w-0 overflow-hidden">
-              <div class="col scroll overflow-auto">
+          <div class="row q-col-gutter-md col">
+            <!-- Left Half: Session List (Given more width for table columns) -->
+            <div class="col-12 col-lg-7 col-xl-8 column">
+              <div class="col scroll">
                 <ListComp
                   :rows="sesFilterRows"
                   :columns="sesListColumns"
@@ -89,8 +89,8 @@
               </div>
             </div>
 
-            <!-- Right Half: Session Card Details -->
-            <div class="col-12 col-lg-5 col-xl-4 column style-min-w-0 overflow-hidden">
+            <!-- Right Half: Session Card Details (Given appropriate summary width) -->
+            <div class="col-12 col-lg-5 col-xl-4 column">
               <div class="col scroll">
                 <PortSessionComp
                   :details="sessionDetails"
@@ -159,7 +159,7 @@ import {
   canCreateSession
 } from '../../modules/appUtils.js'
 export default defineComponent({
-  name: 'PortPage',
+  name: 'PortPageCopy',
   components: {
     PortComp,
     ListComp,
