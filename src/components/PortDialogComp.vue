@@ -169,7 +169,7 @@
           <!-- Fixed Date Picker Input -->
           <div class="col-12 col-sm-3 col-md-3">
             <AppDatePicker
-              v-model:modelValue="localModel.createOn"
+              v-model="localModel.createOn"
               :label="$t('Create_on')"
               :hint="$t('Create_on')"
               :rules="strRule"
@@ -404,7 +404,7 @@ export default defineComponent({
         converted.createOn = date.formatDate(Date.now(), 'DD/MM/YYYY')
       }
       if (props.visRefinal) {
-        converted.amount = props.reFinanceInfo.refinanceAmount
+        if (converted.amount === 0) converted.amount = props.reFinanceInfo.refinanceAmount
       }
       localModel.value = converted
     }

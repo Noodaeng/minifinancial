@@ -125,7 +125,7 @@
         :creditRows="filteredCreditRows"
         :debitColumns="listColumns"
         :debitRows="filteredDebitRows"
-        :enbBtnSave="sesCanSave || isDialogOpen"
+        :enbBtnSave="sesCanSave"
         :enbBtnDelete="sesCanDelete"
         :visRefinal="visRefinal"
         :reFinanceInfo="reFinanceInfo"
@@ -353,6 +353,7 @@ export default defineComponent({
       }
       return usePort.listColumns.value.filter(col => col.name !== 'paymentTerm')
     })
+    const sesCanSave = computed(() => useSession.canSave.value)
     return {
       splitterModel: ref(35),
       myPortComp,
@@ -386,7 +387,7 @@ export default defineComponent({
       sesOnfilter: useSession.onFilter,
       sesFilterRows: useSession.filteredRows,
       sesListColumns: useSession.listColumns,
-      sesCanSave: useSession.canSave,
+      sesCanSave,
       sesCanDelete: useSession.canDelete,
       deleteSession,
       saveSession,

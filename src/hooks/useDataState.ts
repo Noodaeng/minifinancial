@@ -1,96 +1,84 @@
-import { ref, computed } from 'vue'
+import { ref, computed, readonly } from 'vue'
 import { EDataState } from '../types/myEnums'
 
+export interface StateCtrlParams {
+  isInit?: boolean
+  isSelected?: boolean
+  isValidated?: boolean
+  reqCreate?: boolean
+}
+
 export function useDataState() {
-  const state = ref(EDataState.None)
+  const state = ref<EDataState>(EDataState.None)
   const canUserEdit = ref(false)
   const canUserDel = ref(false)
 
-  const stateCtrl = (
-    isInit: boolean,
-    isSelected: boolean,
-    isValidated: boolean,
-    reqCreate: boolean
-  ) => {
-    // console.log(
-    //   'state control--->',
-    //   state.value,
-    //   `init-> ${isInit} select->${isSelected} valid->${isValidated} req->${reqCreate}`
-    // )
+  // Explicit state transition mapping makes logic easy to trace & maintain
+  const stateCtrl = ({
+    isInit = false,
+    isSelected = false,
+    isValidated = false,
+    reqCreate = false
+  }: StateCtrlParams = {}) => {
     if (isInit) {
       state.value = EDataState.Init
       return
     }
+
     switch (state.value) {
-      case EDataState.None:
-        break
       case EDataState.Init:
-        if (isSelected) {
-          state.value = EDataState.Selected
-        } else if (reqCreate) {
-          state.value = EDataState.New
-        }
+        if (isSelected) state.value = EDataState.Selected
+        else if (reqCreate) state.value = EDataState.New
         break
+
       case EDataState.Selected:
-        if (isValidated) {
-          state.value = EDataState.ValidEdit
-        } else if (reqCreate) {
-          state.value = EDataState.New
-        }
+        if (isValidated) state.value = EDataState.ValidEdit
+        else if (reqCreate) state.value = EDataState.New
         break
+
       case EDataState.New:
-        if (isValidated) {
-          state.value = EDataState.ValidNew
-        }
+        if (isValidated) state.value = EDataState.ValidNew
         break
+
       case EDataState.ValidEdit:
-        if (!isValidated) {
-          state.value = EDataState.Selected
-        }
+        if (!isValidated) state.value = EDataState.Selected
         break
+
       case EDataState.ValidNew:
-        if (!isValidated) {
-          state.value = EDataState.New
-        }
+        if (!isValidated) state.value = EDataState.New
         break
+
       default:
         break
     }
   }
 
-  const canCreate = computed(() => {
-    return state.value === EDataState.Init || state.value === EDataState.Selected
-  })
+  // Set lookup collections for cleaner computed states
+  const CAN_CREATE_STATES = new Set([EDataState.Init, EDataState.Selected])
+  const CAN_DELETE_STATES = new Set([EDataState.Selected, EDataState.ValidEdit])
 
-  // Fixed the logical OR expression inside the parenthesis
-  const canDelete = computed(() => {
-    const isValidState = state.value === EDataState.Selected || state.value === EDataState.ValidEdit
-    return isValidState && canUserDel.value
-  })
+  const canCreate = computed(() => CAN_CREATE_STATES.has(state.value))
+
+  const canDelete = computed(() => CAN_DELETE_STATES.has(state.value) && canUserDel.value)
 
   const canSave = computed(() => {
-    return (
-      (state.value === EDataState.ValidEdit && canUserEdit.value) ||
-      state.value === EDataState.ValidNew
-    )
+    const isEditing = state.value === EDataState.ValidEdit && canUserEdit.value
+    const isNew = state.value === EDataState.ValidNew
+    return isEditing || isNew
   })
 
-  // Unwrapped canSave.value properly
   const resetDataState = () => {
-    if (canSave.value) {
-      stateCtrl(false, false, false, false)
-    } else {
-      stateCtrl(true, false, false, false)
-    }
+    stateCtrl({ isInit: !canSave.value })
   }
 
   return {
-    state,
+    // Readonly prevents external direct modification without using stateCtrl
+    state: readonly(state),
+    canUserEdit,
+    canUserDel,
     canCreate,
     canDelete,
     canSave,
-    canUserDel,
-    canUserEdit,
     stateCtrl,
     resetDataState
   }

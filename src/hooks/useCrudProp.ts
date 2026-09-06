@@ -1,21 +1,120 @@
-import { computed, ref, watch, watchEffect } from 'vue'
+import { computed, ref, shallowRef, toRaw, watch, watchEffect, type Ref } from 'vue'
+import { useQuasar } from 'quasar'
+import type { QTableColumn } from 'quasar'
+
 import { useApi } from '../services/api'
 import { showError, confirmDelete } from '../modules/appUtils'
 import MyConfig from '../modules/myConfig'
-import { QTableColumn, useQuasar } from 'quasar'
 import { i18n } from '../i18n'
-import { Action, ActionSingle, OptionalData } from '../types/myTypes'
-import DataOption from '../models/dataOption'
+
+import type { Action, ActionSingle, OptionalData } from '../types/myTypes'
+import type DataOption from '../models/dataOption'
 import { useDataState } from './useDataState'
-import { EDataState } from '@/types/myEnums'
-//import { useAuthStore } from '../stores/authStore'
+import { EDataState } from '../types/myEnums'
+
 interface BaseEntity {
   [key: string]: any
 }
 
-export function useCrudProp<T extends BaseEntity, S>(
+/**
+ * Creates a deterministic string representation.
+ * Object keys are sorted, so the comparison is reliable even when key order differs.
+ *
+ * Intended for normal API/form data: strings, numbers, booleans, null,
+ * arrays, plain objects, and Date values.
+ *
+ * Never throws — it runs inside a synchronous watcher, where a thrown error
+ * would propagate into the v-model update that triggered it.
+ */
+function createStableSnapshot(value: unknown, seen = new WeakSet<object>()): string {
+  const rawValue = typeof value === 'object' && value !== null ? toRaw(value) : value
+
+  if (rawValue === null) {
+    return 'null'
+  }
+
+  if (rawValue === undefined) {
+    return '__undefined__'
+  }
+
+  if (typeof rawValue === 'string') {
+    return JSON.stringify(rawValue)
+  }
+
+  if (typeof rawValue === 'boolean') {
+    return rawValue ? 'true' : 'false'
+  }
+
+  if (typeof rawValue === 'number') {
+    if (Number.isNaN(rawValue)) {
+      return '__NaN__'
+    }
+
+    if (!Number.isFinite(rawValue)) {
+      return rawValue === Infinity ? '__Infinity__' : '__-Infinity__'
+    }
+
+    return String(rawValue)
+  }
+
+  if (typeof rawValue === 'bigint') {
+    return `${rawValue.toString()}n`
+  }
+
+  if (typeof rawValue === 'symbol') {
+    return `__symbol:${rawValue.description ?? ''}__`
+  }
+
+  if (typeof rawValue === 'function') {
+    // Functions normally should not be form/API data.
+    // A fixed marker avoids "[object Object]" warnings.
+    return '__function__'
+  }
+
+  // From here, TypeScript knows it is a non-null object.
+  const objectValue = rawValue as object
+
+  if (objectValue instanceof Date) {
+    return `__date:${objectValue.toISOString()}__`
+  }
+
+  if (seen.has(objectValue)) {
+    // Stable marker instead of throwing. A cycle always serialises the same
+    // way, so change detection stays correct.
+    return '__circular__'
+  }
+
+  seen.add(objectValue)
+
+  try {
+    if (Array.isArray(objectValue)) {
+      return `[${objectValue.map(entry => createStableSnapshot(entry, seen)).join(',')}]`
+    }
+
+    const record = objectValue as Record<string, unknown>
+
+    return `{${Object.keys(record)
+      .sort()
+      .map(key => {
+        const propertyValue = createStableSnapshot(record[key], seen)
+        return `${JSON.stringify(key)}:${propertyValue}`
+      })
+      .join(',')}}`
+  } finally {
+    // `finally` guarantees cleanup on every exit path.
+    seen.delete(objectValue)
+  }
+}
+
+/**
+ * @typeParam T - The full entity model used by the form.
+ * @typeParam S - Optional "base" model that defines which fields get saved.
+ *                Must be an object type: Object.keys() is called on an instance.
+ *                Defaults to T when no BaseConstructor is supplied.
+ */
+export function useCrudProp<T extends BaseEntity, S extends object = T>(
   idKey: keyof T,
-  tableName: string, // Changed from sheetName to tableName
+  tableName: string,
   ModelConstructor: new () => T,
   columnsConfig: (t: (key: string) => string) => QTableColumn[],
   BaseConstructor: (new () => S) | undefined,
@@ -24,41 +123,132 @@ export function useCrudProp<T extends BaseEntity, S>(
   const $q = useQuasar()
   const { t } = i18n.global
   const myConf = MyConfig.instance
-  //const authStore = useAuthStore()
-  const items = ref<T[]>([]) as any
-  const item = ref<T>(new ModelConstructor())
-  const clearValidate = ref<Action | undefined>(undefined)
-  const justSave = ref(false)
-  const isPwdVisible = ref(false)
-  //const assignInit = ref<ActionSingle<T[]> | undefined>(undefined)
-
-  // const getValidate = ref<FuncBoolAsync>(async () => {
-  //   return false
-  // })
   const dataState = useDataState()
 
+  /*
+   * Resolved once during setup. Calling useApi() inside an async function
+   * after an `await` would run outside the component's sync setup context,
+   * where inject() is no longer available.
+   */
+  const api = useApi()
+
+  /*
+   * The cast is applied to the ref itself, not to every usage.
+   * ref<T[]>() would store UnwrapRefSimple<T>[], which forces a cast at
+   * every read site. Casting here keeps `.value` exactly T[] / T.
+   */
+  const items = ref([]) as Ref<T[]>
+  const item = ref(new ModelConstructor()) as Ref<T>
+
+  // shallowRef: the value is a function, which must never be made reactive.
+  const clearValidate = shallowRef<Action | undefined>(undefined)
+
+  const isPwdVisible = ref(false)
+
+  // computed: re-evaluates when the active locale changes.
+  const listColumns = computed<QTableColumn[]>(() => columnsConfig(t))
+
+  /*
+   * Keeps the state of the item when it was last loaded, selected,
+   * initialized, or successfully saved.
+   */
+  const originalItemSnapshot = ref('')
+
+  /*
+   * Prevents the watcher from marking the form as edited while data is
+   * being loaded from API, a row is selected, or a new item is created.
+   *
+   * A plain variable, not a ref: it is read synchronously inside the watcher
+   * and never rendered, so reactivity would only add tracking overhead.
+   */
+  let isApplyingSystemChanges = false
+
+  /*
+   * Used when the user changes data back to its original state.
+   * Existing item => selected/valid state.
+   * New item => new-item state.
+   */
+  const itemMode = ref<'existing' | 'new'>('new')
+
+  const currentUser = myConf.LoginUserId
+
+  // +++++++ Snapshot helpers +++++++++++++++++++++
+
+  const getItemSnapshot = () => createStableSnapshot(item.value)
+
+  const setOriginalItemSnapshot = () => {
+    originalItemSnapshot.value = getItemSnapshot()
+  }
+
+  /**
+   * Applies API/system changes without triggering "edited" state.
+   */
+  const applySystemChanges = (callback: () => void) => {
+    isApplyingSystemChanges = true
+
+    try {
+      callback()
+      setOriginalItemSnapshot()
+    } finally {
+      isApplyingSystemChanges = false
+    }
+  }
+
+  /**
+   * Always create a new model instance.
+   * This prevents properties from the previous selected record from remaining
+   * when the next API item does not contain those properties.
+   */
+  const replaceItem = (source?: Partial<T> | null) => {
+    item.value = Object.assign(new ModelConstructor(), source ?? {})
+  }
+
+  const resetValidation = () => {
+    clearValidate.value?.()
+  }
+
+  // +++++++ Change detection +++++++++++++++++++++
+
+  /*
+   * Watch all top-level and nested properties.
+   *
+   * flush: 'sync' is required, not a preference. The guard flag is cleared
+   * synchronously in applySystemChanges()'s finally block, so a deferred
+   * flush ('pre' / 'post') would run the callback after the guard is already
+   * back to false and every programmatic assignment would be reported as a
+   * user edit.
+   */
   watch(
-    () => ({ ...item.value }),
-    async (newVal, oldVal) => {
-      if (newVal[idKey as string] !== oldVal[idKey as string]) {
-        if (clearValidate.value) {
-          clearValidate.value()
-          justSave.value = false
-        }
+    item,
+    () => {
+      if (isApplyingSystemChanges) {
         return
-      } else if (justSave.value) {
-        justSave.value = false
-        return
-      } else {
-        // const valid = await getValidate.value()
-        dataState.stateCtrl(false, false, true, false)
       }
+
+      const currentSnapshot = getItemSnapshot()
+      const hasChanges = currentSnapshot !== originalItemSnapshot.value
+
+      if (hasChanges) {
+        // Item has been changed by the user.
+        dataState.stateCtrl(false, false, true, false)
+        return
+      }
+
+      // User changed values back to their original values.
+      if (itemMode.value === 'existing') {
+        dataState.stateCtrl(false, true, false, false)
+      } else {
+        dataState.stateCtrl(false, false, false, true)
+      }
+    },
+    {
+      deep: true,
+      flush: 'sync'
     }
   )
 
-  const listColumns = ref<QTableColumn[]>(columnsConfig(t))
-  const currentUser = myConf.LoginUserId
-  // 1. Calculate relative role hierarchy
+  // +++++++ Permissions +++++++++++++++++++++++
+
   const ownRcdRole = computed(() => {
     const createBy = item.value?.createBy
     return createBy ? Number(myConf.getUserRole(createBy)) || 0 : 0
@@ -66,212 +256,269 @@ export function useCrudProp<T extends BaseEntity, S>(
 
   const loginRole = computed(() => Number(myConf.LoginUserRole) || 0)
 
-  // 2. Determine permissions dynamically
   const isFullAccess = computed(() => {
-    if (myConf.LoginUserName === 'super') return true
+    if (myConf.LoginUserName === 'super') {
+      return true
+    }
 
     const createBy = item.value?.createBy
-    if (!createBy) return false
+
+    if (!createBy) {
+      return false
+    }
 
     return createBy === myConf.LoginUserId || loginRole.value > ownRcdRole.value
   })
 
-  const canEditRole = computed(() => loginRole.value >= ownRcdRole.value)
-  // 2. Specific condition checks
+  const canEditRole = computed(() => {
+    return loginRole.value >= ownRcdRole.value
+  })
+
   const isOwnAccount = computed(() => {
     return tableName === 'users' && String(myConf.LoginUserId) === String(item.value?.userId)
   })
-  // 3. Sync updates to existing refs without breaking reactivity
+
   watchEffect(() => {
     const hasAccess = isFullAccess.value
-    //console.log('............................', isOwnAccount.value)
-    // Safely mutate the .value property of existing refs
+
     dataState.canUserEdit.value = hasAccess || isOwnAccount.value
     dataState.canUserDel.value = hasAccess
     isPwdVisible.value = hasAccess || isOwnAccount.value
   })
-  // +++++++ Init +++++++++++++++++++++++
-  const Init = async () => {
-    try {
-      dataState.stateCtrl(true, false, false, false)
-      items.value = await getAllItems()
 
-      if (clearValidate.value) {
-        clearValidate.value()
-      }
-      //console.log('###### Init items length---->', items.value.length)
-      if (assignInit && items.value && items.value.length > 0) {
-        assignInit(items.value)
-        dataState.stateCtrl(false, true, false, false)
-      } else if (items.value && items.value.length > 0) {
-        Object.assign(item.value, items.value[0])
-        dataState.stateCtrl(false, true, false, false)
-      }
-    } catch (err) {
-      await showError(err)
-    }
-  }
+  // +++++++ API +++++++++++++++++++++++
+  // Declared before the callers so the reading order matches the call order.
 
-  // +++++++ Event handling +++++++++++++++++
-  const onRowClick = (row: any) => {
-    if (row) {
-      dataState.stateCtrl(true, false, false, false)
-      const targetId = (row as T)[idKey]
-      const selected = items.value.find((c: any) => c[idKey] === targetId)
-
-      if (selected) {
-        Object.assign(item.value, selected)
-        dataState.stateCtrl(false, true, false, false)
-      }
-    }
-  }
-
-  const onCreate = () => {
-    Object.assign(item.value, new ModelConstructor())
-    dataState.stateCtrl(false, false, false, true)
-  }
-
-  const onDelete = async () => {
-    //await deleteItem()
-    if (item.value && item.value[idKey as string] !== '') {
-      const success = await confirmDelete($q, String(item.value[idKey as string]), () =>
-        deleteItem()
-      )
-      if (success) {
-        await Init() // Refresh list only on actual success!
-      }
-    }
-  }
-
-  const onSave = async () => {
-    if (!item.value) return
-
-    let success = false
-    if (
-      dataState.state.value === EDataState.ValidEdit ||
-      dataState.state.value === EDataState.ValidNew
-    ) {
-      // Cloudflare Worker handles both via post-insertorupdate
-      success = await saveItem()
-      if (success) {
-        $q.notify({
-          type: 'positive',
-          message: t('Item_saved_successfully')
-        })
-        justSave.value = true
-        await Init()
-      }
-    }
-  }
-
-  // +++++++ Call Api +++++++++++++++++++++++
   const getApiContext = (operation: string) => {
-    const secretToken = myConf.AppConfig.AuthToken
-    const baseUrl = myConf.AppConfig.DbUrl // e.g. "https://your-worker.workers.dev"
-
     return {
-      url: `${baseUrl}/api/crud/${operation}`,
-      token: secretToken
+      url: `${myConf.AppConfig.DbUrl}/api/crud/${operation}`,
+      token: myConf.AppConfig.AuthToken
     }
   }
 
-  // 🔍 Action 1: Get All Data
+  /*
+   * Throws on failure instead of returning [].
+   * Swallowing the error here would make a network failure indistinguishable
+   * from an empty table, and Init() would silently fall into new-record mode.
+   */
   const getAllItems = async (): Promise<T[]> => {
-    try {
-      const api = useApi()
-      const { url, token } = getApiContext('get-alldata')
+    const { url, token } = getApiContext('get-alldata')
 
-      const response = await api.post(url, {
-        token: token,
-        table: tableName
-      })
+    const response = await api.post(url, {
+      token,
+      table: tableName
+    })
 
-      return response.data?.data || []
-    } catch (err) {
-      await showError(err)
-      return []
-    }
+    return response.data?.data ?? []
   }
 
-  // ❌ Action 2: Delete Item
   const deleteItem = async (): Promise<boolean> => {
     try {
-      const api = useApi()
-      const { url, token } = getApiContext('post-delete')
-      const currentId = item.value[idKey as string]
+      const currentId = item.value?.[idKey]
 
-      if (!currentId) {
-        console.warn('Cannot delete: No item ID is currently selected.')
+      if (currentId === null || currentId === undefined || currentId === '') {
+        console.warn('Cannot delete: no item ID is currently selected.')
         return false
       }
 
+      const { url, token } = getApiContext('post-delete')
+
       const response = await api.post(url, {
-        token: token,
+        token,
         table: tableName,
         id: String(currentId)
       })
 
-      if (response.data && response.data.status === 'success') {
+      if (response.data?.status === 'success') {
         return true
-      } else {
-        throw new Error(response.data?.message || 'Unknown server error during deletion.')
       }
+
+      throw new Error(response.data?.message ?? 'Unknown server error during deletion.')
     } catch (err) {
       await showError(err)
       return false
     }
   }
 
-  // 💾 Action 3: Unified Save (Insert or Update)
   const saveItem = async (): Promise<boolean> => {
     try {
-      const api = useApi()
       const { url, token } = getApiContext('post-insertorupdate')
 
-      // Clean up inputs and build a strong typed record object payload for D1
-      const recordData: Record<string, any> = {}
-      const blankInstance = new ModelConstructor()
-      const baseInstance = BaseConstructor !== undefined ? new BaseConstructor() : undefined
-      const itemKeys = !baseInstance ? Object.keys(blankInstance) : Object.keys(baseInstance)
+      const recordData: Record<string, unknown> = {}
 
-      itemKeys.forEach(key => {
-        // Enforce fallback boundaries so we don't pass undefined values to SQLite queries
+      /*
+       * When BaseConstructor exists, save only its fields.
+       * Otherwise, save fields defined in the current model.
+       *
+       * Typed as `object` — the union T | S is only ever read through
+       * Object.keys(), which needs nothing more specific.
+       */
+      const modelForKeys: object = BaseConstructor ? new BaseConstructor() : new ModelConstructor()
+
+      Object.keys(modelForKeys).forEach(key => {
         recordData[key] = item.value[key] ?? null
       })
 
-      //console.log('Save Item---->', item.value)
       const response = await api.post(url, {
-        token: token,
+        token,
         table: tableName,
         data: recordData
       })
 
-      if (response.data && response.data.status === 'success') {
-        await Init()
+      if (response.data?.status === 'success') {
         return true
-      } else {
-        throw new Error(response.data?.message || 'Failed to save record.')
       }
+
+      throw new Error(response.data?.message ?? 'Failed to save record.')
     } catch (err) {
       await showError(err)
       return false
     }
   }
-  // 💾 Action 4: GetDataOptions
+
   const getDataOptions = async (option: OptionalData): Promise<DataOption[]> => {
     try {
-      const api = useApi()
-      const token = myConf.AppConfig.AuthToken
-      const baseUrl = myConf.AppConfig.DbUrl // e.g. "https://your-worker.workers.dev"
-      const response = await api.post(`${baseUrl}/api/optionalData`, {
-        token: token,
-        option: option
+      const response = await api.post(`${myConf.AppConfig.DbUrl}/api/optionalData`, {
+        token: myConf.AppConfig.AuthToken,
+        option
       })
 
-      return response.data?.data || []
+      return response.data?.data ?? []
     } catch (err) {
       await showError(err)
       return []
+    }
+  }
+
+  // +++++++ Initialization +++++++++++++++++++++++
+
+  const Init = async (): Promise<void> => {
+    try {
+      // 1. Enter loading state
+      dataState.stateCtrl(true, false, false, false)
+
+      // 2. Fetch records — throws on failure, handled below
+      items.value = await getAllItems()
+
+      // 3. Clear any stale validation from a previous session
+      resetValidation()
+
+      if (items.value.length > 0) {
+        // ---- EXISTING RECORD PATH ----
+        itemMode.value = 'existing'
+
+        applySystemChanges(() => {
+          if (assignInit) {
+            assignInit(items.value)
+          } else {
+            replaceItem(items.value[0])
+          }
+        })
+
+        dataState.stateCtrl(false, true, false, false)
+      } else {
+        // ---- NEW RECORD PATH ----
+        // Same terminal state as onCreate(), so an empty table and a manual
+        // "New" click leave the form in an identical state.
+        itemMode.value = 'new'
+
+        applySystemChanges(() => {
+          replaceItem()
+        })
+
+        dataState.stateCtrl(false, false, false, true)
+      }
+    } catch (err) {
+      // A failed load is not a valid new record — reset to a neutral state.
+      items.value = []
+
+      applySystemChanges(() => {
+        replaceItem()
+      })
+
+      await showError(err)
+      dataState.stateCtrl(false, false, false, false)
+    }
+  }
+
+  // +++++++ Event Handling +++++++++++++++++++++++
+
+  const onRowClick = (row: T) => {
+    if (!row) {
+      return
+    }
+
+    dataState.stateCtrl(true, false, false, false)
+
+    const targetId = row[idKey]
+
+    const selected = items.value.find(record => {
+      return String(record[idKey]) === String(targetId)
+    })
+
+    if (!selected) {
+      dataState.stateCtrl(false, false, false, false)
+      return
+    }
+
+    itemMode.value = 'existing'
+
+    applySystemChanges(() => {
+      replaceItem(selected)
+    })
+
+    resetValidation()
+    dataState.stateCtrl(false, true, false, false)
+  }
+
+  const onCreate = () => {
+    itemMode.value = 'new'
+
+    applySystemChanges(() => {
+      replaceItem()
+    })
+
+    resetValidation()
+    dataState.stateCtrl(false, false, false, true)
+  }
+
+  const onDelete = async () => {
+    const currentId = item.value?.[idKey]
+
+    if (currentId === null || currentId === undefined || currentId === '') {
+      return
+    }
+
+    const success = await confirmDelete($q, String(currentId), () => deleteItem())
+
+    if (success) {
+      await Init()
+    }
+  }
+
+  const onSave = async () => {
+    if (!item.value) {
+      return
+    }
+
+    const canSave =
+      dataState.state.value === EDataState.ValidEdit ||
+      dataState.state.value === EDataState.ValidNew
+
+    if (!canSave) {
+      return
+    }
+
+    const success = await saveItem()
+
+    if (success) {
+      $q.notify({
+        type: 'positive',
+        message: t('Item_saved_successfully')
+      })
+
+      // Refresh once only. saveItem() does not call Init().
+      await Init()
     }
   }
 
@@ -283,13 +530,13 @@ export function useCrudProp<T extends BaseEntity, S>(
     clearValidate,
     isPwdVisible,
     canEditRole,
+    currentUser,
     onRowClick,
     onCreate,
     onDelete,
     onSave,
     Init,
     getAllItems,
-    getDataOptions,
-    currentUser
+    getDataOptions
   }
 }
