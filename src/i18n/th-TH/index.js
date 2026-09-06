@@ -125,6 +125,7 @@ export default {
   Weekly: 'รายสัปดาห์',
   Monthly: 'รายเดือน',
   Yearly: 'รายปี',
+  CustomDays: 'กำหนดวันเอง',
   Port_type: 'ชนิด พอร์ต',
   Port_sub_type: 'ชนิด พอร์ต ย่อย',
   Status: 'สถานะ',
