@@ -68,7 +68,7 @@ export function usePortProp() {
       {
         name: 'description',
         required: true,
-        label: t('Description'),
+        label: t('Port_description'),
         align: 'left',
         field: 'description',
         sortable: true

@@ -170,7 +170,7 @@ export default {
   //++++++++++++
   LoanIssued: 'ปล่อยกู้', // ปล่อยกู้
   LoanRepayment: 'รับชำระคืน', // รับชำระคืน
-  LoanInterestAccrual: 'ดอกเบี้ยค้างรับ', // ดอกเบี้ยค้างรับ
+  LoanInterestAccrual: 'รับชำระดอกเบี้ย', // ดอกเบี้ยค้างรับ
   BadDebtWriteOff: 'ตัดหนี้สูญ', // ตัดหนี้สูญ
   LoanReFinance: 'รีไฟแนนซ์', // รีไฟแนนซ์ / ปรับโครงสร้างหนี้
   BrokerPayment: 'จ่ายค่านายหน้า', //จ่ายค่านายหน้า
