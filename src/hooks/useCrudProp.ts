@@ -416,6 +416,7 @@ export function useCrudProp<T extends BaseEntity, S extends object = T>(
         })
 
         dataState.stateCtrl(false, true, false, false)
+        dataState.isRecordEmpty.value = false
       } else {
         // ---- NEW RECORD PATH ----
         // Same terminal state as onCreate(), so an empty table and a manual
@@ -427,6 +428,7 @@ export function useCrudProp<T extends BaseEntity, S extends object = T>(
         })
 
         dataState.stateCtrl(false, false, false, true)
+        dataState.isRecordEmpty.value = true
       }
     } catch (err) {
       // A failed load is not a valid new record — reset to a neutral state.

@@ -76,6 +76,15 @@ export default {
   Export_to_Excel: 'Export to Excel',
   Export_to_PDF: 'Export to PDF',
   Show_all: 'Show_all',
+  User_Accounts: 'User Accounts',
+  User_Name: 'User Name',
+  Role: 'Role',
+  Session_Token: 'Session Token',
+  Guest: 'Guest',
+  User: 'User',
+  Supervisor: 'Supervisor',
+  Admin: 'Admin',
+  PowerUser: 'PowerUser', //
   //+++++++Customer+++++++++++++++++
   Customer: 'Customer',
   Customers: 'Customers',

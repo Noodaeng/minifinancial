@@ -5,18 +5,18 @@ export function useDataState() {
   const state = ref(EDataState.None)
   const canUserEdit = ref(false)
   const canUserDel = ref(false)
-
+  const isRecordEmpty = ref(false)
   const stateCtrl = (
     isInit: boolean,
     isSelected: boolean,
     isValidated: boolean,
     reqCreate: boolean
   ) => {
-    // console.log(
-    //   'state control--->',
-    //   state.value,
-    //   `init-> ${isInit} select->${isSelected} valid->${isValidated} req->${reqCreate}`
-    // )
+    console.log(
+      'state control--->',
+      state.value,
+      `init-> ${isInit} select->${isSelected} valid->${isValidated} req->${reqCreate}`
+    )
     if (isInit) {
       state.value = EDataState.Init
       return
@@ -59,7 +59,9 @@ export function useDataState() {
   }
 
   const canCreate = computed(() => {
-    return state.value === EDataState.Init || state.value === EDataState.Selected
+    return (
+      state.value === EDataState.Init || state.value === EDataState.Selected || isRecordEmpty.value
+    )
   })
 
   // Fixed the logical OR expression inside the parenthesis
@@ -91,6 +93,7 @@ export function useDataState() {
     canSave,
     canUserDel,
     canUserEdit,
+    isRecordEmpty,
     stateCtrl,
     resetDataState
   }
