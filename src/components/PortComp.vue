@@ -165,6 +165,7 @@
             <q-input
               outlined
               v-model="model.amount"
+              type="number"
               :label="$t('Amount')"
               label-color="appLabel"
               :hint="$t('Amount')"
