@@ -108,6 +108,7 @@
             <q-input
               outlined
               v-model="model.remark"
+              type="text"
               :label="$t('Remark')"
               label-color="appLabel"
               :hint="$t('Remark')"
