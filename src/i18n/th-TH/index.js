@@ -313,5 +313,6 @@ export default {
   Failed_to_delete_item: 'ลบรายการไม่สำเร็จ',
   Deletion_cancelled_by_user: 'ผู้ใช้ยกเลิกการลบ',
   Net_Outstanding: 'ยอดคงค้างสุทธิ',
+  Net_loan_balance: 'ยอดเงินกู้คงค้างสุทธิ',
   Summary_by_Session_Type: 'สรุปตามชนิดรายการ'
 }

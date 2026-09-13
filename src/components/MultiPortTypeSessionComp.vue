@@ -4,6 +4,21 @@
       <!-- Header -->
       <div class="row items-center justify-between q-mb-xs flex-shrink-0">
         <div class="row items-center">
+          <q-icon name="mdi-hand-coin-outline" size="sm" class="q-mr-xs text-grey-7" />
+          <div class="text-caption text-weight-bold text-grey-6">
+            {{ $t('Net_loan_balance') }} : {{ $t('Total') }}
+          </div>
+        </div>
+        <q-badge
+          outline
+          :color="outStanding < 0 ? 'red' : outStanding > 0 ? 'green' : 'grey-6'"
+          size="xs"
+        >
+          {{ formatCurrency(outStanding) }}
+        </q-badge>
+      </div>
+      <div class="row items-center justify-between q-mb-xs flex-shrink-0">
+        <div class="row items-center">
           <q-icon name="mdi-swap-horizontal" size="sm" class="q-mr-xs text-grey-7" />
           <div class="text-caption text-weight-bold text-grey-7">
             {{ $t('Session_List') }} : {{ $t('Total') }}
@@ -17,7 +32,6 @@
           {{ formatCurrency(sumValue) }}
         </q-badge>
       </div>
-
       <!-- Responsive CSS Grid layout -->
       <div
         v-if="sessionTypeSummaries && sessionTypeSummaries.length > 0"
@@ -101,12 +115,27 @@ export default defineComponent({
       })
       return sumVal
     })
+    const outStanding = computed(() => {
+      let outVal = 0
+      props.sessionTypeSummaries?.forEach(detail => {
+        const effect = getSessionEffect(detail.portType, detail.sessionType)
+        if (detail.portType === 1) {
+          if (detail.sessionType === 0) {
+            outVal -= detail.totalAmount
+          } else if (detail.sessionType === 1) {
+            outVal += detail.totalAmount
+          }
+        }
+      })
+      return outVal
+    })
 
     return {
       formatCurrency,
       getSessionTypeDescription,
       totalSessionTypes,
-      sumValue
+      sumValue,
+      outStanding
     }
   }
 })

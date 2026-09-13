@@ -304,5 +304,6 @@ export default {
   Failed_to_delete_item: 'Failed to delete item',
   Deletion_cancelled_by_user: 'Deletion cancelled by user',
   Net_Outstanding: 'Net Outstanding',
+  Net_loan_balance: 'Net loan balance',
   Summary_by_Session_Type: 'Summary by Session Type'
 }
