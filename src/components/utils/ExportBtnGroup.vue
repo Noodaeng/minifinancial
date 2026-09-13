@@ -40,6 +40,7 @@ import { EPortType } from '../../types/myEnums'
 // Import your Thai Base64 font string (adjust the relative path to match your folder structure)
 import { sarabunFontBase64 } from '../../assets/fonts/Sarabun-Regular-normal'
 import { i18n } from '../../i18n'
+import { formatCurrency } from '../../modules/appUtils'
 export enum LoanTransactionType {
   LoanIssued = 0, // ปล่อยกู้
   LoanRepayment = 1, // รับชำระคืน
@@ -248,7 +249,7 @@ export default defineComponent({
           margin: { left: startX, right: rightMargin },
           tableWidth: summaryWidth,
           head: [[t('Type'), t('Total_Amount')]],
-          body: summaryRows.map(s => [s.sessionType, s.totalAmount]),
+          body: summaryRows.map(s => [s.sessionType, formatCurrency(s.totalAmount)]),
           theme: 'grid',
           styles: {
             font: 'Sarabun',
@@ -275,10 +276,11 @@ export default defineComponent({
             body: [
               [
                 t('Net_Outstanding'),
-                differ.toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
-                })
+                formatCurrency(differ)
+                // differ.toLocaleString(undefined, {
+                //   minimumFractionDigits: 2,
+                //   maximumFractionDigits: 2
+                // })
               ]
             ],
             theme: 'grid',
