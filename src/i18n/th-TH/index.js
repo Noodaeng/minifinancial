@@ -281,6 +281,51 @@ export default {
   MutualFund: 'กองทุนรวม', // กองทุนรวม
   CommunitySavingShare: 'เล่นแชร์', // การเล่นแชร์ / ออมหมุนเวียนในชุมชน
   Insurance: 'การซื้อประกัน', // การซื้อประกัน / กรมธรรม์เพื่อการลงทุนหรือคุ้มครอง
+  // EBorrowingSubType
+  ShortTermLoan: 'เงินกู้ยืมระยะสั้น', // เงินกู้ยืมระยะสั้น
+  LongTermLoan: 'เงินกู้ยืมระยะยาว', // เงินกู้ยืมระยะยาว
+  Mortgage: 'เงินกู้จำนอง / สินเชื่อบ้าน', // เงินกู้จำนอง / สินเชื่อบ้าน
+  //EPayableSubType
+  AccountsPayable: 'เจ้าหนี้การค้า', // เจ้าหนี้การค้า
+  AccruedExpense: 'ค่าใช้จ่ายค้างจ่าย', // ค่าใช้จ่ายค้างจ่าย
+  OtherPayable: 'เจ้าหนี้อื่น ๆ', // เจ้าหนี้อื่น ๆ
+  //EOperatingRevenueSubType {
+  SalesRevenue: 'รายได้จากการขาย', // รายได้จากการขาย
+  ServiceRevenue: 'รายได้จากการบริการ', // รายได้จากการบริการ
+  RentalIncome: 'รายได้ค่าเช่า', // รายได้ค่าเช่า
+  //EInterestIncomeSubType {
+  BankInterest: 'ดอกเบี้ยเงินฝาก', // ดอกเบี้ยเงินฝาก
+  LoanInterest: 'ดอกเบี้ยรับจากการปล่อยกู้', // ดอกเบี้ยรับจากการปล่อยกู้
+  BondCoupon: 'ดอกเบี้ยหุ้นกู้ / พันธบัตร', // ดอกเบี้ยหุ้นกู้ / พันธบัตร
+  //EDividendIncomeSubType {
+  ListedDividend: 'เงินปันผลจากหุ้นในตลาด', // เงินปันผลจากหุ้นในตลาด
+  PrivateDividend: 'เงินปันผลจากหุ้นนอกตลาด', // เงินปันผลจากหุ้นนอกตลาด
+  FundDividend: 'เงินปันผลจากกองทุนรวม', // เงินปันผลจากกองทุนรวม
+  EquityMethodGain: 'กำไรตามวิธีส่วนได้เสีย', // กำไรตามวิธีส่วนได้เสีย
+  UnrealizedGain: 'กำไรที่ยังไม่เกิดขึ้นจริง (ปรับมูลค่ายุติธรรม)', // กำไรที่ยังไม่เกิดขึ้นจริง (ปรับมูลค่ายุติธรรม)
+  // EOperatingExpenseSubType {
+  BrokerageFee: 'ค่าธรรมเนียมโบรกเกอร์', // ค่าธรรมเนียมโบรกเกอร์
+  Administrative: 'ค่าใช้จ่ายบริหารทั่วไป', // ค่าใช้จ่ายบริหารทั่วไป
+  InsurancePremium: 'เบี้ยประกันภัย', // เบี้ยประกันภัย
+  //EInterestExpenseSubType {
+  BankLoanInterest: 'ดอกเบี้ยเงินกู้ธนาคาร', // ดอกเบี้ยเงินกู้ธนาคาร
+  BorrowingInterest: 'ดอกเบี้ยเงินกู้ยืมอื่น ๆ', // ดอกเบี้ยเงินกู้ยืมอื่น ๆ
+  //EBadDebtExpenseSubType {
+  BadDebtWriteOff: 'ตัดจำหน่ายหนี้สูญ', // ตัดจำหน่ายหนี้สูญ
+  AllowanceForBadDebt: 'ค่าเผื่อหนี้สงสัยจะสูญ', // ค่าเผื่อหนี้สงสัยจะสูญ
+  //EDisposalLossSubType {
+  DisposalLoss: 'ขาดทุนจากการจำหน่ายทรัพย์สิน', // ขาดทุนจากการจำหน่ายทรัพย์สิน
+  UnrealizedLoss: 'ขาดทุนที่ยังไม่เกิดขึ้นจริง (ปรับมูลค่ายุติธรรม)', // ขาดทุนที่ยังไม่เกิดขึ้นจริง (ปรับมูลค่ายุติธรรม)
+  //EPaidInCapitalSubType {
+  CommonStock: 'หุ้นสามัญ', // หุ้นสามัญ (Common Stock)
+  PreferredStock: 'หุ้นบุริมสิทธิ์', // หุ้นบุริสิทธิ์ (Preferred Stock) -> แก้คำผิดบุริสิทธิ์เป็นบุริมสิทธิ์
+  //ERetainedEarningsSubType {
+  Unappropriated: 'กำไรสะสมยังไม่ได้จัดสรร', // กำไรสะสมยังไม่ได้จัดสรร (Unappropriated Retained Earnings)
+  Appropriated: 'กำไรสะสมจัดสรรแล้ว', // กำไรสะสมจัดสรรแล้ว (Appropriated Retained Earnings)
+  //EOtherReservesSubType {
+  SharePremium: 'ส่วนเกินมูลค่าหุ้น', // ส่วนเกินมูลค่าหุ้น (Share Premium / Capital Surplus)
+  LegalReserve: 'สำรองตามกฎหมาย', // สำรองตามกฎหมาย (Legal Reserve)
+  RevaluationReserve: 'ส่วนเกินทุนจากการตีราคา assets', // ส่วนเกินทุนจากการตีราคา assets (Revaluation Surplus)
   //++++++Session++++++++++
   Port_Id: 'ระหัส พอร์ต',
   Credit_Port_Id: 'ระหัส เครดิต พอร์ต',

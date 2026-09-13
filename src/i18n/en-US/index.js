@@ -271,6 +271,53 @@ export default {
   MutualFund: 'Mutual Fund', // กองทุนรวม
   CommunitySavingShare: 'Community Saving Share', // การเล่นแชร์ / ออมหมุนเวียนในชุมชน
   Insurance: 'Insurance', // การซื้อประกัน / กรมธรรม์เพื่อการลงทุนหรือคุ้มครอง
+
+  // EBorrowingSubType
+  ShortTermLoan: 'Short Term Loan', // เงินกู้ยืมระยะสั้น
+  LongTermLoan: 'Long Term Loan', // เงินกู้ยืมระยะยาว
+  Mortgage: 'Mortgage', // เงินกู้จำนอง / สินเชื่อบ้าน
+  //EPayableSubType
+  AccountsPayable: 'Accounts Payable', // เจ้าหนี้การค้า
+  AccruedExpense: 'Accrued Expense', // ค่าใช้จ่ายค้างจ่าย
+  OtherPayable: 'Other Payable', // เจ้าหนี้อื่น ๆ
+  //EOperatingRevenueSubType {
+  SalesRevenue: 'Sales Revenue', // รายได้จากการขาย
+  ServiceRevenue: 'Service Revenue', // รายได้จากการบริการ
+  RentalIncome: 'Rental Income', // รายได้ค่าเช่า
+  //EInterestIncomeSubType {
+  BankInterest: 'Bank Interest', // ดอกเบี้ยเงินฝาก
+  LoanInterest: 'Loan Interest', // ดอกเบี้ยรับจากการปล่อยกู้
+  BondCoupon: 'Bond Coupon', // ดอกเบี้ยหุ้นกู้ / พันธบัตร
+  //EDividendIncomeSubType {
+  ListedDividend: 'Listed Dividend', // เงินปันผลจากหุ้นในตลาด
+  PrivateDividend: 'Private Dividend', // เงินปันผลจากหุ้นนอกตลาด
+  FundDividend: 'Fund Dividend', // เงินปันผลจากกองทุนรวม
+  EquityMethodGain: 'Equity Method Gain', // กำไรตามวิธีส่วนได้เสีย
+  UnrealizedGain: 'Unrealized Gain', // กำไรที่ยังไม่เกิดขึ้นจริง (ปรับมูลค่ายุติธรรม)
+  // EOperatingExpenseSubType {
+  BrokerageFee: 'Brokerage Fee', // ค่าธรรมเนียมโบรกเกอร์
+  Administrative: 'Administrative', // ค่าใช้จ่ายบริหารทั่วไป
+  InsurancePremium: 'Insurance Premium', // เบี้ยประกันภัย
+  //EInterestExpenseSubType {
+  BankLoanInterest: 'Bank Loan Interest', // ดอกเบี้ยเงินกู้ธนาคาร
+  BorrowingInterest: 'Borrowing Interest', // ดอกเบี้ยเงินกู้ยืมอื่น ๆ
+  //EBadDebtExpenseSubType {
+  BadDebtWriteOff: 'BadDebt Write Off', // ตัดจำหน่ายหนี้สูญ
+  AllowanceForBadDebt: 'Allowance For BadDebt', // ค่าเผื่อหนี้สงสัยจะสูญ
+  //EDisposalLossSubType {
+  DisposalLoss: 'Disposal Loss', // ขาดทุนจากการจำหน่ายทรัพย์สิน
+  UnrealizedLoss: 'Unrealized Loss', // ขาดทุนที่ยังไม่เกิดขึ้นจริง (ปรับมูลค่ายุติธรรม)
+  //EPaidInCapitalSubType {
+  CommonStock: 'Common Stock', // หุ้นสามัญ (Common Stock)
+  PreferredStock: 'Preferred Stock', // หุ้นบุริสิทธิ์ (Preferred Stock)
+  //ERetainedEarningsSubType {
+  Unappropriated: 'Unappropriated', // กำไรสะสมยังไม่ได้จัดสรร (Unappropriated Retained Earnings)
+  Appropriated: ' Appropriated', // กำไรสะสมจัดสรรแล้ว (Appropriated Retained Earnings)
+  //EOtherReservesSubType {
+  SharePremium: 'Share Premium', // ส่วนเกินมูลค่าหุ้น (Share Premium / Capital Surplus)
+  LegalReserve: 'Legal Reserve', // สำรองตามกฎหมาย (Legal Reserve)
+  RevaluationReserve: 'RevaluationReserve', // ส่วนเกินทุนจากการตีราคา assets (Revaluation Surplus)
+
   //++++++Session++++++++++
   Port_Id: 'Port Id',
   Credit_Port_Id: 'Credit Port Id',

@@ -552,7 +552,10 @@ export const getGuideRows = (
           break
         case LoanTransactionType.LoanInterestAccrual:
           debitTarget = CASH_SAVINGS
-          creditTarget = CURRENT_PORT_TARGET
+          creditTarget = {
+            portType: EPortType.InterestIncome,
+            subTypes: [EInterestIncomeSubType.LoanInterest]
+          }
           break
         case LoanTransactionType.BadDebtWriteOff:
           debitTarget = {
