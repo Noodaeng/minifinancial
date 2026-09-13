@@ -1,7 +1,7 @@
 import { ref, Ref, computed } from 'vue'
 import { EPortType } from '../types/myEnums'
 import { useCrudProp } from './useCrudProp'
-import { showError, getSessionType, currentDateTimeStr } from '../modules/appUtils'
+import { showError, getSessionType, currentDateTimeStr, formatCurrency } from '../modules/appUtils'
 import Session from '../models/session'
 import Port from '../models/port'
 import SessionDto from '../models/sessionDto'
@@ -56,6 +56,7 @@ export function usePortSession() {
         label: t('Amount'),
         align: 'left',
         field: 'amount',
+        format: (val: number) => formatCurrency(val),
         sortable: true
       }
     ],
