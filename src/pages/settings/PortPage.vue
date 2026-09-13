@@ -83,6 +83,7 @@
                       :enable-export="true"
                       :title="getTitle"
                       :file-name="getPortFileName"
+                      :portType="portType"
                     />
                   </template>
                 </ListComp>

@@ -156,7 +156,8 @@ export enum OtherInvestmentsSubType {
   RealEstate = 0, // อสังหาริมทรัพย์เพื่อการลงทุน
   MutualFund = 1, // กองทุนรวม
   CommunitySavingShare = 2, // การเล่นแชร์ / ออมหมุนเวียนในชุมชน
-  Insurance = 3 // การซื้อประกัน / กรมธรรม์เพื่อการลงทุนหรือคุ้มครอง
+  Insurance = 3, // การซื้อประกัน / กรมธรรม์เพื่อการลงทุนหรือคุ้มครอง
+  Agriculture = 4
 }
 // Borrowings (5)
 export enum EBorrowingSubType {
@@ -289,7 +290,9 @@ export enum OtherTransactionType {
   SavingSharePayment = 5, // จ่ายค่า แชร์/ออมหมุนเวียน
   SavingShareIncome = 6, // รับค่า แชร์/ออมหมุนเวียน
   InsurancePremium = 7, // การซื้อประกัน / จ่ายเบี้ยประกัน
-  InsuranceBenefit = 8 // ผลประโยชน์จากกรมธรรม์ (เงินคืน/คุ้มครอง)
+  InsuranceBenefit = 8, // ผลประโยชน์จากกรมธรรม์ (เงินคืน/คุ้มครอง)
+  AgriculturePayment = 9, // จ่ายค่าดำเนินงานเกษตร
+  AgricultureIncome = 10 // รับค่าผลประโยชน์งานเกษตร
 }
 // Borrowings = 5 (เงินกู้ยืม / หนี้สิน)
 export enum BorrowingsTransactionType {

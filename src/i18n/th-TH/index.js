@@ -49,7 +49,7 @@ export default {
   Id: 'ระหัส',
   Type: 'ชนิด',
   Item_saved_successfully: 'บันทึกข้อมูลสำเร็จ',
-  User: 'ผู้ใช้',
+  User: 'ผู้ใช้งาน',
   Password: 'รหัสผ่าน',
   Assets: 'สินทรัพย์',
   Liabilities: 'หนี้สิน',
@@ -81,7 +81,6 @@ export default {
   Role: 'บทบาท',
   Session_Token: 'โทเค็นเซสชัน', //
   Guest: 'ผู้เข้าชม',
-  User: 'ผู้ใช้งาน',
   Supervisor: 'ผู้ควบคุมดูแล',
   Admin: 'ผู้ดูแลระบบ',
   PowerUser: 'ผู้ใช้ระดับสูง',
@@ -128,6 +127,7 @@ export default {
   Securities: 'การลงทุนในตราสาร',
   EquityHoldings: 'การลงทุนในกองทุน/หุ้น',
   OtherInvestments: 'อื่น ๆ',
+  Agriculture: 'การเกษตร',
   Port_Investments: 'พอร์ต ลงทุน',
   Port_description: 'ชื่อพอร์ต',
   Daily: 'รายวัน',
@@ -203,6 +203,8 @@ export default {
   SavingShareIncome: 'รับค่าแชร์', // รับค่า แชร์/ออมหมุนเวียน
   InsurancePremium: 'จ่ายเบี้ยประกัน', // การซื้อประกัน / จ่ายเบี้ยประกัน
   InsuranceBenefit: 'ผลประโยชน์จากกรมธรรม์', // ผลประโยชน์จากกรมธรรม์ (เงินคืน/คุ้มครอง)
+  AgriculturePayment: 'จ่ายค่าดำเนินงาน', // จ่ายค่าดำเนินงานเกษตร
+  AgricultureIncome: 'รับค่าผลประโยชน์', // รับค่าผลประโยชน์งานเกษตร
   // BorrowingsTransactionType
   Drawdown: 'เบิกเงินกู้',
   Repayment: 'ชำระคืนเงินกู้',
@@ -309,5 +311,7 @@ export default {
   Would_you_like_to_delete: 'ต้องการลบหรือไม่',
   Item_deleted_successfully: 'ลบรายการสำเร็จ',
   Failed_to_delete_item: 'ลบรายการไม่สำเร็จ',
-  Deletion_cancelled_by_user: 'ผู้ใช้ยกเลิกการลบ'
+  Deletion_cancelled_by_user: 'ผู้ใช้ยกเลิกการลบ',
+  Net_Outstanding: 'ยอดคงค้างสุทธิ',
+  Summary_by_Session_Type: 'สรุปตามชนิดรายการ'
 }

@@ -718,6 +718,20 @@ export const getGuideRows = (
             subTypes: [OtherInvestmentsSubType.Insurance]
           }
           break
+        case OtherTransactionType.AgriculturePayment:
+          debitTarget = CASH_SAVINGS
+          creditTarget = {
+            portType: EPortType.OtherInvestments,
+            subTypes: [OtherInvestmentsSubType.Agriculture]
+          }
+          break
+        case OtherTransactionType.AgricultureIncome:
+          debitTarget = CASH_SAVINGS
+          creditTarget = {
+            portType: EPortType.OtherInvestments,
+            subTypes: [OtherInvestmentsSubType.Agriculture]
+          }
+          break
       }
       break
 
@@ -1506,6 +1520,25 @@ export const getPortSessionInfo = (
           enabled: subType === OtherInvestmentsSubType.Insurance,
           visible: subType === OtherInvestmentsSubType.Insurance,
           description: t('InsuranceBenefit'),
+          iconName: 'mdi-cash-plus',
+          totalAmount: 0,
+          totalCount: 0,
+          effect: '+'
+        },
+        // Agriculture (subType = 4)
+        {
+          enabled: subType === OtherInvestmentsSubType.Agriculture,
+          visible: subType === OtherInvestmentsSubType.Agriculture,
+          description: t('AgriculturePayment'),
+          iconName: 'mdi-cash-minus',
+          totalAmount: 0,
+          totalCount: 0,
+          effect: '-'
+        },
+        {
+          enabled: subType === OtherInvestmentsSubType.Agriculture,
+          visible: subType === OtherInvestmentsSubType.Agriculture,
+          description: t('AgricultureIncome'),
           iconName: 'mdi-cash-plus',
           totalAmount: 0,
           totalCount: 0,

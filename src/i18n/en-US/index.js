@@ -81,7 +81,6 @@ export default {
   Role: 'Role',
   Session_Token: 'Session Token',
   Guest: 'Guest',
-  User: 'User',
   Supervisor: 'Supervisor',
   Admin: 'Admin',
   PowerUser: 'PowerUser', //
@@ -128,6 +127,7 @@ export default {
   Securities: 'Securities',
   EquityHoldings: 'Equity Holdings',
   OtherInvestments: 'Other investments',
+  Agriculture: 'Agriculture',
   Port_Investments: 'Port investments',
   Port_description: 'Port description',
   Daily: 'Daily',
@@ -203,6 +203,8 @@ export default {
   SavingShareIncome: 'Saving Share Income', // รับค่า แชร์/ออมหมุนเวียน
   InsurancePremium: 'Insurance Premium', // การซื้อประกัน / จ่ายเบี้ยประกัน
   InsuranceBenefit: 'Insurance Benefit', // ผลประโยชน์จากกรมธรรม์ (เงินคืน/คุ้มครอง)
+  AgriculturePayment: 'Agriculture Payment', // จ่ายค่าดำเนินงานเกษตร
+  AgricultureIncome: 'Agriculture Income', // รับค่าผลประโยชน์งานเกษตร
   //+++++++++ BorrowingsTransactionType----1
   Drawdown: 'Drawdown', // เบิกเงินกู้ / รับเงินกู้ยืม
   Repayment: ' Repayment', // ชำระคืนเงินกู้
@@ -300,5 +302,7 @@ export default {
   Would_you_like_to_delete: 'Would you like to delete',
   Item_deleted_successfully: 'Item deleted successfully',
   Failed_to_delete_item: 'Failed to delete item',
-  Deletion_cancelled_by_user: 'Deletion cancelled by user'
+  Deletion_cancelled_by_user: 'Deletion cancelled by user',
+  Net_Outstanding: 'Net Outstanding',
+  Summary_by_Session_Type: 'Summary by Session Type'
 }
