@@ -165,7 +165,7 @@ export default {
   OperatingExpense: 'ค่าใช้จ่ายดำเนินงาน',
   InterestExpense: 'จ่ายดอกเบี้ย',
   BadDebtExpense: 'ค่าเผื่อหนี้สงสัยจะสูญ',
-  DisposalLoss: 'ขาดทุนจากการจำหน่าย',
+  //DisposalLoss: 'ขาดทุนจากการจำหน่าย',
   //++++++++++++
   Equity_Ports: 'พอร์ต ส่วนของผู้ถือหุ้น',
   PaidInCapital: 'ทุนเรือนหุ้น',
@@ -180,7 +180,7 @@ export default {
   LoanIssued: 'ปล่อยกู้', // ปล่อยกู้
   LoanRepayment: 'รับชำระคืน', // รับชำระคืน
   LoanInterestAccrual: 'รับชำระดอกเบี้ย', // ดอกเบี้ยค้างรับ
-  BadDebtWriteOff: 'ตัดหนี้สูญ', // ตัดหนี้สูญ
+  //BadDebtWriteOff: 'ตัดหนี้สูญ', // ตัดหนี้สูญ
   LoanReFinance: 'รีไฟแนนซ์', // รีไฟแนนซ์ / ปรับโครงสร้างหนี้
   BrokerPayment: 'จ่ายค่านายหน้า', //จ่ายค่านายหน้า
   //+++++++++++++
@@ -195,16 +195,17 @@ export default {
   EquityMethodAdjustment: 'ปรับตามวิธีส่วนได้เสีย', // ปรับตามวิธีส่วนได้เสีย
   //+++++++++++++
   RealEstatePurchase: 'ซื้ออสังหาริมทรัพย์', // ซื้ออสังหาริมทรัพย์
-  RentalIncome: 'รับค่าเช่า', // รับค่าเช่า
+  //RentalIncome: 'รับค่าเช่า', // รับค่าเช่า
   MutualFundInvestment: 'ลงทุนกองทุนรวม', // ลงทุนกองทุนรวม
   DisposalGain: 'กำไรจากการจำหน่าย', // กำไร/ขาดทุนจากการจำหน่าย
   // DisposalLoss: 'ขาดทุนจากการจำหน่าย', // ขาดทุนจากการจำหน่าย
   SavingSharePayment: 'จ่ายค่าแชร์', // ลงทุน แชร์/ออมหมุนเวียน
   SavingShareIncome: 'รับค่าแชร์', // รับค่า แชร์/ออมหมุนเวียน
-  InsurancePremium: 'จ่ายเบี้ยประกัน', // การซื้อประกัน / จ่ายเบี้ยประกัน
+  //InsurancePremium: 'จ่ายเบี้ยประกัน', // การซื้อประกัน / จ่ายเบี้ยประกัน
   InsuranceBenefit: 'ผลประโยชน์จากกรมธรรม์', // ผลประโยชน์จากกรมธรรม์ (เงินคืน/คุ้มครอง)
   AgriculturePayment: 'จ่ายค่าดำเนินงาน', // จ่ายค่าดำเนินงานเกษตร
   AgricultureIncome: 'รับค่าผลประโยชน์', // รับค่าผลประโยชน์งานเกษตร
+  ShareInterestIncome: 'รับดอกเบี้ยแชร์', // รับดอกเบี้ยแชร์
   // BorrowingsTransactionType
   Drawdown: 'เบิกเงินกู้',
   Repayment: 'ชำระคืนเงินกู้',

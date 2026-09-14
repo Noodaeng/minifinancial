@@ -165,7 +165,7 @@ export default {
   OperatingExpense: 'Operating Expense',
   InterestExpense: 'Interest Expense',
   BadDebtExpense: 'BadDebt Expense',
-  DisposalLoss: 'Disposal Loss',
+  //DisposalLoss: 'Disposal Loss',
   //++++++++++++
   Equity_Ports: 'Equity Ports',
   PaidInCapital: 'Paid-in Capital',
@@ -180,7 +180,7 @@ export default {
   LoanIssued: 'Loan Issued', // ปล่อยกู้
   LoanRepayment: 'Loan Repayment', // รับชำระคืน
   LoanInterestAccrual: 'Loan Interest Accrual', // ดอกเบี้ยค้างรับ
-  BadDebtWriteOff: 'Bad Debt Write Off', // ตัดหนี้สูญ
+  //BadDebtWriteOff: 'Bad Debt Write Off', // ตัดหนี้สูญ
   LoanReFinance: 'Re-Finance', // รีไฟแนนซ์ / ปรับโครงสร้างหนี้
   BrokerPayment: 'Broker Payment', //จ่ายค่านายหน้า
   //+++++++++++++
@@ -195,16 +195,17 @@ export default {
   EquityMethodAdjustment: 'Equity Method Adjustment', // ปรับตามวิธีส่วนได้เสีย
   //+++++++++++++
   RealEstatePurchase: 'Real Estate Purchase', // ซื้ออสังหาริมทรัพย์
-  RentalIncome: 'Rental Income', // รับค่าเช่า
+  //RentalIncome: 'Rental Income', // รับค่าเช่า
   MutualFundInvestment: 'Mutual Fund Investment', // ลงทุนกองทุนรวม
   DisposalGain: 'Disposal Gain ', // กำไร/ขาดทุนจากการจำหน่าย
   //DisposalLoss: 'Disposal Loss', // ขาดทุนจากการจำหน่าย
   SavingSharePayment: 'Saving Share Payment', // ลงทุน แชร์/ออมหมุนเวียน
   SavingShareIncome: 'Saving Share Income', // รับค่า แชร์/ออมหมุนเวียน
-  InsurancePremium: 'Insurance Premium', // การซื้อประกัน / จ่ายเบี้ยประกัน
+  //InsurancePremium: 'Insurance Premium', // การซื้อประกัน / จ่ายเบี้ยประกัน
   InsuranceBenefit: 'Insurance Benefit', // ผลประโยชน์จากกรมธรรม์ (เงินคืน/คุ้มครอง)
   AgriculturePayment: 'Agriculture Payment', // จ่ายค่าดำเนินงานเกษตร
   AgricultureIncome: 'Agriculture Income', // รับค่าผลประโยชน์งานเกษตร
+  ShareInterestIncome: 'Share Interest Income', // รับดอกเบี้ยแชร์
   //+++++++++ BorrowingsTransactionType----1
   Drawdown: 'Drawdown', // เบิกเงินกู้ / รับเงินกู้ยืม
   Repayment: ' Repayment', // ชำระคืนเงินกู้

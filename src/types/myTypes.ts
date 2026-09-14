@@ -95,7 +95,7 @@ export interface LoanPaymentRecord {
   customerId: string
   brokerId: string
   amount: number
-  interest: string
+  interest: number
   paymentTerm: number
   paymentRate: number
   customDays: number

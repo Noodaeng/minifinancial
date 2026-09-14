@@ -510,22 +510,16 @@ export const getGuideRows = (
     case EPortType.CashAndDeposits:
       switch (sType) {
         case CashTransactionType.Deposit:
-          debitTarget = CASH_ALL
-          creditTarget = CASH_SAVINGS
+          debitTarget = CURRENT_PORT_TARGET
+          creditTarget = CASH_ALL
           break
         case CashTransactionType.Withdrawal:
-          debitTarget = {
-            portType: EPortType.CashAndDeposits,
-            subTypes: [CashAndDepositsSubType.Cash]
-          }
-          creditTarget = {
-            portType: EPortType.CashAndDeposits,
-            subTypes: [CashAndDepositsSubType.SavingsAccount, CashAndDepositsSubType.FixedDeposit]
-          }
+          debitTarget = CASH_ALL
+          creditTarget = CURRENT_PORT_TARGET
           break
         case CashTransactionType.Transfer:
           debitTarget = CASH_ALL
-          creditTarget = CASH_ALL
+          creditTarget = CURRENT_PORT_TARGET
           break
         case CashTransactionType.InterestIncome:
           debitTarget = {
@@ -733,6 +727,13 @@ export const getGuideRows = (
           creditTarget = {
             portType: EPortType.OtherInvestments,
             subTypes: [OtherInvestmentsSubType.Agriculture]
+          }
+          break
+        case OtherTransactionType.ShareInterestIncome:
+          debitTarget = CASH_SAVINGS
+          creditTarget = {
+            portType: EPortType.InterestIncome,
+            subTypes: [EInterestIncomeSubType.ShareInterest]
           }
           break
       }

@@ -184,7 +184,8 @@ export enum EOperatingRevenueSubType {
 export enum EInterestIncomeSubType {
   BankInterest = 0, // ดอกเบี้ยเงินฝาก
   LoanInterest = 1, // ดอกเบี้ยรับจากการปล่อยกู้
-  BondCoupon = 2 // ดอกเบี้ยหุ้นกู้ / พันธบัตร
+  BondCoupon = 2, // ดอกเบี้ยหุ้นกู้ / พันธบัตร
+  ShareInterest = 3 // ดอกเบี้ยแชร์
 }
 
 // DividendIncome (9)
@@ -258,7 +259,7 @@ export enum CashTransactionType {
 export enum LoanTransactionType {
   LoanIssued = 0, // ปล่อยกู้
   LoanRepayment = 1, // รับชำระคืน
-  LoanInterestAccrual = 2, // ดอกเบี้ยค้างรับ
+  LoanInterestAccrual = 2, // รับดอกเบี้ยเงินกู้
   BadDebtWriteOff = 3, // ตัดหนี้สูญ
   LoanReFinance = 4, // รีไฟแนนซ์ / ปรับโครงสร้างหนี้
   BrokerPayment = 5 //จ่ายค่านายหน้า
@@ -292,7 +293,8 @@ export enum OtherTransactionType {
   InsurancePremium = 7, // การซื้อประกัน / จ่ายเบี้ยประกัน
   InsuranceBenefit = 8, // ผลประโยชน์จากกรมธรรม์ (เงินคืน/คุ้มครอง)
   AgriculturePayment = 9, // จ่ายค่าดำเนินงานเกษตร
-  AgricultureIncome = 10 // รับค่าผลประโยชน์งานเกษตร
+  AgricultureIncome = 10, // รับค่าผลประโยชน์งานเกษตร
+  ShareInterestIncome = 11 // รับดอกเบี้ยแชร์
 }
 // Borrowings = 5 (เงินกู้ยืม / หนี้สิน)
 export enum BorrowingsTransactionType {

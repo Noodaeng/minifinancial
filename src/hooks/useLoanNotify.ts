@@ -25,7 +25,7 @@ export function useLoanNotify() {
   const initNotify = async () => {
     const payments = await getLoanPayments()
     if (!payments || payments.length <= 0) return
-    // console.log('*******get---------payments*****', payments)
+    //console.log('*******get---------payments*****', payments)
     const output = getLoanNotifies(payments)
     const models = output[0]
     loanNotifies.value = output[1]
@@ -45,25 +45,56 @@ export function useLoanNotify() {
 
       const dateDif = getDaysDifference(p.sessionCreateOn) ?? 0
       let periodsPassed = 0
-
+      let expectedAmount = 0
+      let difAmount = 0
+      let difCount = 0
       // 1. Calculate how many payment terms have elapsed
       switch (p.paymentTerm) {
         case 0: // Daily
           periodsPassed = dateDif // Grace period of 1 day
+          expectedAmount = p.paymentRate * periodsPassed
+          difAmount = expectedAmount - p.totalType1And2AfterSession
+          difCount = p.paymentRate > 0 ? ceiling(difAmount / p.paymentRate, 1) : 0
+
           break
         case 1: // Weekly
           periodsPassed = Math.trunc(dateDif / 7)
+          expectedAmount = p.paymentRate * periodsPassed
+          difAmount = expectedAmount - p.totalType1And2AfterSession
+          difCount = p.paymentRate > 0 ? ceiling(difAmount / p.paymentRate, 1) : 0
           break
         case 2: // Monthly
           periodsPassed = Math.trunc(dateDif / 30)
+          expectedAmount = p.paymentRate * periodsPassed
+          if (p.interest > 0) {
+            difAmount = expectedAmount - p.totalType1And2AfterSession
+            difCount = p.paymentRate > 0 ? ceiling(difAmount / p.paymentRate, 1) : 0
+          } else {
+            const outStanding = p.amount - p.totalType1AfterSession
+            //console.log('!!!!!--->', p.amount, p.totalType1AfterSession, outStanding)
+            difAmount = Math.min(expectedAmount - p.totalType1AfterSession, outStanding)
+            difCount = p.paymentRate > 0 ? ceiling(difAmount / p.paymentRate, 1) : 0
+          }
           break
         case 3: // Yearly
           periodsPassed = Math.trunc(dateDif / 365)
+          expectedAmount = p.paymentRate * periodsPassed
+          if (p.interest > 0) {
+            difAmount = expectedAmount - p.totalType1And2AfterSession
+            difCount = p.paymentRate > 0 ? ceiling(difAmount / p.paymentRate, 1) : 0
+          } else {
+            const outStanding = p.amount - p.totalType1AfterSession
+            difAmount = Math.min(expectedAmount - p.totalType1AfterSession, outStanding)
+            difCount = p.paymentRate > 0 ? ceiling(difAmount / p.paymentRate, 1) : 0
+          }
           break
 
         case 4: // CustomDays
           const cusDays = p.customDays && p.customDays > 0 ? p.customDays : 1
           periodsPassed = Math.trunc(dateDif / cusDays)
+          expectedAmount = p.paymentRate * periodsPassed
+          difAmount = expectedAmount - p.totalType1And2AfterSession
+          difCount = p.paymentRate > 0 ? ceiling(difAmount / p.paymentRate, 1) : 0
           break
         default:
           return
@@ -72,10 +103,6 @@ export function useLoanNotify() {
       // Skip if no payment period has matured yet
       if (periodsPassed <= 0) return
 
-      // 2. Expected payment = rate per period * periods passed
-      const expectedAmount = p.paymentRate * periodsPassed
-      const difAmount = expectedAmount - p.totalType1And2AfterSession
-      const difCount = p.paymentRate > 0 ? ceiling(difAmount / p.paymentRate, 1) : 0
       // 3. Payment delay occurs if expected total > actual payments made
       const ignoreStatus = new Set([0, 4, 5, 6])
       if (
