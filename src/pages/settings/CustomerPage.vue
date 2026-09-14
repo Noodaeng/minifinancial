@@ -21,7 +21,11 @@
             :columns="listColumns"
             @onRowClick="onRowClick"
             @onFilter="onFilter"
-          />
+          >
+            <template #append>
+              <MultiPortTypeSessionComp :sessionTypeSummaries="sessionTypeSummariesAll" />
+            </template>
+          </ListComp>
         </q-card>
       </div>
 
@@ -80,6 +84,7 @@ export default defineComponent({
       }
       await useCustomer.Init()
       await useCustomer.onInitCusSession()
+      await useCustomer.onInitCustomerPage()
     })
     watch(
       () => useCustomer.item.value.customerId,
@@ -111,6 +116,7 @@ export default defineComponent({
       canSave: useCustomer.canSave,
       state: useCustomer.state,
       sessionTypeSummaries: useCustomer.sessionTypeSummaries,
+      sessionTypeSummariesAll: useCustomer.sessionTypeSummariesAll,
       myChild
     }
   },

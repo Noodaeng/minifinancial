@@ -7,6 +7,7 @@ import { showError, currentDateTimeStr } from '../modules/appUtils'
 import MyConfig from '../modules/myConfig'
 export function useCustomerProp() {
   const sessionTypeSummaries = ref<MultiPortTypeSummary[]>([])
+  const sessionTypeSummariesAll = ref<MultiPortTypeSummary[]>([])
   const crud = useCrudProp<Customer, Customer>(
     'customerId',
     'customers',
@@ -73,6 +74,10 @@ export function useCustomerProp() {
       sessionTypeSummaries.value = sessionFilter(result)
     }
   }
+  const onInitCustomerPage = async () => {
+    const result = await GetSessionTypesAllCustomer()
+    sessionTypeSummariesAll.value = sessionFilter(result)
+  }
   const sessionFilter = (raw: MultiPortTypeSummary[]): MultiPortTypeSummary[] => {
     if (!raw || raw.length === 0) return []
 
@@ -101,13 +106,29 @@ export function useCustomerProp() {
       return []
     }
   }
+  async function GetSessionTypesAllCustomer(): Promise<MultiPortTypeSummary[]> {
+    try {
+      const secretToken = MyConfig.instance.AppConfig.AuthToken
+      const baseUrl = MyConfig.instance.AppConfig.DbUrl
+      const api = useApi()
+      const response = await api.post(`${baseUrl}/api/sessionRpt/getSessionTypesAllCustomer`, {
+        token: secretToken
+      })
+      return response.data?.data || []
+    } catch (err: any) {
+      await showError(err)
+      return []
+    }
+  }
   return {
     ...crud,
     filter,
     filteredRows,
     sessionTypeSummaries,
+    sessionTypeSummariesAll,
     onFilter,
     onCreateCustomer,
-    onInitCusSession
+    onInitCusSession,
+    onInitCustomerPage
   }
 }
