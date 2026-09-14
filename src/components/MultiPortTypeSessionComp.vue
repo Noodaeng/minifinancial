@@ -120,7 +120,7 @@ export default defineComponent({
       props.sessionTypeSummaries?.forEach(detail => {
         const effect = getSessionEffect(detail.portType, detail.sessionType)
         if (detail.portType === 1) {
-          if (detail.sessionType === 0) {
+          if (detail.sessionType === 0 || detail.sessionType === 4) {
             outVal -= detail.totalAmount
           } else if (detail.sessionType === 1) {
             outVal += detail.totalAmount
