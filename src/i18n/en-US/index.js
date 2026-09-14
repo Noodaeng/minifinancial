@@ -201,11 +201,12 @@ export default {
   //DisposalLoss: 'Disposal Loss', // ขาดทุนจากการจำหน่าย
   SavingSharePayment: 'Saving Share Payment', // ลงทุน แชร์/ออมหมุนเวียน
   SavingShareIncome: 'Saving Share Income', // รับค่า แชร์/ออมหมุนเวียน
-  //InsurancePremium: 'Insurance Premium', // การซื้อประกัน / จ่ายเบี้ยประกัน
+  // InsurancePremium: 'Insurance Premium', // การซื้อประกัน / จ่ายเบี้ยประกัน
   InsuranceBenefit: 'Insurance Benefit', // ผลประโยชน์จากกรมธรรม์ (เงินคืน/คุ้มครอง)
   AgriculturePayment: 'Agriculture Payment', // จ่ายค่าดำเนินงานเกษตร
   AgricultureIncome: 'Agriculture Income', // รับค่าผลประโยชน์งานเกษตร
   ShareInterestIncome: 'Share Interest Income', // รับดอกเบี้ยแชร์
+  AgricultureBenefit: 'Agriculture Benefit',
   //+++++++++ BorrowingsTransactionType----1
   Drawdown: 'Drawdown', // เบิกเงินกู้ / รับเงินกู้ยืม
   Repayment: ' Repayment', // ชำระคืนเงินกู้
@@ -289,6 +290,7 @@ export default {
   BankInterest: 'Bank Interest', // ดอกเบี้ยเงินฝาก
   LoanInterest: 'Loan Interest', // ดอกเบี้ยรับจากการปล่อยกู้
   BondCoupon: 'Bond Coupon', // ดอกเบี้ยหุ้นกู้ / พันธบัตร
+  OtherInterest: 'Other Interest', //ดอกเบี้ยการลงทุนอื่นๆ
   //EDividendIncomeSubType {
   ListedDividend: 'Listed Dividend', // เงินปันผลจากหุ้นในตลาด
   PrivateDividend: 'Private Dividend', // เงินปันผลจากหุ้นนอกตลาด

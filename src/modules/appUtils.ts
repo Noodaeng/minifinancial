@@ -688,18 +688,12 @@ export const getGuideRows = (
           }
           break
         case OtherTransactionType.SavingSharePayment:
-          debitTarget = {
-            portType: EPortType.OtherInvestments,
-            subTypes: [OtherInvestmentsSubType.CommunitySavingShare]
-          }
+          debitTarget = CURRENT_PORT_TARGET
           creditTarget = CASH_SAVINGS
           break
         case OtherTransactionType.SavingShareIncome:
           debitTarget = CASH_SAVINGS
-          creditTarget = {
-            portType: EPortType.OtherInvestments,
-            subTypes: [OtherInvestmentsSubType.CommunitySavingShare]
-          }
+          creditTarget = CURRENT_PORT_TARGET
           break
         case OtherTransactionType.InsurancePremium:
           debitTarget = {
@@ -716,24 +710,25 @@ export const getGuideRows = (
           }
           break
         case OtherTransactionType.AgriculturePayment:
-          debitTarget = CASH_SAVINGS
-          creditTarget = {
-            portType: EPortType.OtherInvestments,
-            subTypes: [OtherInvestmentsSubType.Agriculture]
-          }
+          debitTarget = CURRENT_PORT_TARGET
+          creditTarget = CASH_SAVINGS
           break
         case OtherTransactionType.AgricultureIncome:
           debitTarget = CASH_SAVINGS
-          creditTarget = {
-            portType: EPortType.OtherInvestments,
-            subTypes: [OtherInvestmentsSubType.Agriculture]
-          }
+          creditTarget = CURRENT_PORT_TARGET
           break
         case OtherTransactionType.ShareInterestIncome:
           debitTarget = CASH_SAVINGS
           creditTarget = {
             portType: EPortType.InterestIncome,
-            subTypes: [EInterestIncomeSubType.ShareInterest]
+            subTypes: [EInterestIncomeSubType.OtherInterest]
+          }
+          break
+        case OtherTransactionType.AgricultureBenefit:
+          debitTarget = CASH_SAVINGS
+          creditTarget = {
+            portType: EPortType.DividendIncome,
+            subTypes: [EDividendIncomeSubType.EquityMethodGain]
           }
           break
       }
@@ -1510,6 +1505,7 @@ export const getPortSessionInfo = (
           totalCount: 0,
           effect: '+'
         },
+
         // Insurance (subType = 3)
         {
           enabled: subType === OtherInvestmentsSubType.Insurance,
@@ -1543,6 +1539,24 @@ export const getPortSessionInfo = (
           enabled: subType === OtherInvestmentsSubType.Agriculture,
           visible: subType === OtherInvestmentsSubType.Agriculture,
           description: t('AgricultureIncome'),
+          iconName: 'mdi-cash-plus',
+          totalAmount: 0,
+          totalCount: 0,
+          effect: '+'
+        },
+        {
+          enabled: subType === OtherInvestmentsSubType.CommunitySavingShare,
+          visible: subType === OtherInvestmentsSubType.CommunitySavingShare,
+          description: t('ShareInterestIncome'),
+          iconName: 'mdi-cash-plus',
+          totalAmount: 0,
+          totalCount: 0,
+          effect: '+'
+        },
+        {
+          enabled: subType === OtherInvestmentsSubType.Agriculture,
+          visible: subType === OtherInvestmentsSubType.Agriculture,
+          description: t('AgricultureBenefit'),
           iconName: 'mdi-cash-plus',
           totalAmount: 0,
           totalCount: 0,
