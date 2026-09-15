@@ -23,15 +23,17 @@ export function useD1Backup() {
 
       const signedUrl = response.data?.data?.signedUrl
       if (signedUrl) {
-        // Create a direct download link without using fetch()
-        const link = document.createElement('a')
-        link.href = signedUrl
-        link.download = `d1-backup-${new Date().toISOString().slice(0, 10)}.sql`
-        // Opening in a new context prevents page navigation warnings
-        link.target = '_blank'
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
+        // Create a hidden iframe to trigger the file download silently
+        const iframe = document.createElement('iframe')
+        iframe.style.display = 'none'
+        iframe.src = signedUrl
+        document.body.appendChild(iframe)
+
+        // Clean up the iframe after a few seconds
+        setTimeout(() => {
+          document.body.removeChild(iframe)
+        }, 10000)
+
         return signedUrl
       }
 
