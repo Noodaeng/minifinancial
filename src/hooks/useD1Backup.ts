@@ -16,8 +16,6 @@ export function useD1Backup() {
       const accountId = MyConfig.instance.AppConfig.ClientId
       const api = useApi()
 
-      // The worker will now hold the connection open while polling
-      // until Cloudflare finishes generating the .sql file.
       const response = await api.post(`${baseUrl}/api/getBackupD1`, {
         token: secretToken,
         accountId: accountId
@@ -25,12 +23,20 @@ export function useD1Backup() {
 
       const signedUrl = response.data?.data?.signedUrl
       if (signedUrl) {
+        // Fetch the file as a blob so the browser doesn't trigger navigation warnings
+        const fileResponse = await fetch(signedUrl)
+        const blob = await fileResponse.blob()
+
+        const blobUrl = window.URL.createObjectURL(blob)
         const link = document.createElement('a')
-        link.href = signedUrl
+        link.href = blobUrl
         link.download = `d1-backup-${new Date().toISOString().slice(0, 10)}.sql`
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
+
+        // Clean up the object URL
+        window.URL.revokeObjectURL(blobUrl)
         return signedUrl
       }
 
