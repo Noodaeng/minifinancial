@@ -23,20 +23,15 @@ export function useD1Backup() {
 
       const signedUrl = response.data?.data?.signedUrl
       if (signedUrl) {
-        // Fetch the file as a blob so the browser doesn't trigger navigation warnings
-        const fileResponse = await fetch(signedUrl)
-        const blob = await fileResponse.blob()
-
-        const blobUrl = window.URL.createObjectURL(blob)
+        // Create a direct download link without using fetch()
         const link = document.createElement('a')
-        link.href = blobUrl
+        link.href = signedUrl
         link.download = `d1-backup-${new Date().toISOString().slice(0, 10)}.sql`
+        // Opening in a new context prevents page navigation warnings
+        link.target = '_blank'
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
-
-        // Clean up the object URL
-        window.URL.revokeObjectURL(blobUrl)
         return signedUrl
       }
 
