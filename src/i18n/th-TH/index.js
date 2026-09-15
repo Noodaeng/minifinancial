@@ -42,6 +42,7 @@ export default {
     pluralDay: 'วัน'
   },
   Mini_Financial: 'การเงินขนาดเล็ก',
+  Dashboard_overview: 'ภาพรวมระบบ', //ภาพรวมระบบ
   Login_failed_Please_check_Username_or_Password:
     'การเข้าสู่ระบบล้มเหลว โปรดตรวจสอบชื่อผู้ใช้หรือรหัสผ่าน',
   Abort: 'ล้มเหลว',

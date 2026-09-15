@@ -43,6 +43,7 @@ export default {
     pluralDay: 'days'
   },
   Mini_Financial: 'Mini Financial',
+  Dashboard_overview: 'Dashboard overview', //ภาพรวมระบบ
   Login_failed_Please_check_Username_or_Password: 'Login failed. Please check Username or Password',
   failed: 'Action failed',
   success: 'Action was successful',

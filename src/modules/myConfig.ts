@@ -140,7 +140,7 @@ export default class MyConfig {
 }
 
 export class AppConfigModel {
-  ClientId = 0
+  ClientId = ''
   ScreenIndex = 0
   Theme = 0
   DbUrl = ''
