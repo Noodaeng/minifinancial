@@ -48,3 +48,5 @@ index.html/<meta
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://minifinancial-worker.apptawee-api.workers.dev https://minifinancial-worker.pare-pare2521.workers.dev https://script.google.com https://script.googleusercontent.com<% if (ctx.dev) { %> ws://localhost:*<% } %>; worker-src 'self' blob:;"
     />
+
+    "ClientId": "e422a689faa45301847398aa0e4feafd"
