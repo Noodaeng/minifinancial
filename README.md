@@ -38,6 +38,7 @@ index.html/<meta
       content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 
       'self' https://minifinancial-worker.apptawee-api.workers.dev https://script.google.com https://script.googleusercontent.com<% if (ctx.dev) { %> ws://localhost:*<% } %>; worker-src 'self' blob:;"
     />
+"ClientId": "f15d8505caa4b7362199beeda7a88676",
 
 ### URL for worker cloudflare (pare)
 
