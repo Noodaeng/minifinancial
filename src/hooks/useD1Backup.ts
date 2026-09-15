@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { useApi } from '../services/api'
+//import { useApi } from '../services/api'
 
 import { showError } from '../modules/appUtils'
 
@@ -8,39 +8,46 @@ export function useD1Backup() {
   const loading = ref(false)
   const errorMessage = ref('')
 
-  async function downloadBackupD1(): Promise<string | null> {
+  async function downloadBackupD1(): Promise<boolean> {
     try {
       loading.value = true
       const secretToken = MyConfig.instance.AppConfig.AuthToken
       const baseUrl = MyConfig.instance.AppConfig.DbUrl
       const accountId = MyConfig.instance.AppConfig.ClientId
-      const api = useApi()
 
-      const response = await api.post(`${baseUrl}/api/getBackupD1`, {
-        token: secretToken,
-        accountId: accountId
+      // Call your worker (allowed by CSP connect-src)
+      const response = await fetch(`${baseUrl}/api/getBackupD1`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          token: secretToken,
+          accountId: accountId
+        })
       })
 
-      const signedUrl = response.data?.data?.signedUrl
-      if (signedUrl) {
-        // Create a hidden iframe to trigger the file download silently
-        const iframe = document.createElement('iframe')
-        iframe.style.display = 'none'
-        iframe.src = signedUrl
-        document.body.appendChild(iframe)
-
-        // Clean up the iframe after a few seconds
-        setTimeout(() => {
-          document.body.removeChild(iframe)
-        }, 10000)
-
-        return signedUrl
+      if (!response.ok) {
+        const errJson = await response.json().catch(() => ({}))
+        throw new Error((errJson as any)?.message || 'Backup export failed.')
       }
 
-      throw new Error('No download URL returned from server.')
+      // Receive the file stream as a blob
+      const blob = await response.blob()
+      const blobUrl = window.URL.createObjectURL(blob)
+
+      const link = document.createElement('a')
+      link.href = blobUrl
+      link.download = `d1-backup-${new Date().toISOString().slice(0, 10)}.sql`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+
+      window.URL.revokeObjectURL(blobUrl)
+      return true
     } catch (err: any) {
       await showError(err)
-      return null
+      return false
     } finally {
       loading.value = false
     }
