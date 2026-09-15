@@ -16,45 +16,31 @@ export function useD1Backup() {
       const accountId = MyConfig.instance.AppConfig.ClientId
       const api = useApi()
 
+      // The worker will now hold the connection open while polling
+      // until Cloudflare finishes generating the .sql file.
       const response = await api.post(`${baseUrl}/api/getBackupD1`, {
         token: secretToken,
         accountId: accountId
       })
 
-      const result = response.data?.data
-      console.log('Worker Result Data:', result)
-
-      // If Cloudflare returns a direct signed URL immediately
-      if (result?.signedUrl) {
-        triggerDownload(result.signedUrl)
-        return result.signedUrl
+      const signedUrl = response.data?.data?.signedUrl
+      if (signedUrl) {
+        const link = document.createElement('a')
+        link.href = signedUrl
+        link.download = `d1-backup-${new Date().toISOString().slice(0, 10)}.sql`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        return signedUrl
       }
 
-      // If Cloudflare returns an active/polling status
-      if (result?.status === 'active') {
-        alert(
-          'Backup generation has started in the background! Please check your server/Cloudflare dashboard or try again in a few seconds.'
-        )
-      } else {
-        alert('Backup triggered successfully, but no download URL was returned immediately.')
-      }
-
-      return null
+      throw new Error('No download URL returned from server.')
     } catch (err: any) {
       await showError(err)
       return null
     } finally {
       loading.value = false
     }
-  }
-
-  function triggerDownload(url: string) {
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `d1-backup-${new Date().toISOString().slice(0, 10)}.sql`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
   }
 
   return {
