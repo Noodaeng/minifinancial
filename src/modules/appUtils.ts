@@ -1981,6 +1981,7 @@ export const periodUnit: PeriodUnits = {
   3: t('year'),
   4: t('day')
 }
+
 export const getRefinanceInfo = (sessions: Session[], port: Port, enb: boolean): ReFinanceInfo => {
   const defaultInfo: ReFinanceInfo = {
     canRefinance: false,
@@ -1996,8 +1997,8 @@ export const getRefinanceInfo = (sessions: Session[], port: Port, enb: boolean):
 
   if (!enb || !sessions?.length || !port) return defaultInfo
 
-  // Use toSorted to avoid mutating original array
-  const sortDec = sessions.toSorted((a, b) => (b.createOn || '').localeCompare(a.createOn || ''))
+  // Utilize getSessionSort with 'DSC' (Descending) to get latest dates first
+  const sortDec = getSessionSort(sessions, 'DSC')
 
   const startSession = sortDec.find(s => s.sessionType === 0 || s.sessionType === 4)
   const startCreateOn = startSession?.createOn || ''
@@ -2022,6 +2023,32 @@ export const getRefinanceInfo = (sessions: Session[], port: Port, enb: boolean):
     refinanceAmount: canRefinance ? diff : 0,
     shortageAmount: canRefinance ? 0 : Math.abs(diff)
   }
+}
+const getSessionSort = (sessions: Session[], sortType: 'ASC' | 'DSC'): Session[] => {
+  if (!sessions || sessions.length === 0) return []
+
+  // Helper to safely convert DD/MM/YYYY string to timestamp
+  const getTimestamp = (dateStr?: string): number => {
+    if (!dateStr) return 0
+    const parsedDate = date.extractDate(dateStr, 'DD/MM/YYYY')
+    const time = parsedDate ? parsedDate.getTime() : 0
+    return isNaN(time) ? 0 : time
+  }
+
+  // Create a shallow copy before sorting
+  return [...sessions].sort((a, b) => {
+    const dateA = getTimestamp(a.createOn)
+    const dateB = getTimestamp(b.createOn)
+
+    if (dateA !== dateB) {
+      return sortType === 'ASC' ? dateA - dateB : dateB - dateA
+    }
+
+    // Fallback tie-breaker: sort by sessionId if available on the Session type
+    const idA = String(a.sessionId ?? '')
+    const idB = String(b.sessionId ?? '')
+    return sortType === 'ASC' ? idA.localeCompare(idB) : idB.localeCompare(idA)
+  })
 }
 
 export const canCreateSession = (sessions: Session[], sessionType: number, port: Port): boolean => {
