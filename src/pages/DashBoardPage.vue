@@ -63,6 +63,7 @@ export default defineComponent({
     const isLoanNotifiesOpen = ref(false)
     onMounted(async () => {
       await useDash.Init()
+      useBackUp.checkAndAutoBackup()
     })
     const handleCategoryNotify = (item: CategoryMeta) => {
       isLoanNotifiesOpen.value =
