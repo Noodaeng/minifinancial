@@ -8,8 +8,33 @@ export function useD1Backup() {
   const loading = ref(false)
   const errorMessage = ref('')
 
+  // Helper function to check if the device is a PC/Laptop (Desktop)
+  function isDesktopDevice(): boolean {
+    const userAgent = navigator.userAgent.toLowerCase()
+
+    // Check for common mobile/tablet keywords in the user agent string
+    const isMobileOrTablet =
+      /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile/i.test(userAgent)
+
+    // Additional check: mobile devices usually have touch points and smaller viewports,
+    // but checking userAgent combined with maxTouchPoints helps filter out iPads posing as desktops.
+    const isTouchMac = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1
+
+    return !isMobileOrTablet && !isTouchMac
+  }
+
   async function downloadBackupD1(isAutomatic = false): Promise<boolean> {
     try {
+      // 1. Guard check: Prevent download if it's not a PC or Laptop
+      if (!isDesktopDevice()) {
+        const restrictionMsg = 'Database backups can only be downloaded from a PC or laptop.'
+        errorMessage.value = restrictionMsg
+        if (!isAutomatic) {
+          await showError(restrictionMsg) // or your preferred notification method
+        }
+        return false
+      }
+
       loading.value = true
       const secretToken = MyConfig.instance.AppConfig.AuthToken
       const baseUrl = MyConfig.instance.AppConfig.DbUrl
@@ -42,6 +67,7 @@ export function useD1Backup() {
       localStorage.setItem('last_d1_backup_date', todayStr)
       return true
     } catch (err: any) {
+      errorMessage.value = err.message || 'An error occurred'
       if (!isAutomatic) await showError(err)
       return false
     } finally {
@@ -51,6 +77,9 @@ export function useD1Backup() {
 
   // Check if an auto-backup is needed (e.g., if last backup is > 30 days old or never done)
   async function checkAndAutoBackup() {
+    // Optional: skip auto-backup checks entirely on mobile/tablet
+    if (!isDesktopDevice()) return
+
     const lastBackupDate = localStorage.getItem('last_d1_backup_date')
 
     if (!lastBackupDate) {
