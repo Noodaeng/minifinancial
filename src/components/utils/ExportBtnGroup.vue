@@ -176,7 +176,9 @@ export default defineComponent({
         // 4. Add Differ if portType === 1
         if (differ !== null) {
           const differRowIndex = startSummaryRow + 2 + summaryRows.length
-          XLSX.utils.sheet_add_aoa(worksheet, [[t('Net_Outstanding'), differ]], {
+          const differ_info = differ && differ > 0 ? t('Net_Outstanding') : t('Net_Overpayment')
+
+          XLSX.utils.sheet_add_aoa(worksheet, [[differ_info, Math.abs(differ)]], {
             origin: `A${differRowIndex}`
           })
         }
@@ -266,23 +268,16 @@ export default defineComponent({
         })
 
         // 5. Append Differ info aligned with the summary block on the right
+
         if (differ !== null) {
+          const differ_info = differ && differ > 0 ? t('Net_Outstanding') : t('Net_Overpayment')
           const finalY2 = (doc as any).lastAutoTable?.finalY || summaryStartY + 30
           autoTable(doc, {
             startY: finalY2 + 4,
             margin: { left: startX, right: rightMargin },
             tableWidth: summaryWidth,
             head: [[t('Description'), t('Amount')]],
-            body: [
-              [
-                t('Net_Outstanding'),
-                formatCurrency(differ)
-                // differ.toLocaleString(undefined, {
-                //   minimumFractionDigits: 2,
-                //   maximumFractionDigits: 2
-                // })
-              ]
-            ],
+            body: [[differ_info, formatCurrency(Math.abs(differ))]],
             theme: 'grid',
             styles: {
               font: 'Sarabun',
