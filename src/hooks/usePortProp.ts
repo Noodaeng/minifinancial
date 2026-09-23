@@ -164,7 +164,6 @@ export function usePortProp() {
       //++++++
       portTypeSummaries.value = await getSessionTypesByPortType()
       //console.log('Test new-------->api####-1', portTypeSummaries.value)
-      filter.value = ''
     } catch (err) {
       await showError(err)
     }

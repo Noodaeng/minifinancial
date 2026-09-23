@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue'
+import { defineComponent, ref, onMounted, type PropType, watch } from 'vue'
 import type { QTableColumn } from 'quasar'
 
 export default defineComponent({
@@ -73,6 +73,10 @@ export default defineComponent({
     },
     initGuide: {
       type: String,
+      default: ''
+    },
+    keyVal: {
+      type: [String, Number] as PropType<string | number>,
       default: ''
     }
   },
@@ -122,7 +126,12 @@ export default defineComponent({
     onMounted(() => {
       onFiltering(filter.value)
     })
-
+    watch(
+      () => props.keyVal,
+      async () => {
+        filter.value = ''
+      }
+    )
     return {
       filter,
       onFiltering,

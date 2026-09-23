@@ -23,6 +23,7 @@
             <ListComp
               :rows="filteredRows"
               :columns="listColumns"
+              :keyVal="portType"
               @onRowClick="onRowClick"
               @onFilter="onFilter"
             />
