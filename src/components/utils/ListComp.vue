@@ -130,6 +130,7 @@ export default defineComponent({
       () => props.keyVal,
       async () => {
         filter.value = ''
+        onFiltering(filter.value)
       }
     )
     return {
