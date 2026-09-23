@@ -357,5 +357,6 @@ export default {
   Net_Outstanding: 'Net Outstanding',
   Net_Overpayment: 'Net Overpayment',
   Net_loan_balance: 'Net loan balance',
-  Summary_by_Session_Type: 'Summary by Session Type'
+  Summary_by_Session_Type: 'Summary by Session Type',
+  No_data_available: 'No data available'
 }

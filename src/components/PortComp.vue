@@ -124,20 +124,11 @@
             v-if="isFieldVisible('customerId', model.portSubType)"
             class="col-12 col-sm-6 col-md-3 bg-body text-appText"
           >
-            <q-select
-              v-model="model.customerId"
-              label-color="appLabel"
-              :label="$t('Customer')"
-              :hint="$t('Customer')"
+            <SelectorFilter
+              v-model:modelValue="model.customerId"
+              :labelValue="$t('Customer')"
+              :hintValue="$t('Customer')"
               :options="custOption"
-              :rules="selectorRule"
-              lazy-rules
-              dense
-              outlined
-              emit-value
-              map-options
-              options-dense
-              popup-content-class="bg-body text-appText"
             />
           </div>
           <div
@@ -307,9 +298,10 @@ import { QSelectOption } from '../types/myTypes'
 import SaveCancelBtn from '../components/utils/SaveCancelBtn.vue'
 import AppDatePicker from '../components/utils/AppDatePicker.vue'
 import { usePortField } from '../hooks/usePortField'
+import SelectorFilter from '../components/utils/SelectorFilter.vue'
 export default defineComponent({
   name: 'PortComp',
-  components: { SaveCancelBtn, AppDatePicker },
+  components: { SaveCancelBtn, AppDatePicker, SelectorFilter },
   data() {
     return {}
   },

@@ -364,5 +364,6 @@ export default {
   Net_Outstanding: 'ยอดคงค้างสุทธิ',
   Net_Overpayment: 'ยอดชำระเกินสุทธิ',
   Net_loan_balance: 'ยอดเงินกู้คงค้างสุทธิ',
-  Summary_by_Session_Type: 'สรุปตามชนิดรายการ'
+  Summary_by_Session_Type: 'สรุปตามชนิดรายการ',
+  No_data_available: 'ไม่พบ ข้อมูล'
 }
