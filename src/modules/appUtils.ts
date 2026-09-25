@@ -2001,16 +2001,24 @@ export const getRefinanceInfo = (sessions: Session[], port: Port, enb: boolean):
   const sortDec = getSessionSort(sessions, 'DSC')
 
   const startSession = sortDec.find(s => s.sessionType === 0 || s.sessionType === 4)
-  const startCreateOn = startSession?.createOn || ''
+  const startCreateOn = getTimestamp(startSession?.createOn || '')
 
   const lastPaids = startCreateOn
-    ? sessions.filter(s => s.sessionType === 1 && (s.createOn || '') > startCreateOn)
+    ? sessions.filter(s => s.sessionType === 1 && getTimestamp(s.createOn || '') > startCreateOn)
     : []
 
   const totalPaid = lastPaids.reduce((sum, s) => sum + (s.amount || 0), 0)
   const incomeInterest = port.amount * (port.interest / 100)
   const diff = ceiling(totalPaid - incomeInterest, 10)
   const canRefinance = diff >= 0
+  // console.log(
+  //   '!!!!!!----totalPaid:',
+  //   totalPaid,
+  //   'incomeInterest',
+  //   incomeInterest,
+  //   'startSession:',
+  //   startSession
+  // )
 
   return {
     canRefinance,
@@ -2024,16 +2032,15 @@ export const getRefinanceInfo = (sessions: Session[], port: Port, enb: boolean):
     shortageAmount: canRefinance ? 0 : Math.abs(diff)
   }
 }
+const getTimestamp = (dateStr?: string): number => {
+  // Helper to safely convert DD/MM/YYYY string to timestamp
+  if (!dateStr) return 0
+  const parsedDate = date.extractDate(dateStr, 'DD/MM/YYYY')
+  const time = parsedDate ? parsedDate.getTime() : 0
+  return isNaN(time) ? 0 : time
+}
 const getSessionSort = (sessions: Session[], sortType: 'ASC' | 'DSC'): Session[] => {
   if (!sessions || sessions.length === 0) return []
-
-  // Helper to safely convert DD/MM/YYYY string to timestamp
-  const getTimestamp = (dateStr?: string): number => {
-    if (!dateStr) return 0
-    const parsedDate = date.extractDate(dateStr, 'DD/MM/YYYY')
-    const time = parsedDate ? parsedDate.getTime() : 0
-    return isNaN(time) ? 0 : time
-  }
 
   // Create a shallow copy before sorting
   return [...sessions].sort((a, b) => {
